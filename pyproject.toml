@@ -1,0 +1,49 @@
+[build-system]
+requires = [
+    "setuptools>=80",
+    "wheel",
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "optengine"
+version = "0.1.0"
+description = "A feasibility-aware hybrid AI–Quantum optimization platform."
+requires-python = ">=3.10"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "pytest",
+    "ruff",
+    "build",
+    "python-semantic-release",
+]
+
+[tool.setuptools.packages.find]
+include = [
+    "optengine",
+    "optengine.*",
+]
+exclude = [
+    "demos",
+    "tests",
+    "config",
+    "scratch",
+    "outputs",
+    "artifacts",
+]
+
+[tool.semantic_release]
+version_toml = ["pyproject.toml:project.version"]
+version_variables = [
+    "optengine/_version.py:__version__"
+]
+branch = "main"
+build_command = "python -m build"
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_functions = ["test_*"]

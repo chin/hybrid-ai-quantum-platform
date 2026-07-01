@@ -1,0 +1,33 @@
+name: Conventions
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  branch-name:
+    name: Check branch name
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Validate branch name
+        shell: bash
+        run: |
+          BRANCH_NAME="${GITHUB_HEAD_REF:-${GITHUB_REF_NAME}}"
+
+          echo "Checking branch: $BRANCH_NAME"
+
+          if [[ "$BRANCH_NAME" == "main" ]]; then
+            exit 0
+          fi
+
+          if [[ ! "$BRANCH_NAME" =~ ^(feat|fix|docs)/[a-z0-9._-]+$ ]]; then
+            echo "Invalid branch name: $BRANCH_NAME"
+            echo "Use one of:"
+            echo "  feat/short-description"
+            echo "  fix/short-description"
+            echo "  docs/short-description"
+            exit 1
+          fi

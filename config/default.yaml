@@ -1,0 +1,6 @@
+run:
+  output_dir: outputs
+
+policy:
+  confidence_threshold: 0.70
+  improvement_threshold: 0.05

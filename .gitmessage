@@ -1,0 +1,16 @@
+feat: short description
+
+# Allowed types:
+#   feat: new functionality
+#   fix: bug fix
+#   docs: documentation only
+#
+# Branch naming:
+#   feat/short-description
+#   fix/short-description
+#   docs/short-description
+#
+# Examples:
+#   feat: add executable platform skeleton
+#   fix: correct policy threshold logic
+#   docs: add architecture overview
