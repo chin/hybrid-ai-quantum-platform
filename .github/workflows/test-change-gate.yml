@@ -1,0 +1,82 @@
+name: Test Change Gate
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - reopened
+      - synchronize
+
+permissions:
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: test-change-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  require-tests:
+    name: Implementation changes include tests
+    runs-on: ubuntu-latest
+
+    env:
+      BASE_SHA: ${{ github.event.pull_request.base.sha }}
+      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+
+    steps:
+      - name: Check out pull request head
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: Detect implementation and test changes
+        shell: bash
+        run: |
+          CHANGED_FILES="$(
+            git diff \
+              --name-only \
+              "${BASE_SHA}...${HEAD_SHA}"
+          )"
+
+          IMPLEMENTATION_FILES="$(
+            printf '%s\n' "${CHANGED_FILES}" |
+            grep -E '^optengine/.*\.py$' || true
+          )"
+
+          TEST_FILES="$(
+            git diff \
+              --name-only \
+              --diff-filter=ACMR \
+              "${BASE_SHA}...${HEAD_SHA}" |
+            grep -E '^tests/.*\.py$' || true
+          )"
+
+          echo "Changed files:"
+          printf '%s\n' "${CHANGED_FILES}"
+          echo ""
+
+          if [[ -z "${IMPLEMENTATION_FILES}" ]]; then
+            echo "No OptEngine implementation files changed."
+            echo "No test-file change is required."
+            exit 0
+          fi
+
+          echo "Implementation files changed:"
+          printf '%s\n' "${IMPLEMENTATION_FILES}"
+          echo ""
+
+          if [[ -z "${TEST_FILES}" ]]; then
+            echo "::error::OptEngine implementation changed without an accompanying Python test change."
+            echo ""
+            echo "Add or modify at least one Python file under tests/."
+            exit 1
+          fi
+
+          echo "Accompanying test files:"
+          printf '%s\n' "${TEST_FILES}"
+          echo ""
+          echo "Implementation changes include test changes."
