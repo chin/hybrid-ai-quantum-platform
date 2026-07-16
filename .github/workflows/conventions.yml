@@ -48,7 +48,7 @@ jobs:
       - name: Validate pull request title
         shell: bash
         run: |
-          TITLE_PATTERN='^(feat|fix|docs)(\([a-z0-9._/-]+\))?!?:[[:space:]].+'
+          TITLE_PATTERN='^(feat|fix|docs|test)(\([a-z0-9._/-]+\))?!?:[[:space:]].+'
 
           echo "Pull request title: ${PR_TITLE}"
 
@@ -83,7 +83,7 @@ jobs:
       - name: Validate commit subjects
         shell: bash
         run: |
-          COMMIT_PATTERN='^(feat|fix|docs)(\([a-z0-9._/-]+\))?!?:[[:space:]].+'
+          COMMIT_PATTERN='^(feat|fix|docs|test)(\([a-z0-9._/-]+\))?!?:[[:space:]].+'
           INVALID=0
           COUNT=0
 
