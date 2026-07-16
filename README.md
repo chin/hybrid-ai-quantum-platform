@@ -4,21 +4,59 @@
 
 **Quantifying operational optimality to simplify decision optionality**
 
+---
+
+## Quickstart
 
 Run:
 
-```python
-python demos/quickstart.py
+```bash
+make dev
+```
+
+Or run the demonstration directly through the managed environment:
+
+```bash
+uv run python demos/quickstart.py
 ```
 
 Expected output:
 
+```text
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+                   OptEngine :: Quickstart
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+> problem
+Optimize a candidate design using AI analysis, FNO surrogate evaluation, classical search, quantum search, and a feasibility-policy decision.
+
+> analysis
+✓ complete
+
+> search
+✓ complete
+
+> decision
+scale
+
+> reason
+Additional low-cost search is justified.
+
+> artifact
+outputs/quickstart_<YYYYMMDD_HHMMSSZ>.json
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+                       Runtime Complete
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
-Quickstart run complete.
-Decision: scale
-Reason: Additional low-cost search is justified.
-Output: outputs/quickstart_<timestamp>.json
-```
+
+Terminal colors distinguish the runtime information:
+
+* successful stages appear in green;
+* the decision value appears in yellow;
+* the generated artifact path appears in cyan.
+
+---
 
 ## License
 
