@@ -1,33 +1,120 @@
 name: Conventions
 
 on:
-  push:
-    branches: ["**"]
   pull_request:
-    branches: ["main"]
+    branches:
+      - main
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - edited
+
+permissions:
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: conventions-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
 
 jobs:
-  branch-name:
-    name: Check branch name
+  branch-and-title:
+    name: Branch and PR title
     runs-on: ubuntu-latest
+
+    env:
+      HEAD_BRANCH: ${{ github.head_ref }}
+      PR_TITLE: ${{ github.event.pull_request.title }}
 
     steps:
       - name: Validate branch name
         shell: bash
         run: |
-          BRANCH_NAME="${GITHUB_HEAD_REF:-${GITHUB_REF_NAME}}"
+          BRANCH_PATTERN='^(feat|fix|docs)/[a-z0-9][a-z0-9._-]*$'
 
-          echo "Checking branch: $BRANCH_NAME"
+          echo "Branch: ${HEAD_BRANCH}"
 
-          if [[ "$BRANCH_NAME" == "main" ]]; then
-            exit 0
-          fi
-
-          if [[ ! "$BRANCH_NAME" =~ ^(feat|fix|docs)/[a-z0-9._-]+$ ]]; then
-            echo "Invalid branch name: $BRANCH_NAME"
-            echo "Use one of:"
+          if [[ ! "${HEAD_BRANCH}" =~ ${BRANCH_PATTERN} ]]; then
+            echo "::error::Invalid branch name: ${HEAD_BRANCH}"
+            echo ""
+            echo "Expected one of:"
             echo "  feat/short-description"
             echo "  fix/short-description"
             echo "  docs/short-description"
             exit 1
           fi
+
+      - name: Validate pull request title
+        shell: bash
+        run: |
+          TITLE_PATTERN='^(feat|fix|docs)(\([a-z0-9._/-]+\))?!?:[[:space:]].+'
+
+          echo "Pull request title: ${PR_TITLE}"
+
+          if [[ ! "${PR_TITLE}" =~ ${TITLE_PATTERN} ]]; then
+            echo "::error::Invalid pull request title: ${PR_TITLE}"
+            echo ""
+            echo "Expected Conventional Commit form:"
+            echo "  feat: add capability"
+            echo "  fix: correct behavior"
+            echo "  docs: update documentation"
+            echo ""
+            echo "Optional scopes are allowed:"
+            echo "  feat(optimize): add Max-Cut baseline"
+            exit 1
+          fi
+
+  commit-messages:
+    name: Commit subjects
+    runs-on: ubuntu-latest
+
+    env:
+      BASE_SHA: ${{ github.event.pull_request.base.sha }}
+      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+
+    steps:
+      - name: Check out pull request head
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: Validate commit subjects
+        shell: bash
+        run: |
+          COMMIT_PATTERN='^(feat|fix|docs)(\([a-z0-9._/-]+\))?!?:[[:space:]].+'
+          INVALID=0
+          COUNT=0
+
+          while IFS= read -r SUBJECT; do
+            [[ -z "${SUBJECT}" ]] && continue
+
+            COUNT=$((COUNT + 1))
+            echo "Checking: ${SUBJECT}"
+
+            if [[ ! "${SUBJECT}" =~ ${COMMIT_PATTERN} ]]; then
+              echo "::error::Invalid commit subject: ${SUBJECT}"
+              INVALID=1
+            fi
+          done < <(
+            git log \
+              --format='%s' \
+              "${BASE_SHA}..${HEAD_SHA}"
+          )
+
+          if [[ "${COUNT}" -eq 0 ]]; then
+            echo "::error::No pull request commits were found."
+            exit 1
+          fi
+
+          if [[ "${INVALID}" -ne 0 ]]; then
+            echo ""
+            echo "Every commit subject must begin with:"
+            echo "  feat:"
+            echo "  fix:"
+            echo "  docs:"
+            exit 1
+          fi
+
+          echo "Validated ${COUNT} commit subject(s)."

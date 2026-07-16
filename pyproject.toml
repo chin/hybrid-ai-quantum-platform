@@ -41,6 +41,8 @@ version_toml = ["pyproject.toml:project.version"]
 version_variables = [
     "optengine/_version.py:__version__"
 ]
+allow_zero_version = true
+major_on_zero = false
 branch = "main"
 build_command = "python -m build"
 
