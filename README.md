@@ -58,6 +58,12 @@ Terminal colors distinguish the runtime information:
 
 ---
 
+## Development Documentation
+
+- [Makefile execution guide](docs/MAKEFILE.md) — command behavior, execution paths, side effects, and release workflow.
+
+---
+
 ## License
 
 OptEngine is licensed under the Apache License, Version 2.0. See
