@@ -1,6 +1,9 @@
-# OptEngine
+# OptEngine by OptChin
 
-A Feasibility-Aware Hybrid AI–Quantum Optimization Platform
+## A Feasibility-Aware Hybrid AI–Quantum Optimization Platform
+
+**Quantifying operational optimality to simplify decision optionality**
+
 
 Run:
 
