@@ -72,8 +72,10 @@ bootstrap: ## Verify the toolchain and synchronize the development environment
 run: bootstrap ## Run the OptEngine quickstart
 	@uv run python demos/quickstart.py
 
-dev: bootstrap ## Format source and run all pre-merge checks
-	@$(DEV_COMMAND) dev
+dev: bootstrap ## Clean, format, and run all pre-merge checks
+	@$(MAKE) --no-print-directory clean
+	@$(DEV_COMMAND) format
+	@$(DEV_COMMAND) release-check
 
 format: bootstrap ## Format source code
 	@$(DEV_COMMAND) format
@@ -117,7 +119,8 @@ artifact: bootstrap ## Promote an output into the artifact registry
 ci: bootstrap ## Run the local CI quality gate
 	@$(DEV_COMMAND) ci
 
-release-check: bootstrap ## Run complete local release-readiness checks
+release-check: bootstrap ## Clean and run all local release-readiness checks
+	@$(MAKE) --no-print-directory clean
 	@$(DEV_COMMAND) release-check
 
 release: ## Trigger the official GitHub release workflow
@@ -143,6 +146,7 @@ release: ## Trigger the official GitHub release workflow
 		printf "\033[31m✗ release failed: local main does not match origin/main\033[0m\n"; \
 		exit 1; \
 	}
+	@$(DEV_COMMAND) version
 	@printf "\033[36m> release.github\033[0m\n"
 	@gh workflow run release.yml --ref main
 	@printf "\033[32m✓ release workflow dispatched\033[0m\n\n"
@@ -154,4 +158,8 @@ clean: ## Remove disposable generated files and caches
 	@find . -maxdepth 1 -name "*.egg-info" -type d -exec rm -rf {} +
 	@find . -name "__pycache__" -type d -exec rm -rf {} +
 
-publish: 
+publish: ## Publish distributions to a package registry
+	@echo ""
+	@echo "> publish.status"
+	@echo "• package-registry publication is not implemented yet"
+	@echo ""

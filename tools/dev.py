@@ -74,10 +74,6 @@ COMMAND_GROUPS: dict[str, tuple[str, ...]] = {
         "ci",
         "build",
     ),
-    "dev": (
-        "format",
-        "release-check",
-    ),
     "version": (
         "version-next",
         "version-tag",
