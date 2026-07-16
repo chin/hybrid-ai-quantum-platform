@@ -59,6 +59,7 @@ jobs:
             echo "  feat: add capability"
             echo "  fix: correct behavior"
             echo "  docs: update documentation"
+            echo "  test: add regression coverage"
             echo ""
             echo "Optional scopes are allowed:"
             echo "  feat(optimize): add Max-Cut baseline"
@@ -114,6 +115,7 @@ jobs:
             echo "  feat:"
             echo "  fix:"
             echo "  docs:"
+            echo "  test:"
             exit 1
           fi
 
