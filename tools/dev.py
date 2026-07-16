@@ -70,9 +70,13 @@ COMMAND_GROUPS: dict[str, tuple[str, ...]] = {
         "lint",
         "test",
     ),
-    "release": (
+    "release-check": (
         "ci",
         "build",
+    ),
+    "dev": (
+        "format",
+        "release-check",
     ),
     "version": (
         "version-next",

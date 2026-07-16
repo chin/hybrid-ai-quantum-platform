@@ -1,4 +1,11 @@
-.PHONY: help bootstrap dev test lint format format-check build version docs status benchmark validate artifact ci release clean
+.PHONY: help bootstrap dev test lint format format-check build version docs status benchmark validate artifact ci release clean publish
+
+# make run       Run OptEngine quickstart only
+# make test      Run pytest only
+# make ci        Run the complete non-mutating quality gate
+# make dev       Format, then run the complete quality gate
+# make version   Preview the next version and tag from main
+# make release   Trigger the official GitHub release workflow
 
 DEV_COMMAND = FORCE_COLOR=1 uv run python tools/dev.py
 
@@ -62,8 +69,11 @@ bootstrap: ## Verify the toolchain and synchronize the development environment
 	}
 	$(call compact_pass,environment.sync)
 
-dev: bootstrap ## Run the OptEngine quickstart
+run: bootstrap ## Run the OptEngine quickstart
 	@uv run python demos/quickstart.py
+
+dev: bootstrap ## Format source and run all pre-merge checks
+	@$(DEV_COMMAND) dev
 
 format: bootstrap ## Format source code
 	@$(DEV_COMMAND) format
@@ -89,7 +99,6 @@ docs: ## Build or validate documentation
 	@echo "• documentation automation is not implemented yet"
 	@echo ""
 
-
 benchmark: ## Run performance benchmarks
 	@echo ""
 	@echo "> benchmark.status"
@@ -108,11 +117,35 @@ artifact: bootstrap ## Promote an output into the artifact registry
 ci: bootstrap ## Run the local CI quality gate
 	@$(DEV_COMMAND) ci
 
-release: bootstrap status ## Run local release checks
-	@$(DEV_COMMAND) release
-	@echo "> release.next"
-	@echo "• merge or push to main to invoke Semantic Release"
-	@echo ""
+release-check: bootstrap ## Run complete local release-readiness checks
+	@$(DEV_COMMAND) release-check
+
+release: ## Trigger the official GitHub release workflow
+	@branch="$$(git branch --show-current)"; \
+	if [ "$$branch" != "main" ]; then \
+		printf "\033[31m✗ release failed: current branch is '%s', expected 'main'\033[0m\n" "$$branch"; \
+		exit 1; \
+	fi
+	@git diff --quiet && git diff --cached --quiet || { \
+		printf "\033[31m✗ release failed: working tree is not clean\033[0m\n"; \
+		exit 1; \
+	}
+	@command -v gh >/dev/null 2>&1 || { \
+		printf "\033[31m✗ release failed: GitHub CLI 'gh' is not installed\033[0m\n"; \
+		exit 1; \
+	}
+	@gh auth status >/dev/null 2>&1 || { \
+		printf "\033[31m✗ release failed: GitHub CLI is not authenticated\033[0m\n"; \
+		exit 1; \
+	}
+	@git fetch origin main
+	@test "$$(git rev-parse HEAD)" = "$$(git rev-parse origin/main)" || { \
+		printf "\033[31m✗ release failed: local main does not match origin/main\033[0m\n"; \
+		exit 1; \
+	}
+	@printf "\033[36m> release.github\033[0m\n"
+	@gh workflow run release.yml --ref main
+	@printf "\033[32m✓ release workflow dispatched\033[0m\n\n"
 
 clean: ## Remove disposable generated files and caches
 	@find outputs -type f ! -name ".gitkeep" -delete
@@ -120,3 +153,5 @@ clean: ## Remove disposable generated files and caches
 	@rm -rf build dist
 	@find . -maxdepth 1 -name "*.egg-info" -type d -exec rm -rf {} +
 	@find . -name "__pycache__" -type d -exec rm -rf {} +
+
+publish: 
