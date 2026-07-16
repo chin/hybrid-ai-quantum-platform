@@ -33,6 +33,18 @@ TOOL_COMMANDS: dict[str, tuple[str, Sequence[str]]] = {
         "build.package",
         (sys.executable, "-m", "build"),
     ),
+    "version-next": (
+        "version.next",
+        ("semantic-release", "version", "--print"),
+    ),
+    "version-tag": (
+        "version.tag",
+        ("semantic-release", "version", "--print-tag"),
+    ),
+    "version-last-tag": (
+        "version.last-tag",
+        ("semantic-release", "version", "--print-last-released-tag"),
+    ),
 }
 
 COMMAND_GROUPS: dict[str, tuple[str, ...]] = {
@@ -45,6 +57,11 @@ COMMAND_GROUPS: dict[str, tuple[str, ...]] = {
     "release": (
         "ci",
         "build",
+    ),
+    "version": (
+        "version-next",
+        "version-tag",
+        "version-last-tag",
     ),
 }
 

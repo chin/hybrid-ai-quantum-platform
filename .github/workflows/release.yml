@@ -1,0 +1,46 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Semantic Release
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Check out release branch
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+
+      - name: Pin checkout to triggering commit
+        run: git reset --hard "${{ github.sha }}"
+
+      - name: Determine and create release
+        id: release
+        uses: python-semantic-release/python-semantic-release@v10.6.1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          git_committer_name: github-actions
+          git_committer_email: actions@users.noreply.github.com
+
+      - name: Upload distributions to GitHub Release
+        if: steps.release.outputs.released == 'true'
+        uses: python-semantic-release/publish-action@v10.6.1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ steps.release.outputs.tag }}

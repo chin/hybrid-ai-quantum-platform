@@ -1,4 +1,4 @@
-.PHONY: help bootstrap dev test lint format format-check build docs status benchmark validate artifact ci release clean
+.PHONY: help bootstrap dev test lint format format-check build version docs status benchmark validate artifact ci release clean
 
 DEV_COMMAND = FORCE_COLOR=1 uv run python tools/dev.py
 
@@ -80,6 +80,9 @@ test: bootstrap ## Execute the software test suite
 build: bootstrap ## Build source and wheel distributions
 	@$(DEV_COMMAND) build
 
+version: bootstrap ## Preview the next semantic version and Git tag
+	@$(DEV_COMMAND) version
+	
 docs: ## Build or validate documentation
 	@echo ""
 	@echo "> docs.status"
