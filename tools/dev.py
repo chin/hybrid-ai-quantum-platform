@@ -33,6 +33,34 @@ TOOL_COMMANDS: dict[str, tuple[str, Sequence[str]]] = {
         "build.package",
         (sys.executable, "-m", "build"),
     ),
+    "version-next": (
+        "version.next",
+        (
+            "semantic-release",
+            "--strict",
+            "--noop",
+            "version",
+            "--print",
+        ),
+    ),
+    "version-tag": (
+        "version.tag",
+        (
+            "semantic-release",
+            "--strict",
+            "--noop",
+            "version",
+            "--print-tag",
+        ),
+    ),
+    "version-last-tag": (
+        "version.last-tag",
+        (
+            "semantic-release",
+            "version",
+            "--print-last-released-tag",
+        ),
+    ),
 }
 
 COMMAND_GROUPS: dict[str, tuple[str, ...]] = {
@@ -42,9 +70,14 @@ COMMAND_GROUPS: dict[str, tuple[str, ...]] = {
         "lint",
         "test",
     ),
-    "release": (
+    "release-check": (
         "ci",
         "build",
+    ),
+    "version": (
+        "version-next",
+        "version-tag",
+        # "version-last-tag",
     ),
 }
 
@@ -79,7 +112,11 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> None:
     args = parse_args()
-    run_target(args.target)
+
+    try:
+        run_target(args.target)
+    except subprocess.CalledProcessError as error:
+        raise SystemExit(error.returncode) from None
 
 
 if __name__ == "__main__":

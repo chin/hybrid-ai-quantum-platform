@@ -36,6 +36,8 @@ jobs:
       - name: Detect implementation and test changes
         shell: bash
         run: |
+          set -euo pipefail
+          
           CHANGED_FILES="$(
             git diff \
               --name-only \
@@ -44,7 +46,8 @@ jobs:
 
           IMPLEMENTATION_FILES="$(
             printf '%s\n' "${CHANGED_FILES}" |
-            grep -E '^optengine/.*\.py$' || true
+            grep -E '^(optengine|tools|demos)/.*\.py$' |
+            grep -Ev '^optengine/_version\.py$' || true
           )"
 
           TEST_FILES="$(
