@@ -1,0 +1,60 @@
+name: Test
+description: Define verification, regression, integration, or release testing.
+title: "test: "
+labels:
+  - "type:test"
+assignees: []
+body:
+  - type: input
+    id: parent
+    attributes:
+      label: Related feature or bug
+      placeholder: "#123"
+    validations:
+      required: true
+
+  - type: textarea
+    id: purpose
+    attributes:
+      label: Purpose
+      description: What behavior or regression must this test protect?
+    validations:
+      required: true
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope
+      description: Which positive, negative, failure, or end-to-end cases are included?
+      placeholder: |
+        Included:
+        - ...
+
+        Excluded:
+        - ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: checklist
+    attributes:
+      label: Checklist
+      placeholder: |
+        - [ ] Positive case
+        - [ ] Negative case
+        - [ ] Failure path
+        - [ ] Determinism or repeatability where applicable
+    validations:
+      required: true
+
+  - type: textarea
+    id: references
+    attributes:
+      label: References
+      placeholder: |
+        - Related issue:
+        - Existing tests:
+        - Contract or behavior:
+        - Artifact or fixture:
+    validations:
+      required: false

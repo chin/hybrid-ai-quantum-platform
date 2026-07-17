@@ -1,0 +1,54 @@
+name: Bug
+description: Report incorrect OptEngine behavior.
+title: "fix: "
+labels:
+  - "type:bug"
+assignees: []
+body:
+  - type: textarea
+    id: purpose
+    attributes:
+      label: Problem
+      description: What is wrong, and what should happen instead?
+      placeholder: |
+        Observed:
+        Expected:
+    validations:
+      required: true
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope and impact
+      description: Where does the bug occur, and what does it affect?
+      placeholder: |
+        Affected release:
+        Affected workflow:
+        Impact:
+        Reproduction:
+    validations:
+      required: true
+
+  - type: textarea
+    id: checklist
+    attributes:
+      label: Checklist
+      placeholder: |
+        - [ ] Reproduction confirmed
+        - [ ] Fix implemented
+        - [ ] Regression test added
+        - [ ] Documentation or release notes updated if needed
+    validations:
+      required: true
+
+  - type: textarea
+    id: references
+    attributes:
+      label: References
+      placeholder: |
+        - Related issue or PR:
+        - Logs or error output:
+        - Relevant files:
+        - Affected artifact:
+    validations:
+      required: false

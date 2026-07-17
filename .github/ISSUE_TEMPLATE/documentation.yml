@@ -1,0 +1,52 @@
+name: Documentation
+description: Define a bounded documentation deliverable.
+title: "docs: "
+labels:
+  - "type:documentation"
+assignees: []
+body:
+  - type: textarea
+    id: purpose
+    attributes:
+      label: Purpose
+      description: What should the documentation enable the reader to understand or do?
+    validations:
+      required: true
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope
+      description: Which files, sections, diagrams, commands, or examples are included?
+      placeholder: |
+        Included:
+        - ...
+
+        Excluded:
+        - ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: checklist
+    attributes:
+      label: Checklist
+      placeholder: |
+        - [ ] Content updated
+        - [ ] Links verified
+        - [ ] Commands/examples verified
+        - [ ] Implemented and planned behavior distinguished
+    validations:
+      required: true
+
+  - type: textarea
+    id: references
+    attributes:
+      label: References
+      placeholder: |
+        - Related issue:
+        - Source files:
+        - Existing documentation:
+        - External references:
+    validations:
+      required: false

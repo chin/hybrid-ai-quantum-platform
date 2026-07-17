@@ -1,0 +1,59 @@
+name: Task
+description: Track a substantial implementation task beneath a feature.
+title: "task: "
+labels:
+  - "type:task"
+assignees: []
+body:
+  - type: input
+    id: parent
+    attributes:
+      label: Parent feature
+      description: Link the feature issue this task supports.
+      placeholder: "#123"
+    validations:
+      required: true
+
+  - type: textarea
+    id: purpose
+    attributes:
+      label: Purpose
+      description: What specific result must this task deliver?
+    validations:
+      required: true
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope
+      description: What work is included and excluded?
+      placeholder: |
+        Included:
+        - ...
+
+        Excluded:
+        - ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: checklist
+    attributes:
+      label: Checklist
+      placeholder: |
+        - [ ] Implementation
+        - [ ] Tests
+        - [ ] Parent feature updated
+    validations:
+      required: true
+
+  - type: textarea
+    id: references
+    attributes:
+      label: References
+      placeholder: |
+        - Parent issue:
+        - Files or modules:
+        - Related PRs or issues:
+    validations:
+      required: false

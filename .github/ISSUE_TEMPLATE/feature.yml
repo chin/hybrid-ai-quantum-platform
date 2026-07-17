@@ -1,0 +1,55 @@
+name: Feature
+description: Define a bounded OptEngine capability.
+title: "feat: "
+labels:
+  - "type:feature"
+assignees: []
+body:
+  - type: textarea
+    id: purpose
+    attributes:
+      label: Purpose
+      description: Why is this capability needed?
+      placeholder: Describe the outcome this feature must provide.
+    validations:
+      required: true
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope
+      description: What is included and excluded?
+      placeholder: |
+        Included:
+        - ...
+
+        Excluded:
+        - ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: checklist
+    attributes:
+      label: Checklist
+      description: What must be completed before this issue can close?
+      placeholder: |
+        - [ ] Implementation
+        - [ ] Tests
+        - [ ] Documentation
+        - [ ] Evidence or artifact
+    validations:
+      required: true
+
+  - type: textarea
+    id: references
+    attributes:
+      label: References
+      description: Link related issues, milestones, architecture, source files, research, or external documentation.
+      placeholder: |
+        - Milestone:
+        - Related issues:
+        - Architecture:
+        - Source or documentation:
+    validations:
+      required: false
