@@ -8,10 +8,22 @@
 
 ## Quickstart
 
+The current quickstart executes deterministic implementations of the platform
+stage interfaces. It validates the end-to-end OptEngine lifecycle without yet
+invoking the planned external AI, FNO, classical, or quantum backends.
+
+```bash
+make run             #Run the quickstart.
+make test            #Run the test suite.
+make dev             #Format and run the complete pre-merge gate.
+make ci              #Run the non-mutating CI-equivalent gate.
+make release-check   #Clean and verify release readiness.
+```
+
 Run:
 
 ```bash
-make dev
+make run
 ```
 
 Or run the demonstration directly through the managed environment:
@@ -56,10 +68,22 @@ Terminal colors distinguish the runtime information:
 * the decision value appears in yellow;
 * the generated artifact path appears in cyan.
 
----
+## Outputs and Artifacts
+
+Files under `outputs/` are disposable execution results.
+
+Files under `artifacts/` are deliberately promoted, curated evidence. Artifact
+promotion is explicit and is performed with:
+
+```bash
+make artifact
+```
 
 ## Development Documentation
 
+- [Detailed architecture](docs/detailed-architecture.md)
+- [Mermaid architecture](docs/mermaid-architecture.md)
+- [Release roadmap](docs/ROADMAP.md)
 - [Makefile execution guide](docs/MAKEFILE.md) — command behavior, execution paths, side effects, and release workflow.
 
 ---
