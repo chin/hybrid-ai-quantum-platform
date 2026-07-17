@@ -168,3 +168,27 @@ def test_run_tool_preserves_command_failure(
 
     assert f"> {expected_label}" in output
     assert f"✗ {expected_label} failed" in output
+
+
+def test_version_preview_commands_are_strict_and_non_mutating():
+    assert dev.TOOL_COMMANDS["version-next"] == (
+        "version.next",
+        (
+            "semantic-release",
+            "--strict",
+            "--noop",
+            "version",
+            "--print",
+        ),
+    )
+
+    assert dev.TOOL_COMMANDS["version-tag"] == (
+        "version.tag",
+        (
+            "semantic-release",
+            "--strict",
+            "--noop",
+            "version",
+            "--print-tag",
+        ),
+    )

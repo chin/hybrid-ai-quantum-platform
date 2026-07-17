@@ -48,7 +48,7 @@ jobs:
       - name: Validate pull request title
         shell: bash
         run: |
-          TITLE_PATTERN='^(feat|fix|docs)(\([a-z0-9._/-]+\))?!?:[[:space:]].+'
+          TITLE_PATTERN='^(feat|fix|docs|test)(\([a-z0-9._/-]+\))?!?:[[:space:]].+'
 
           echo "Pull request title: ${PR_TITLE}"
 
@@ -59,6 +59,7 @@ jobs:
             echo "  feat: add capability"
             echo "  fix: correct behavior"
             echo "  docs: update documentation"
+            echo "  test: add regression coverage"
             echo ""
             echo "Optional scopes are allowed:"
             echo "  feat(optimize): add Max-Cut baseline"
@@ -83,7 +84,7 @@ jobs:
       - name: Validate commit subjects
         shell: bash
         run: |
-          COMMIT_PATTERN='^(feat|fix|docs)(\([a-z0-9._/-]+\))?!?:[[:space:]].+'
+          COMMIT_PATTERN='^(feat|fix|docs|test)(\([a-z0-9._/-]+\))?!?:[[:space:]].+'
           INVALID=0
           COUNT=0
 
@@ -99,8 +100,9 @@ jobs:
             fi
           done < <(
             git log \
-              --format='%s' \
-              "${BASE_SHA}..${HEAD_SHA}"
+            --no-merges \
+            --format='%s' \
+            "${BASE_SHA}..${HEAD_SHA}"
           )
 
           if [[ "${COUNT}" -eq 0 ]]; then
@@ -114,6 +116,7 @@ jobs:
             echo "  feat:"
             echo "  fix:"
             echo "  docs:"
+            echo "  test:"
             exit 1
           fi
 
