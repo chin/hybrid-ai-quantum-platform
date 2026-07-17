@@ -1,0 +1,55 @@
+name: Research
+description: Define an investigation or experiment needed for a technical decision.
+title: "research: "
+labels:
+  - "type:research"
+assignees: []
+body:
+  - type: textarea
+    id: purpose
+    attributes:
+      label: Purpose
+      description: What question must be answered, and what decision will the result support?
+      placeholder: |
+        Question:
+        Decision enabled:
+    validations:
+      required: true
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope
+      description: What method, inputs, comparisons, and limitations are included?
+      placeholder: |
+        Method:
+        Inputs:
+        Comparison:
+        Limitations:
+    validations:
+      required: true
+
+  - type: textarea
+    id: checklist
+    attributes:
+      label: Checklist
+      placeholder: |
+        - [ ] Method defined
+        - [ ] Experiment executed
+        - [ ] Evidence retained
+        - [ ] Result interpreted
+        - [ ] Decision documented
+    validations:
+      required: true
+
+  - type: textarea
+    id: references
+    attributes:
+      label: References
+      placeholder: |
+        - Parent feature:
+        - Primary sources:
+        - Dataset or fixture:
+        - Artifacts or results:
+    validations:
+      required: false
