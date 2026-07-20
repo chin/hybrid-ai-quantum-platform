@@ -1,0 +1,13 @@
+{
+  "category": "baselines",
+  "name": "quickstart",
+  "version": "v0.1",
+  "path": "artifacts/baselines/quickstart_v0.1.json",
+  "created_utc": "20260720_044225Z",
+  "description": "Baseline quickstart output for the initial OptEngine skeleton.",
+  "source": "outputs/quickstart_20260720_044225Z.json",
+  "metadata": {
+    "artifact_type": "baseline",
+    "promoted_from": "outputs"
+  }
+}
