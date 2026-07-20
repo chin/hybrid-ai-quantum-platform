@@ -1,7 +1,11 @@
-.PHONY: help bootstrap dev test lint format format-check build version docs status benchmark validate artifact ci release clean publish coverage
+.PHONY: help bootstrap dev test untime-test regression-test coverage lint format format-check build version docs status benchmark validate artifact ci release clean publish
 
 # make run       Run OptEngine quickstart only
 # make test      Run pytest only
+# make runtime-test
+#                Focused runtime lifecycle and failure behavior
+# make regression-test
+#                Complete suite with terminal branch coverage
 # make ci        Run the complete non-mutating quality gate
 # make dev       Format, then run the complete quality gate
 # make version   Preview the next version and tag from main
@@ -90,6 +94,15 @@ lint: bootstrap ## Run static analysis
 test: bootstrap ## Execute the software test suite
 	@$(DEV_COMMAND) test
 
+coverage: bootstrap ## Execute the test suite with branch coverage
+	@$(DEV_COMMAND) coverage
+
+runtime-test: bootstrap ## Execute runtime lifecycle and failure-path tests
+	@$(DEV_COMMAND) runtime-test
+
+regression-test: bootstrap ## Execute exhaustive foundation regression tests
+	@$(DEV_COMMAND) regression-test
+
 build: bootstrap ## Build source and wheel distributions
 	@$(DEV_COMMAND) build
 
@@ -166,6 +179,3 @@ publish: ## Publish distributions to a package registry
 	@echo "> publish.status"
 	@echo "• package-registry publication is not implemented yet"
 	@echo ""
-
-coverage: bootstrap ## Execute the test suite with branch coverage
-	@$(DEV_COMMAND) coverage

@@ -40,6 +40,25 @@ TOOL_COMMANDS: dict[str, tuple[str, Sequence[str]]] = {
             "-v",
         ),
     ),
+    "runtime-test": (
+        "test.runtime",
+        (
+            "pytest",
+            "tests/runtime",
+            "-v",
+        ),
+    ),
+    "regression-test": (
+        "test.regression",
+        (
+            "pytest",
+            "tests",
+            "--cov=optengine",
+            "--cov-branch",
+            "--cov-report=term-missing",
+            "-v",
+        ),
+    ),
     "build": (
         "build.package",
         (sys.executable, "-m", "build"),
