@@ -41,10 +41,16 @@ class FailingSolver(Solver):
 
 def _registry() -> StrategyRegistry:
     registry = StrategyRegistry()
-    supports = lambda domain, interpretation: (
-        isinstance(domain, MaxCutDomain)
-        and isinstance(interpretation, QuadraticBinaryInterpretation)
-    )
+
+    def supports(
+        domain: Any,
+        interpretation: Any,
+    ) -> bool:
+        return isinstance(domain, MaxCutDomain) and isinstance(
+            interpretation,
+            QuadraticBinaryInterpretation,
+        )
+
     registry.register(
         StrategyFactory(
             name="exact",
