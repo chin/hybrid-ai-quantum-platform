@@ -12,7 +12,11 @@ description = "A feasibility-aware hybrid AI–Quantum optimization platform."
 requires-python = ">=3.10"
 license = "Apache-2.0"
 license-files = ["LICENSE"]
-dependencies = []
+dependencies = [
+    "dimod>=0.12.22",
+    "dwave-samplers>=1.8.0",
+    "networkx>=3.4.2",
+]
 
 [dependency-groups]
 dev = [
@@ -20,6 +24,7 @@ dev = [
     "ruff",
     "build",
     "python-semantic-release",
+    "pytest-cov>=7.1.0",
 ]
 
 [tool.setuptools.packages.find]

@@ -1,4 +1,4 @@
-from optengine.context import Context
+from optengine.engine import Context
 
 
 def analyze(context: Context) -> None:
