@@ -1,68 +1,116 @@
-import json
-from datetime import datetime, timezone
+from __future__ import annotations
 
-from optengine.ai import analyze
-from optengine.optimize import search
-from optengine.policy import decide
+import platform
+from datetime import datetime, timezone
+from pathlib import Path
+from uuid import uuid4
+
+from optengine._version import __version__
 from optengine.cli import banner, block, footer
-from optengine.context import Context
-from optengine.solution import Solution
+from optengine.domains.base import Domain
+from optengine.engine import OptEngine
+from optengine.explainers.base import Explainer
+from optengine.policy.base import Policy
+from optengine.recommendation import Recommendation
+from optengine.registry import StrategyRegistry
+from optengine.stages.analyze import analyze
+from optengine.stages.decide import decide
+from optengine.stages.evaluate import evaluate
+from optengine.stages.explain import explain
+from optengine.utility.base import UtilityModel
+from optengine.utility.operational import OperationalUtilityModel
+from optengine.writers.base import RecommendationWriter
+
+
+def _utc_now() -> str:
+    return datetime.now(timezone.utc).isoformat()
 
 
 def run(
-    problem: str,
+    input_data: object,
     *,
+    domain: Domain,
+    registry: StrategyRegistry,
+    policy: Policy,
+    explainer: Explainer,
+    writer: RecommendationWriter,
+    utility_model: UtilityModel | None = None,
+    requested_strategies: tuple[str, ...] | None = None,
+    output_dir: Path = Path("outputs"),
     render: bool = False,
     title: str = "OptEngine :: Runtime",
     run_name: str = "run",
-) -> Solution:
-    context = Context(problem=problem)
-    context.output_dir.mkdir(parents=True, exist_ok=True)
+) -> Recommendation:
+    recommendation = Recommendation(
+        run_id=str(uuid4()),
+        started_at=_utc_now(),
+        provenance={
+            "optengine_version": __version__,
+            "python_version": platform.python_version(),
+            "python_implementation": platform.python_implementation(),
+            "platform": platform.platform(),
+        },
+    )
 
-    if render:
-        banner(title)
-        block("problem", problem)
+    engine = OptEngine(
+        input_data=input_data,
+        domain=domain,
+        registry=registry,
+        utility_model=(
+            utility_model if utility_model is not None else OperationalUtilityModel()
+        ),
+        policy=policy,
+        explainer=explainer,
+        writer=writer,
+        recommendation=recommendation,
+        requested_strategies=requested_strategies,
+        output_dir=output_dir,
+        render=render,
+        title=title,
+        run_name=run_name,
+    )
 
-    context.log("OptEngine started.")
+    if engine.render:
+        banner(engine.title)
+        block("problem", str(engine.input_data))
 
-    analyze(context)
-    if render:
+    engine.started = True
+    engine.log("OptEngine started.")
+
+    analyze(engine)
+    if engine.render:
         block("analysis", "complete", ok=True)
 
-    search(context)
-    if render:
-        block("search", "complete", ok=True)
+    evaluate(engine)
+    if engine.render:
+        block("evaluation", "complete", ok=True)
 
-    decide(context)
-    if render:
-        block("decision", context.decision["action"])
-        block("reason", context.decision["reason"])
+    decide(engine)
+    explain(engine)
 
-    context.log("OptEngine finished.")
+    decision = engine.recommendation.decision
+    explanation = engine.recommendation.explanation
+    if decision is None:
+        raise RuntimeError("OptEngine completed without a decision.")
+    if explanation is None:
+        raise RuntimeError("OptEngine completed without an explanation.")
 
-    solution = Solution.from_context(context)
-    context.output_path = _write_output(solution, context, run_name=run_name)
+    if engine.render:
+        block("decision", decision.action)
+        block("reason", explanation.summary)
 
-    solution = Solution.from_context(context)
+    engine.completed = True
+    engine.recommendation.completed_at = _utc_now()
+    engine.log("OptEngine finished.")
 
-    if render:
-        block("artifact", solution.output_path)
+    output_path = engine.writer.write(
+        recommendation=engine.recommendation,
+        output_dir=engine.output_dir,
+        run_name=engine.run_name,
+    )
+
+    if engine.render:
+        block("artifact", output_path)
         footer("Runtime Complete")
 
-    return solution
-
-
-def _write_output(solution: Solution, context: Context, *, run_name: str):
-    timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%SZ")
-    output_path = context.output_dir / f"{run_name}_{timestamp}.json"
-
-    payload = {
-        "problem": solution.problem,
-        "decision": solution.decision,
-        "metrics": solution.metrics,
-        "results": solution.results,
-        "logs": solution.logs,
-    }
-
-    output_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
-    return output_path
+    return engine.recommendation

@@ -1,7 +1,11 @@
-"""
-Decision policy components.
-"""
+from optengine.policy.base import Policy
+from optengine.policy.chintropic_stop import (
+    ChintropicStopConfig,
+    ChintropicStopPolicy,
+)
 
-from optengine.policy.decide import decide
-
-__all__ = ["decide"]
+__all__ = [
+    "ChintropicStopConfig",
+    "ChintropicStopPolicy",
+    "Policy",
+]

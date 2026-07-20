@@ -11,7 +11,7 @@ def test_ci_group_preserves_gate_order():
         "status",
         "format-check",
         "lint",
-        "test",
+        "coverage",
     )
 
 
@@ -50,7 +50,7 @@ def test_release_check_expands_commands_in_order(monkeypatch):
         "status",
         "format-check",
         "lint",
-        "test",
+        "coverage",
         "build",
     ]
     assert results == [

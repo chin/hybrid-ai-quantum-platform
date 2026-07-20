@@ -1,4 +1,4 @@
-.PHONY: help bootstrap dev test lint format format-check build version docs status benchmark validate artifact ci release clean publish
+.PHONY: help bootstrap dev test lint format format-check build version docs status benchmark validate artifact ci release clean publish coverage
 
 # make run       Run OptEngine quickstart only
 # make test      Run pytest only
@@ -6,6 +6,7 @@
 # make dev       Format, then run the complete quality gate
 # make version   Preview the next version and tag from main
 # make release   Trigger the official GitHub release workflow
+# make coverage  Run pytest with branch coverage reports
 
 DEV_COMMAND = FORCE_COLOR=1 uv run python tools/dev.py
 
@@ -157,9 +158,14 @@ clean: ## Remove disposable generated files and caches
 	@rm -rf build dist
 	@find . -maxdepth 1 -name "*.egg-info" -type d -exec rm -rf {} +
 	@find . -name "__pycache__" -type d -exec rm -rf {} +
+	@rm -rf .coverage htmlcov
+# 	@rm -f coverage.xml
 
 publish: ## Publish distributions to a package registry
 	@echo ""
 	@echo "> publish.status"
 	@echo "• package-registry publication is not implemented yet"
 	@echo ""
+
+coverage: bootstrap ## Execute the test suite with branch coverage
+	@$(DEV_COMMAND) coverage

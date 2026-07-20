@@ -29,6 +29,17 @@ TOOL_COMMANDS: dict[str, tuple[str, Sequence[str]]] = {
         "test.pytest",
         ("pytest", "-v"),
     ),
+    "coverage": (
+        "coverage.pytest",
+        (
+            "pytest",
+            "--cov=optengine",
+            "--cov-branch",
+            "--cov-report=term-missing",
+            "--cov-report=html",
+            "-v",
+        ),
+    ),
     "build": (
         "build.package",
         (sys.executable, "-m", "build"),
@@ -68,7 +79,7 @@ COMMAND_GROUPS: dict[str, tuple[str, ...]] = {
         "status",
         "format-check",
         "lint",
-        "test",
+        "coverage",
     ),
     "release-check": (
         "ci",
