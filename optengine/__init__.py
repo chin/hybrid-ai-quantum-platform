@@ -1,20 +1,25 @@
-"""
-Core platform execution for the OptEngine project.
-"""
-
-from optengine import cli
 from optengine._version import __version__
-from optengine.artifact import ArtifactRecord, ArtifactRegistry
-from optengine.context import Context
+from optengine.engine import OptEngine
+from optengine.artifact import ArtifactRegistry
+from optengine.recommendation import Recommendation
 from optengine.runner import run
-from optengine.solution import Solution
+from optengine.utility import (
+    OperationalUtilityModel,
+    OptChinUtilityAdapter,
+    StrategyUtility,
+    UtilityAssessment,
+    UtilityModel,
+)
 
 __all__ = [
-    "ArtifactRecord",
-    "ArtifactRegistry",
-    "Context",
-    "Solution",
-    "cli",
-    "run",
+    "OperationalUtilityModel",
+    "OptChinUtilityAdapter",
+    "OptEngine",
+    "Recommendation",
+    "StrategyUtility",
+    "UtilityAssessment",
+    "UtilityModel",
+    ArtifactRegistry,
     "__version__",
+    "run",
 ]

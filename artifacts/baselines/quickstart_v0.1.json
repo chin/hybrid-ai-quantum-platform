@@ -1,0 +1,755 @@
+{
+  "analysis": {
+    "interpretation": {
+      "edges": 5,
+      "nodes": 4,
+      "weighted": false
+    },
+    "metadata": {
+      "capabilities": [
+        "annealing",
+        "exact-search",
+        "qaoa",
+        "qubo"
+      ],
+      "domain": "max-cut"
+    },
+    "strategies": [
+      {
+        "domain": "max-cut",
+        "formulation": "qubo",
+        "metadata": {
+          "role": "reference"
+        },
+        "name": "maxcut-exact",
+        "operation": "exact-search",
+        "solver": "dimod-exact"
+      },
+      {
+        "domain": "max-cut",
+        "formulation": "qubo",
+        "metadata": {
+          "role": "candidate"
+        },
+        "name": "maxcut-local-annealing",
+        "operation": "annealing",
+        "solver": "dwave-local"
+      }
+    ]
+  },
+  "completed_at": "2026-07-20T23:53:20.961611+00:00",
+  "decision": {
+    "action": "stop",
+    "evidence": {
+      "confidence": 1.0,
+      "confidence_threshold": 0.7,
+      "execution_cost": 16.0,
+      "expected_improvement": 0.0,
+      "feasible": true,
+      "improvement_threshold": 0.05,
+      "marginal_utility": -16.0,
+      "minimum_marginal_utility": 0.0,
+      "reference_gap": 0.0,
+      "target_reference_gap": 0.0,
+      "utility": 4.0
+    },
+    "next_strategy": null,
+    "reason_code": "REFERENCE_TARGET_REACHED",
+    "resource_change": {},
+    "selected_strategy": "maxcut-exact"
+  },
+  "evaluations": [
+    {
+      "candidate": {
+        "formulation": "qubo",
+        "metadata": {
+          "budget": {},
+          "configuration": {},
+          "is_reference": true
+        },
+        "native_metrics": {
+          "confidence": 1.0,
+          "evaluated_candidates": 16,
+          "expected_improvement": 0.0,
+          "is_reference": true
+        },
+        "native_score": -4.0,
+        "operation": "exact-search",
+        "provenance": {
+          "execution": "local",
+          "library": "dimod",
+          "solver": "ExactSolver"
+        },
+        "resource_cost": 16.0,
+        "runtime_s": 0.0009695829940028489,
+        "solver": "dimod-exact",
+        "status": "complete",
+        "strategy": "maxcut-exact",
+        "values": {
+          "sample": {
+            "0": 1,
+            "1": 0,
+            "2": 1,
+            "3": 0
+          }
+        }
+      },
+      "feasible": true,
+      "metrics": {
+        "cut_edges": [
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "cut_value": 4.0,
+        "runtime_s": 0.0009695829940028489
+      },
+      "policy_evidence": {},
+      "provenance": {
+        "domain": "max-cut"
+      },
+      "quality": 4.0,
+      "reference": {
+        "is_reference": true
+      },
+      "strategy": "maxcut-exact",
+      "utility_inputs": {
+        "confidence": 1.0,
+        "execution_cost": 16.0,
+        "expected_improvement": 0.0,
+        "feasible": true,
+        "is_reference": true,
+        "quality": 4.0
+      }
+    },
+    {
+      "candidate": {
+        "formulation": "qubo",
+        "metadata": {
+          "budget": {
+            "iterations": 30
+          },
+          "configuration": {}
+        },
+        "native_metrics": {
+          "confidence": 0.75,
+          "expected_improvement": 0.0,
+          "history": [
+            {
+              "batch_best_energy": -4.0,
+              "batch_energy_variance": 0.009899999999999999,
+              "batch_max_energy": -3.0,
+              "batch_mean_energy": -3.99,
+              "batch_min_energy": -4.0,
+              "batch_time_s": 0.004075374978128821,
+              "best_so_far_energy": -4.0,
+              "elapsed_s": 0.004169499967247248,
+              "improved": true,
+              "improvement_in_native_score": 0.0,
+              "iteration": 1
+            },
+            {
+              "batch_best_energy": -4.0,
+              "batch_energy_variance": 0.009899999999999999,
+              "batch_max_energy": -3.0,
+              "batch_mean_energy": -3.99,
+              "batch_min_energy": -4.0,
+              "batch_time_s": 0.0029268329963088036,
+              "best_so_far_energy": -4.0,
+              "elapsed_s": 0.007194249948952347,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 2
+            },
+            {
+              "batch_best_energy": -4.0,
+              "batch_energy_variance": 0.0196,
+              "batch_max_energy": -3.0,
+              "batch_mean_energy": -3.98,
+              "batch_min_energy": -4.0,
+              "batch_time_s": 0.002908708993345499,
+              "best_so_far_energy": -4.0,
+              "elapsed_s": 0.010173541959375143,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 3
+            },
+            {
+              "batch_best_energy": -4.0,
+              "batch_energy_variance": 0.0,
+              "batch_max_energy": -4.0,
+              "batch_mean_energy": -4.0,
+              "batch_min_energy": -4.0,
+              "batch_time_s": 0.0029544580029323697,
+              "best_so_far_energy": -4.0,
+              "elapsed_s": 0.0131920839776285,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 4
+            },
+            {
+              "batch_best_energy": -4.0,
+              "batch_energy_variance": 0.0,
+              "batch_max_energy": -4.0,
+              "batch_mean_energy": -4.0,
+              "batch_min_energy": -4.0,
+              "batch_time_s": 0.002948375011328608,
+              "best_so_far_energy": -4.0,
+              "elapsed_s": 0.016198166995309293,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 5
+            },
+            {
+              "batch_best_energy": -4.0,
+              "batch_energy_variance": 0.0,
+              "batch_max_energy": -4.0,
+              "batch_mean_energy": -4.0,
+              "batch_min_energy": -4.0,
+              "batch_time_s": 0.0029183750157244503,
+              "best_so_far_energy": -4.0,
+              "elapsed_s": 0.01917233399581164,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 6
+            },
+            {
+              "batch_best_energy": -4.0,
+              "batch_energy_variance": 0.0291,
+              "batch_max_energy": -3.0,
+              "batch_mean_energy": -3.97,
+              "batch_min_energy": -4.0,
+              "batch_time_s": 0.0028859999729320407,
+              "best_so_far_energy": -4.0,
+              "elapsed_s": 0.02211449999595061,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 7
+            },
+            {
+              "batch_best_energy": -4.0,
+              "batch_energy_variance": 0.0196,
+              "batch_max_energy": -3.0,
+              "batch_mean_energy": -3.98,
+              "batch_min_energy": -4.0,
+              "batch_time_s": 0.0029393750010058284,
+              "best_so_far_energy": -4.0,
+              "elapsed_s": 0.025110708957072347,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 8
+            },
+            {
+              "batch_best_energy": -4.0,
+              "batch_energy_variance": 0.0196,
+              "batch_max_energy": -3.0,
+              "batch_mean_energy": -3.98,
+              "batch_min_energy": -4.0,
+              "batch_time_s": 0.002925915992818773,
+              "best_so_far_energy": -4.0,
+              "elapsed_s": 0.028095249959733337,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 9
+            },
+            {
+              "batch_best_energy": -4.0,
+              "batch_energy_variance": 0.0,
+              "batch_max_energy": -4.0,
+              "batch_mean_energy": -4.0,
+              "batch_min_energy": -4.0,
+              "batch_time_s": 0.002817499975208193,
+              "best_so_far_energy": -4.0,
+              "elapsed_s": 0.030963666969910264,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 10
+            },
+            {
+              "batch_best_energy": -4.0,
+              "batch_energy_variance": 0.009899999999999999,
+              "batch_max_energy": -3.0,
+              "batch_mean_energy": -3.99,
+              "batch_min_energy": -4.0,
+              "batch_time_s": 0.0028739169938489795,
+              "best_so_far_energy": -4.0,
+              "elapsed_s": 0.033889666956383735,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 11
+            },
+            {
+              "batch_best_energy": -4.0,
+              "batch_energy_variance": 0.009899999999999999,
+              "batch_max_energy": -3.0,
+              "batch_mean_energy": -3.99,
+              "batch_min_energy": -4.0,
+              "batch_time_s": 0.0028236660291440785,
+              "best_so_far_energy": -4.0,
+              "elapsed_s": 0.03676933399401605,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 12
+            },
+            {
+              "batch_best_energy": -4.0,
+              "batch_energy_variance": 0.0,
+              "batch_max_energy": -4.0,
+              "batch_mean_energy": -4.0,
+              "batch_min_energy": -4.0,
+              "batch_time_s": 0.0028250410105101764,
+              "best_so_far_energy": -4.0,
+              "elapsed_s": 0.03964408399770036,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 13
+            },
+            {
+              "batch_best_energy": -4.0,
+              "batch_energy_variance": 0.0196,
+              "batch_max_energy": -3.0,
+              "batch_mean_energy": -3.98,
+              "batch_min_energy": -4.0,
+              "batch_time_s": 0.002803332987241447,
+              "best_so_far_energy": -4.0,
+              "elapsed_s": 0.04250004194909707,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 14
+            },
+            {
+              "batch_best_energy": -4.0,
+              "batch_energy_variance": 0.0,
+              "batch_max_energy": -4.0,
+              "batch_mean_energy": -4.0,
+              "batch_min_energy": -4.0,
+              "batch_time_s": 0.0028119999915361404,
+              "best_so_far_energy": -4.0,
+              "elapsed_s": 0.045360208954662085,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 15
+            },
+            {
+              "batch_best_energy": -4.0,
+              "batch_energy_variance": 0.0,
+              "batch_max_energy": -4.0,
+              "batch_mean_energy": -4.0,
+              "batch_min_energy": -4.0,
+              "batch_time_s": 0.002830374985933304,
+              "best_so_far_energy": -4.0,
+              "elapsed_s": 0.04824191698571667,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 16
+            },
+            {
+              "batch_best_energy": -4.0,
+              "batch_energy_variance": 0.056400000000000006,
+              "batch_max_energy": -3.0,
+              "batch_mean_energy": -3.94,
+              "batch_min_energy": -4.0,
+              "batch_time_s": 0.0028526249807327986,
+              "best_so_far_energy": -4.0,
+              "elapsed_s": 0.05114599998341873,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 17
+            },
+            {
+              "batch_best_energy": -4.0,
+              "batch_energy_variance": 0.009899999999999999,
+              "batch_max_energy": -3.0,
+              "batch_mean_energy": -3.99,
+              "batch_min_energy": -4.0,
+              "batch_time_s": 0.002822916954755783,
+              "best_so_far_energy": -4.0,
+              "elapsed_s": 0.05401974997948855,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 18
+            },
+            {
+              "batch_best_energy": -4.0,
+              "batch_energy_variance": 0.0,
+              "batch_max_energy": -4.0,
+              "batch_mean_energy": -4.0,
+              "batch_min_energy": -4.0,
+              "batch_time_s": 0.002849375014193356,
+              "best_so_far_energy": -4.0,
+              "elapsed_s": 0.05692441697465256,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 19
+            },
+            {
+              "batch_best_energy": -4.0,
+              "batch_energy_variance": 0.0196,
+              "batch_max_energy": -3.0,
+              "batch_mean_energy": -3.98,
+              "batch_min_energy": -4.0,
+              "batch_time_s": 0.002824458002578467,
+              "best_so_far_energy": -4.0,
+              "elapsed_s": 0.05979929195018485,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 20
+            },
+            {
+              "batch_best_energy": -4.0,
+              "batch_energy_variance": 0.009899999999999999,
+              "batch_max_energy": -3.0,
+              "batch_mean_energy": -3.99,
+              "batch_min_energy": -4.0,
+              "batch_time_s": 0.0028363330056890845,
+              "best_so_far_energy": -4.0,
+              "elapsed_s": 0.06268524995539337,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 21
+            },
+            {
+              "batch_best_energy": -4.0,
+              "batch_energy_variance": 0.0196,
+              "batch_max_energy": -3.0,
+              "batch_mean_energy": -3.98,
+              "batch_min_energy": -4.0,
+              "batch_time_s": 0.0028271249611862004,
+              "best_so_far_energy": -4.0,
+              "elapsed_s": 0.06556312495376915,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 22
+            },
+            {
+              "batch_best_energy": -4.0,
+              "batch_energy_variance": 0.009899999999999999,
+              "batch_max_energy": -3.0,
+              "batch_mean_energy": -3.99,
+              "batch_min_energy": -4.0,
+              "batch_time_s": 0.0028574999887496233,
+              "best_so_far_energy": -4.0,
+              "elapsed_s": 0.0684709589695558,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 23
+            },
+            {
+              "batch_best_energy": -4.0,
+              "batch_energy_variance": 0.0,
+              "batch_max_energy": -4.0,
+              "batch_mean_energy": -4.0,
+              "batch_min_energy": -4.0,
+              "batch_time_s": 0.0028086249949410558,
+              "best_so_far_energy": -4.0,
+              "elapsed_s": 0.07133324997266755,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 24
+            },
+            {
+              "batch_best_energy": -4.0,
+              "batch_energy_variance": 0.0,
+              "batch_max_energy": -4.0,
+              "batch_mean_energy": -4.0,
+              "batch_min_energy": -4.0,
+              "batch_time_s": 0.0029020000365562737,
+              "best_so_far_energy": -4.0,
+              "elapsed_s": 0.07428724999772385,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 25
+            },
+            {
+              "batch_best_energy": -4.0,
+              "batch_energy_variance": 0.0196,
+              "batch_max_energy": -3.0,
+              "batch_mean_energy": -3.98,
+              "batch_min_energy": -4.0,
+              "batch_time_s": 0.002803749986924231,
+              "best_so_far_energy": -4.0,
+              "elapsed_s": 0.07714195898734033,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 26
+            },
+            {
+              "batch_best_energy": -4.0,
+              "batch_energy_variance": 0.038400000000000004,
+              "batch_max_energy": -3.0,
+              "batch_mean_energy": -3.96,
+              "batch_min_energy": -4.0,
+              "batch_time_s": 0.002789042016956955,
+              "best_so_far_energy": -4.0,
+              "elapsed_s": 0.07998649997171015,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 27
+            },
+            {
+              "batch_best_energy": -4.0,
+              "batch_energy_variance": 0.009899999999999999,
+              "batch_max_energy": -3.0,
+              "batch_mean_energy": -3.99,
+              "batch_min_energy": -4.0,
+              "batch_time_s": 0.002808332967106253,
+              "best_so_far_energy": -4.0,
+              "elapsed_s": 0.08284612494753674,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 28
+            },
+            {
+              "batch_best_energy": -4.0,
+              "batch_energy_variance": 0.0,
+              "batch_max_energy": -4.0,
+              "batch_mean_energy": -4.0,
+              "batch_min_energy": -4.0,
+              "batch_time_s": 0.0028018750017508864,
+              "best_so_far_energy": -4.0,
+              "elapsed_s": 0.08570137497736141,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 29
+            },
+            {
+              "batch_best_energy": -4.0,
+              "batch_energy_variance": 0.009899999999999999,
+              "batch_max_energy": -3.0,
+              "batch_mean_energy": -3.99,
+              "batch_min_energy": -4.0,
+              "batch_time_s": 0.0028000419843010604,
+              "best_so_far_energy": -4.0,
+              "elapsed_s": 0.08855354198021814,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 30
+            }
+          ],
+          "iterations": 30,
+          "num_sweeps": 1000,
+          "reads_per_iteration": 100,
+          "total_reads": 3000
+        },
+        "native_score": -4.0,
+        "operation": "annealing",
+        "provenance": {
+          "execution": "local",
+          "library": "dwave-samplers",
+          "sampler": "SimulatedAnnealingSampler"
+        },
+        "resource_cost": null,
+        "runtime_s": 0.08855566696729511,
+        "solver": "dwave-local",
+        "status": "complete",
+        "strategy": "maxcut-local-annealing",
+        "values": {
+          "sample": {
+            "0": 1,
+            "1": 0,
+            "2": 1,
+            "3": 0
+          }
+        }
+      },
+      "feasible": true,
+      "metrics": {
+        "cut_edges": [
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "cut_value": 4.0,
+        "runtime_s": 0.08855566696729511
+      },
+      "policy_evidence": {},
+      "provenance": {
+        "domain": "max-cut"
+      },
+      "quality": 4.0,
+      "reference": {
+        "is_reference": false
+      },
+      "strategy": "maxcut-local-annealing",
+      "utility_inputs": {
+        "confidence": 0.75,
+        "execution_cost": 0.08855566696729511,
+        "expected_improvement": 0.0,
+        "feasible": true,
+        "is_reference": false,
+        "quality": 4.0
+      }
+    }
+  ],
+  "explanation": {
+    "alternatives": [
+      "maxcut-local-annealing"
+    ],
+    "evidence": {
+      "confidence": 1.0,
+      "confidence_threshold": 0.7,
+      "execution_cost": 16.0,
+      "expected_improvement": 0.0,
+      "feasible": true,
+      "improvement_threshold": 0.05,
+      "marginal_utility": -16.0,
+      "minimum_marginal_utility": 0.0,
+      "reference_gap": 0.0,
+      "target_reference_gap": 0.0,
+      "utility": 4.0
+    },
+    "limitations": [],
+    "selected_strategy": "maxcut-exact",
+    "summary": "OptEngine decided to stop with strategy 'maxcut-exact' because the configured reference target was reached."
+  },
+  "failures": [],
+  "input_summary": {
+    "edges": 5,
+    "nodes": 4,
+    "weighted": false
+  },
+  "logs": [
+    "OptEngine started.",
+    "Analysis started.",
+    "Analysis completed.",
+    "Evaluation started.",
+    "Evaluation completed.",
+    "Decision started.",
+    "Decision completed: stop.",
+    "OptEngine finished."
+  ],
+  "output_path": "outputs/quickstart_20260720_235320Z.json",
+  "provenance": {
+    "optengine_version": "0.1.1",
+    "platform": "macOS-26.5.2-arm64-arm-64bit-Mach-O",
+    "python_implementation": "CPython",
+    "python_version": "3.14.6"
+  },
+  "run_id": "c3d22f1a-b26c-4ec8-9720-d05ca144d020",
+  "started_at": "2026-07-20T23:53:20.855405+00:00",
+  "utility_assessment": {
+    "confidence": 1.0,
+    "evidence": {
+      "evaluation_count": 2,
+      "feasible_count": 2,
+      "reference_quality": 4.0,
+      "strategy_utilities": [
+        {
+          "confidence": 1.0,
+          "evidence": {
+            "confidence": 1.0,
+            "execution_cost": 16.0,
+            "expected_improvement": 0.0,
+            "feasible": true,
+            "is_reference": true,
+            "quality": 4.0,
+            "reference_gap": 0.0
+          },
+          "execution_cost": 16.0,
+          "expected_improvement": 0.0,
+          "feasible": true,
+          "marginal_utility": -16.0,
+          "quality": 4.0,
+          "reference_gap": 0.0,
+          "strategy": "maxcut-exact",
+          "utility": 4.0
+        },
+        {
+          "confidence": 0.75,
+          "evidence": {
+            "confidence": 0.75,
+            "execution_cost": 0.08855566696729511,
+            "expected_improvement": 0.0,
+            "feasible": true,
+            "is_reference": false,
+            "quality": 4.0,
+            "reference_gap": 0.0
+          },
+          "execution_cost": 0.08855566696729511,
+          "expected_improvement": 0.0,
+          "feasible": true,
+          "marginal_utility": -0.08855566696729511,
+          "quality": 4.0,
+          "reference_gap": 0.0,
+          "strategy": "maxcut-local-annealing",
+          "utility": 4.0
+        }
+      ]
+    },
+    "execution_cost": 16.0,
+    "expected_improvement": 0.0,
+    "feasible": true,
+    "marginal_utility": -16.0,
+    "reference_gap": 0.0,
+    "selected_strategy": "maxcut-exact",
+    "strategies": [
+      {
+        "confidence": 1.0,
+        "evidence": {
+          "confidence": 1.0,
+          "execution_cost": 16.0,
+          "expected_improvement": 0.0,
+          "feasible": true,
+          "is_reference": true,
+          "quality": 4.0,
+          "reference_gap": 0.0
+        },
+        "execution_cost": 16.0,
+        "expected_improvement": 0.0,
+        "feasible": true,
+        "marginal_utility": -16.0,
+        "quality": 4.0,
+        "reference_gap": 0.0,
+        "strategy": "maxcut-exact",
+        "utility": 4.0
+      },
+      {
+        "confidence": 0.75,
+        "evidence": {
+          "confidence": 0.75,
+          "execution_cost": 0.08855566696729511,
+          "expected_improvement": 0.0,
+          "feasible": true,
+          "is_reference": false,
+          "quality": 4.0,
+          "reference_gap": 0.0
+        },
+        "execution_cost": 0.08855566696729511,
+        "expected_improvement": 0.0,
+        "feasible": true,
+        "marginal_utility": -0.08855566696729511,
+        "quality": 4.0,
+        "reference_gap": 0.0,
+        "strategy": "maxcut-local-annealing",
+        "utility": 4.0
+      }
+    ],
+    "utility": 4.0
+  }
+}

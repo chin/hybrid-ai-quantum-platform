@@ -36,23 +36,23 @@ Expected output:
 
 ```text
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-                   OptEngine :: Quickstart
+                   OptEngine :: Quickstart                    
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 > problem
-Optimize a candidate design using AI analysis, FNO surrogate evaluation, classical search, quantum search, and a feasibility-policy decision.
+Graph with 4 nodes and 5 edges
 
 > analysis
 ✓ complete
 
-> search
+> evaluation
 ✓ complete
 
 > decision
-scale
+stop
 
 > reason
-Additional low-cost search is justified.
+OptEngine selected maxcut-exact and decided to stop.
 
 > artifact
 outputs/quickstart_<YYYYMMDD_HHMMSSZ>.json
