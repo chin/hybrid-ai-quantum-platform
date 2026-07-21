@@ -1,0 +1,74 @@
+name: Label project-tracked items
+
+on:
+  issues:
+    types:
+      - opened
+      - reopened
+
+  pull_request:
+    types:
+      - opened
+      - edited
+      - reopened
+
+  workflow_dispatch:
+
+permissions:
+  issues: write
+  pull-requests: write
+
+jobs:
+  label-issue:
+    if: github.event_name == 'issues'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Add project tracking label to issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          NUMBER: ${{ github.event.issue.number }}
+        run: |
+          gh issue edit "$NUMBER" \
+            --repo "$GH_REPO" \
+            --add-label "project:track"
+
+  label-fix-pr:
+    if: >
+      github.event_name == 'pull_request' &&
+      startsWith(github.event.pull_request.title, 'fix:')
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Add project tracking label to fix PR
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          gh pr edit "$NUMBER" \
+            --repo "$GH_REPO" \
+            --add-label "project:track"
+
+  backfill-open-issues:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Label every open issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          gh issue list \
+            --repo "$GH_REPO" \
+            --state open \
+            --limit 1000 \
+            --json number \
+            --jq '.[].number' |
+          while read -r number; do
+            gh issue edit "$number" \
+              --repo "$GH_REPO" \
+              --add-label "project:track"
+          done
