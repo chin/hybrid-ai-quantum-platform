@@ -1,10 +1,11 @@
+from __future__ import annotations
+
+import json
 from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
 from shutil import copy2
 from typing import Any
-import json
-
 
 VALID_CATEGORIES = {
     "architecture",
@@ -33,6 +34,13 @@ class ArtifactRegistry:
     def __init__(self, root: str | Path = "artifacts") -> None:
         self.root = Path(root)
 
+    @staticmethod
+    def _validate_segment(value: str, label: str) -> None:
+        if not value or not value.strip():
+            raise ValueError(f"Artifact {label} must not be empty.")
+        if Path(value).name != value or "/" in value or "\\" in value or ".." in value:
+            raise ValueError(f"Artifact {label} must be a safe path segment.")
+
     def promote(
         self,
         source: str | Path,
@@ -44,23 +52,24 @@ class ArtifactRegistry:
     ) -> ArtifactRecord:
         if category not in VALID_CATEGORIES:
             raise ValueError(
-                f"Invalid artifact category '{category}'. "
-                f"Expected one of: {sorted(VALID_CATEGORIES)}"
+                f"Invalid artifact category '{category}'. Expected one of: {sorted(VALID_CATEGORIES)}"
             )
-
+        self._validate_segment(name, "name")
+        self._validate_segment(version, "version")
         source_path = Path(source)
         if not source_path.exists():
             raise FileNotFoundError(f"Source artifact does not exist: {source_path}")
+        if not source_path.is_file():
+            raise ValueError("Source artifact must be a file.")
 
-        ext = source_path.suffix
         artifact_dir = self.root / category
         artifact_dir.mkdir(parents=True, exist_ok=True)
-
-        artifact_name = f"{name}_{version}{ext}"
-        artifact_path = artifact_dir / artifact_name
+        artifact_path = artifact_dir / f"{name}_{version}{source_path.suffix}"
+        metadata_path = artifact_dir / f"{name}_{version}.metadata.json"
+        if artifact_path.exists() or metadata_path.exists():
+            raise FileExistsError("Artifact destination already exists.")
 
         copy2(source_path, artifact_path)
-
         record = ArtifactRecord(
             category=category,
             name=name,
@@ -71,11 +80,8 @@ class ArtifactRegistry:
             source=str(source_path),
             metadata=metadata or {},
         )
-
-        metadata_path = artifact_dir / f"{name}_{version}.metadata.json"
         metadata_path.write_text(
-            json.dumps(asdict(record), indent=2),
+            json.dumps(asdict(record), indent=2, sort_keys=True) + "\n",
             encoding="utf-8",
         )
-
         return record

@@ -1,59 +1,48 @@
-# OptEngine Architecture — Mermaid View
-
-This document provides the compact control-flow representation of the same
-platform architecture shown in the
-[detailed architecture](detailed-architecture.md).
+# OptEngine Runtime Architecture
 
 ```mermaid
 flowchart TD
-
-    A[User] --> B[NeMo Switchyard]
-
-    B --> C1[Small LLM]
-    B --> C2[Large LLM]
-    B --> C3[Code Agent]
-
-    C1 --> D
-    C2 --> D
-    C3 --> D
-
-    D[Workflow Controller]
-
-    D --> E[Problem Formulation]
-
-    E --> F[FNO Surrogate<br/>PhysicsNeMo]
-    E --> G[Classical Optimizer]
-    E --> H[Quantum Solver]
-
-    F --> I[Evaluation Metrics]
-    G --> I
-    H --> I
-
-    I --> J[Decision Engine]
-
-    J --> K[Stop]
-    J --> L[Switch]
-    J --> M[Scale]
-
-    L --> D
-    M --> D
-
-    K --> N[Verification]
-    N --> O[Solution]
+    I[Input / Execution Instance] --> D[Domain.interpret_input]
+    D --> INT[Interpretation]
+    INT --> R[Strategy Registry]
+    R --> S[Strategy]
+    S --> F[Formulation.build]
+    F --> M[Library-native Model]
+    M --> O[Operation]
+    O --> SOL[Concrete Solver]
+    SOL --> LIB[External Library / Backend]
+    LIB --> C[Candidate]
+    C --> DE[Domain.interpret_candidate]
+    DE --> E[Evaluation]
+    E --> U[UtilityModel.assess]
+    U --> UA[UtilityAssessment]
+    UA --> P[Policy.apply]
+    P --> DEC[Stop / Switch / Scale]
+    DEC --> X[Explainer]
+    X --> REC[Recommendation]
+    REC --> OUT[outputs/]
+    OUT --> AR[Explicit Artifact Promotion]
+    AR --> CUR[artifacts/]
 ```
 
-## Architectural Role
+## Ownership boundaries
 
-This Mermaid view emphasizes the platform’s control flow and decision loop.
-
-The detailed ASCII view expands the same architecture with example providers,
-solver technologies, evaluated metrics, and decision semantics.
-
-## Current Implementation Status
-
-The `v0.1.x` platform foundation implements the execution lifecycle, software
-contracts, package boundaries, deterministic demonstration stages, output and
-artifact handling, tests, CI, packaging, and release automation.
-
-Named external model-routing, PhysicsNeMo, classical-optimization, and
-quantum-optimization integrations remain planned functional implementations.
+```mermaid
+flowchart LR
+    subgraph OptEngine
+      DI[Domain Interpretation]
+      COMP[Strategy Composition]
+      NORM[Candidate Normalization]
+      EVAL[Independent Evaluation]
+      UTIL[Utility]
+      POLICY[Policy]
+      EXPLAIN[Explanation]
+      REC[Recommendation]
+    end
+    subgraph External Implementations
+      MODEL[BQM / CQM / future models]
+      EXEC[Exact / Annealing / future backends]
+    end
+    DI --> MODEL --> EXEC --> NORM --> EVAL --> UTIL --> POLICY --> EXPLAIN --> REC
+    COMP --> MODEL
+```

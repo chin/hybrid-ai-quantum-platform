@@ -62,7 +62,7 @@ class JsonRecommendationWriter(RecommendationWriter):
         run_name: str,
     ) -> Path:
         output_dir.mkdir(parents=True, exist_ok=True)
-        timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%SZ")
+        timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S_%fZ")
         path = output_dir / f"{run_name}_{timestamp}.json"
         recommendation.output_path = str(path)
 

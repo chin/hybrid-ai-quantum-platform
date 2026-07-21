@@ -1,6 +1,7 @@
 from optengine._version import __version__
-from optengine.engine import OptEngine
 from optengine.artifact import ArtifactRegistry
+from optengine.engine import OptEngine
+from optengine.execution import ExecutionInstance
 from optengine.recommendation import Recommendation
 from optengine.runner import run
 from optengine.utility import (
@@ -12,6 +13,8 @@ from optengine.utility import (
 )
 
 __all__ = [
+    "ArtifactRegistry",
+    "ExecutionInstance",
     "OperationalUtilityModel",
     "OptChinUtilityAdapter",
     "OptEngine",
@@ -19,7 +22,6 @@ __all__ = [
     "StrategyUtility",
     "UtilityAssessment",
     "UtilityModel",
-    ArtifactRegistry,
     "__version__",
     "run",
 ]

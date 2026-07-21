@@ -24,3 +24,17 @@ class QuadraticBinaryInterpretation(Interpretation):
     offset: float = 0.0
     objective_sense: Literal["minimize", "maximize"] = "minimize"
     domain_data: Any = field(default=None, repr=False, compare=False)
+
+
+@dataclass(frozen=True, kw_only=True)
+class PortfolioInterpretation(Interpretation):
+    """A bounded discrete portfolio problem expressed in allocation units."""
+
+    assets: tuple[str, ...]
+    expected_returns: Mapping[str, float]
+    covariance: Mapping[tuple[str, str], float]
+    total_units: int
+    allocation_increment: float
+    risk_aversion: float
+    max_assets: int | None = None
+    domain_data: Any = field(default=None, repr=False, compare=False)

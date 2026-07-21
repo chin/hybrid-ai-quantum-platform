@@ -1,0 +1,35 @@
+name: Synchronize project fields
+
+on:
+  issues:
+    types: [opened, reopened, assigned, labeled, closed]
+  pull_request:
+    types: [opened, reopened, ready_for_review, labeled, closed]
+  schedule:
+    - cron: "17 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.PROJECT_TOKEN }}
+      PROJECT_OWNER: ${{ vars.PROJECT_OWNER }}
+      PROJECT_NUMBER: ${{ vars.PROJECT_NUMBER }}
+      PROJECT_START_FIELD: ${{ vars.PROJECT_START_FIELD || 'Start date' }}
+      PROJECT_END_FIELD: ${{ vars.PROJECT_END_FIELD || 'End date' }}
+      PROJECT_ITERATION_FIELD: ${{ vars.PROJECT_ITERATION_FIELD || 'Iteration' }}
+      PROJECT_IN_PROGRESS_VALUES: ${{ vars.PROJECT_IN_PROGRESS_VALUES || 'In Progress,Started' }}
+      PROJECT_DONE_VALUES: ${{ vars.PROJECT_DONE_VALUES || 'Done,Closed' }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate project configuration
+        run: |
+          test -n "$GH_TOKEN" || { echo "PROJECT_TOKEN secret is required"; exit 1; }
+          test -n "$PROJECT_OWNER" || { echo "PROJECT_OWNER variable is required"; exit 1; }
+          test -n "$PROJECT_NUMBER" || { echo "PROJECT_NUMBER variable is required"; exit 1; }
+      - name: Populate start, completion, and current iteration fields
+        run: python tools/sync_project_fields.py
