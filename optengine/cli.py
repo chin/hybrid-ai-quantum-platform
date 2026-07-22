@@ -22,6 +22,7 @@ _BLOCK_VALUE_COLORS = {
     "decision": _YELLOW,
     # "reason": None,
     "artifact": _CYAN,
+    "output": _CYAN,
 }
 
 

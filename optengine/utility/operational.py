@@ -1,48 +1,45 @@
 from __future__ import annotations
 
-from collections.abc import Mapping, Sequence
-from typing import Any
+from collections.abc import Sequence
+from typing import TYPE_CHECKING, Any, Mapping
 
-from optengine.analysis import Analysis
-from optengine.evaluation import Evaluation
 from optengine.utility.base import (
-    StrategyUtility,
-    UtilityAssessment,
-    UtilityModel,
+    Assessment,
+    StrategyAssessment,
+    Utility,
 )
+
+if TYPE_CHECKING:
+    from optengine.analysis import Analysis
+    from optengine.execution import Execution
 
 
 def _optional_float(value: Any) -> float | None:
     return None if value is None else float(value)
 
 
-def _is_reference(evaluation: Evaluation) -> bool:
-    return bool(
-        evaluation.reference.get("is_reference")
-        or evaluation.candidate.metadata.get("is_reference")
-        or evaluation.candidate.native_metrics.get("is_reference")
-    )
-
-
-class OperationalUtilityModel(UtilityModel):
-    """Deterministic public fallback until OptChin is connected."""
+class OperationalUtility(Utility):
+    """Deterministic public Utility implementation."""
 
     def assess(
         self,
-        evaluations: Sequence[Evaluation],
+        executions: Sequence[Execution],
         analysis: Analysis | None,
-    ) -> UtilityAssessment:
-        reference_quality = self._reference_quality(evaluations)
+    ) -> Assessment:
+        reference_quality = self._reference_quality(executions)
         strategies = tuple(
-            self._assess_strategy(evaluation, reference_quality)
-            for evaluation in evaluations
+            self._assess_execution(
+                execution,
+                reference_quality,
+            )
+            for execution in executions
         )
         feasible = [
             item for item in strategies if item.feasible and item.utility is not None
         ]
 
         if not feasible:
-            return UtilityAssessment(
+            return Assessment(
                 selected_strategy=None,
                 feasible=False,
                 utility=None,
@@ -53,7 +50,10 @@ class OperationalUtilityModel(UtilityModel):
                 reference_gap=None,
                 strategies=strategies,
                 evidence={
-                    "evaluation_count": len(evaluations),
+                    "execution_count": len(executions),
+                    "successful_count": sum(
+                        execution.succeeded for execution in executions
+                    ),
                     "feasible_count": 0,
                 },
             )
@@ -62,8 +62,7 @@ class OperationalUtilityModel(UtilityModel):
             feasible,
             key=lambda item: float(item.utility),
         )
-
-        return UtilityAssessment(
+        return Assessment(
             selected_strategy=selected.strategy,
             feasible=True,
             utility=selected.utility,
@@ -74,35 +73,68 @@ class OperationalUtilityModel(UtilityModel):
             reference_gap=selected.reference_gap,
             strategies=strategies,
             evidence={
-                "evaluation_count": len(evaluations),
+                "execution_count": len(executions),
+                "successful_count": sum(
+                    execution.succeeded for execution in executions
+                ),
                 "feasible_count": len(feasible),
                 "reference_quality": reference_quality,
-                "strategy_utilities": [
-                    self._strategy_payload(item) for item in strategies
-                ],
+                "strategy_assessments": [item.to_dict() for item in strategies],
             },
         )
 
     @staticmethod
     def _reference_quality(
-        evaluations: Sequence[Evaluation],
+        executions: Sequence[Execution],
     ) -> float | None:
         values = [
-            float(evaluation.quality)
-            for evaluation in evaluations
+            float(execution.evaluation.quality)
+            for execution in executions
             if (
-                evaluation.feasible
-                and evaluation.quality is not None
-                and _is_reference(evaluation)
+                execution.succeeded
+                and execution.evaluation is not None
+                and execution.evaluation.feasible
+                and execution.evaluation.quality is not None
+                and OperationalUtility._is_reference(execution)
             )
         ]
         return max(values) if values else None
 
-    def _assess_strategy(
+    @staticmethod
+    def _is_reference(execution: Execution) -> bool:
+        return bool(
+            execution.strategy.reference
+            or (
+                execution.result is not None
+                and execution.result.metrics.get("is_reference")
+            )
+        )
+
+    def _assess_execution(
         self,
-        evaluation: Evaluation,
+        execution: Execution,
         reference_quality: float | None,
-    ) -> StrategyUtility:
+    ) -> StrategyAssessment:
+        if not execution.succeeded or execution.evaluation is None:
+            failure = {} if execution.failure is None else execution.failure.to_dict()
+            return StrategyAssessment(
+                strategy=execution.strategy.name,
+                feasible=False,
+                quality=None,
+                utility=None,
+                marginal_utility=None,
+                expected_improvement=None,
+                execution_cost=None,
+                confidence=None,
+                reference_gap=None,
+                evidence={
+                    "execution_status": execution.state.code,
+                    "failure": failure,
+                },
+            )
+
+        evaluation = execution.evaluation
+        result = execution.result
         supplied = evaluation.evidence_for_utility()
         quality = _optional_float(evaluation.quality)
 
@@ -111,17 +143,24 @@ class OperationalUtilityModel(UtilityModel):
                 "execution_cost",
                 supplied.get(
                     "estimated_cost",
-                    evaluation.candidate.resource_cost,
+                    (None if result is None else result.resource_cost),
                 ),
             )
         )
         if execution_cost is None:
-            execution_cost = 0.0
+            execution_cost = (
+                0.0 if execution.runtime_s is None else float(execution.runtime_s)
+            )
 
         confidence = (
             1.0
-            if _is_reference(evaluation)
-            else _optional_float(supplied.get("confidence"))
+            if self._is_reference(execution)
+            else _optional_float(
+                supplied.get(
+                    "confidence",
+                    (None if result is None else result.metrics.get("confidence")),
+                )
+            )
         )
         if confidence is None:
             confidence = 0.0
@@ -129,9 +168,13 @@ class OperationalUtilityModel(UtilityModel):
         expected_improvement = _optional_float(
             supplied.get(
                 "expected_improvement",
-                evaluation.candidate.native_metrics.get(
-                    "expected_improvement",
-                    0.0,
+                (
+                    0.0
+                    if result is None
+                    else result.metrics.get(
+                        "expected_improvement",
+                        0.0,
+                    )
                 ),
             )
         )
@@ -144,11 +187,14 @@ class OperationalUtilityModel(UtilityModel):
             and reference_quality is not None
             and quality is not None
         ):
-            reference_gap = max(0.0, reference_quality - quality)
+            reference_gap = max(
+                0.0,
+                reference_quality - quality,
+            )
 
-        utility = _optional_float(supplied.get("utility"))
-        if utility is None and evaluation.feasible:
-            utility = quality
+        utility_value = _optional_float(supplied.get("utility"))
+        if utility_value is None and evaluation.feasible:
+            utility_value = quality
 
         marginal_utility = _optional_float(supplied.get("marginal_utility"))
         if marginal_utility is None:
@@ -160,15 +206,16 @@ class OperationalUtilityModel(UtilityModel):
             "confidence": confidence,
             "expected_improvement": expected_improvement,
             "reference_gap": reference_gap,
-            "is_reference": _is_reference(evaluation),
+            "is_reference": self._is_reference(execution),
+            "execution_status": execution.state.code,
         }
         evidence.update(supplied)
 
-        return StrategyUtility(
-            strategy=evaluation.strategy,
+        return StrategyAssessment(
+            strategy=execution.strategy.name,
             feasible=evaluation.feasible,
             quality=quality,
-            utility=utility,
+            utility=utility_value,
             marginal_utility=marginal_utility,
             expected_improvement=expected_improvement,
             execution_cost=execution_cost,
@@ -177,19 +224,6 @@ class OperationalUtilityModel(UtilityModel):
             evidence=evidence,
         )
 
-    @staticmethod
-    def _strategy_payload(
-        item: StrategyUtility,
-    ) -> Mapping[str, Any]:
-        return {
-            "strategy": item.strategy,
-            "feasible": item.feasible,
-            "quality": item.quality,
-            "utility": item.utility,
-            "marginal_utility": item.marginal_utility,
-            "expected_improvement": item.expected_improvement,
-            "execution_cost": item.execution_cost,
-            "confidence": item.confidence,
-            "reference_gap": item.reference_gap,
-            "evidence": dict(item.evidence),
-        }
+
+# Backward-compatible public name.
+OperationalUtilityModel = OperationalUtility

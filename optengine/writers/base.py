@@ -14,4 +14,4 @@ class RecommendationWriter(ABC):
         output_dir: Path,
         run_name: str,
     ) -> Path:
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover

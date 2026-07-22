@@ -1,44 +1,53 @@
 from __future__ import annotations
 
+import importlib.util
 import time
-from typing import Any, Mapping
+from typing import Any, ClassVar
 
-import dimod
-
-from optengine.candidate import Candidate
-from optengine.formulations.base import Model
-from optengine.formulations.qubo import QUBOModel
+from optengine.errors import MissingDependencyError
+from optengine.formulations.qubo import QUBO
+from optengine.mathematics import ValueType
 from optengine.operations.base import Operation
-from optengine.operations.exact import ExactSearchOperation
+from optengine.operations.exact import ExactSearch
 from optengine.solvers.base import Solver
 
 
-class DimodExactSolver(Solver):
-    name = "dimod-exact"
+class DimodExact(Solver):
+    name: ClassVar[str] = "dimod-exact"
 
-    def supports(
-        self,
-        model: Model,
-        operation: Operation,
-    ) -> bool:
-        return isinstance(model, QUBOModel) and isinstance(
-            operation,
-            ExactSearchOperation,
-        )
+    capability = Solver.Capability(
+        operation_types=(ExactSearch,),
+        model_types=(QUBO.Model,),
+        input_types=frozenset({ValueType.BINARY}),
+        supports_constraints=False,
+    )
 
-    def execute(
-        self,
-        model: Model,
-        operation: Operation,
-        configuration: Mapping[str, Any],
-        budget: Mapping[str, Any],
-    ) -> Candidate:
-        if not isinstance(model, QUBOModel):
-            raise TypeError("DimodExactSolver requires a QUBOModel.")
+    @property
+    def reference(self) -> bool:
+        return True
 
-        if not isinstance(operation, ExactSearchOperation):
-            raise TypeError("DimodExactSolver requires ExactSearchOperation.")
+    @property
+    def available(self) -> bool:
+        return importlib.util.find_spec("dimod") is not None
 
+    def execute(self, request: Operation.Request) -> Solver.Result:
+        if not self.compatibility(
+            operation=request.operation,
+            model=request.model,
+        ):
+            raise TypeError("DimodExact received an incompatible Request.")
+
+        try:
+            import dimod
+        except ImportError as error:
+            raise MissingDependencyError("dimod", self.name) from error
+
+        model = request.model
+        operation = request.operation
+        if not isinstance(model, QUBO.Model):
+            raise TypeError("DimodExact requires QUBO.Model.")
+        if not isinstance(operation, ExactSearch):
+            raise TypeError("DimodExact requires ExactSearch.")
         if model.payload.num_variables > operation.max_variables:
             raise ValueError("Model exceeds the exact-search variable limit.")
 
@@ -47,27 +56,20 @@ class DimodExactSolver(Solver):
         best = sampleset.first
         runtime_s = time.perf_counter() - started
 
-        sample = {node: int(bit) for node, bit in best.sample.items()}
-
-        return Candidate(
-            formulation=model.formulation,
-            operation=operation.name,
-            solver=self.name,
-            values={"sample": sample},
+        return Solver.Result(
+            values={node: int(bit) for node, bit in best.sample.items()},
             native_score=float(best.energy),
             status="complete",
             runtime_s=runtime_s,
             resource_cost=float(len(sampleset)),
-            native_metrics={
+            metrics={
                 "evaluated_candidates": len(sampleset),
                 "is_reference": True,
                 "confidence": 1.0,
                 "expected_improvement": 0.0,
             },
             metadata={
-                "is_reference": True,
-                "configuration": dict(configuration),
-                "budget": dict(budget),
+                "budget": dict(request.budget),
             },
             provenance={
                 "library": "dimod",
@@ -75,3 +77,6 @@ class DimodExactSolver(Solver):
                 "execution": "local",
             },
         )
+
+
+DimodExactSolver = DimodExact

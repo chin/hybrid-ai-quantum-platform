@@ -71,3 +71,12 @@ pythonpath = ["."]
 testpaths = ["tests"]
 python_files = ["test_*.py"]
 python_functions = ["test_*"]
+
+
+[tool.coverage.run]
+branch = true
+source = ["optengine"]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = false

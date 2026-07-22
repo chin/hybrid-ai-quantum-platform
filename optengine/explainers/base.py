@@ -5,18 +5,21 @@ from collections.abc import Sequence
 
 from optengine.analysis import Analysis
 from optengine.decision import Decision
-from optengine.evaluation import Evaluation
+from optengine.execution import Execution
 from optengine.explanation import Explanation
-from optengine.utility.base import UtilityAssessment
+from optengine.utility.base import Assessment
 
 
 class Explainer(ABC):
+    """Behavior object that explains an Assessment-backed Decision."""
+
     @abstractmethod
     def explain(
         self,
+        *,
         decision: Decision,
-        evaluations: Sequence[Evaluation],
-        assessment: UtilityAssessment | None = None,
-        analysis: Analysis | None = None,
+        executions: Sequence[Execution],
+        assessment: Assessment,
+        analysis: Analysis,
     ) -> Explanation:
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover

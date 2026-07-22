@@ -1,242 +1,203 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
-from typing import Any
 
 import pytest
 
-import optengine.runner as runner_module
-from optengine.decision import Decision
-from optengine.explanation import Explanation
-from optengine.recommendation import Recommendation
-from optengine.utility.base import UtilityAssessment
+from optengine.analysis import Analyzer
+from optengine.catalog import Catalog
+from optengine.execution import ExecutionInstance
+from optengine.explainers.default import DefaultExplainer
+from optengine.policy.chintropic_stop import ChintropicStopPolicy
+from optengine.runner import run
+from optengine.utility.operational import OperationalUtility
+from optengine.writers.json import JsonRecommendationWriter
+from tests.support import (
+    ExampleDomain,
+    ExampleFormulation,
+    ExampleOperation,
+    ExampleSolver,
+)
 
 
-class RecordingWriter:
-    def __init__(self, calls: list[str]) -> None:
-        self.calls = calls
-        self.logs_seen: list[str] = []
-        self.decision_seen: Decision | None = None
-        self.explanation_seen: Explanation | None = None
-        self.utility_seen: UtilityAssessment | None = None
-
-    def write(
-        self,
-        recommendation: Recommendation,
-        output_dir: Path,
-        run_name: str,
-    ) -> Path:
-        self.calls.append("write")
-        self.logs_seen = list(recommendation.logs)
-        self.decision_seen = recommendation.decision
-        self.explanation_seen = recommendation.explanation
-        self.utility_seen = recommendation.utility_assessment
-
-        output_dir.mkdir(parents=True, exist_ok=True)
-        path = output_dir / f"{run_name}.json"
-        recommendation.output_path = str(path)
-        path.write_text("{}", encoding="utf-8")
-        return path
-
-
-def _install_successful_stages(
-    monkeypatch: pytest.MonkeyPatch,
-    calls: list[str],
-) -> None:
-    def fake_analyze(engine: Any) -> None:
-        calls.append("analyze")
-
-    def fake_evaluate(engine: Any) -> None:
-        calls.append("evaluate")
-
-    def fake_decide(engine: Any) -> None:
-        calls.append("decide")
-        engine.recommendation.utility_assessment = UtilityAssessment(
-            selected_strategy="test-strategy",
-            feasible=True,
-            utility=1.0,
-            marginal_utility=0.0,
-            expected_improvement=0.0,
-            execution_cost=0.0,
-            confidence=1.0,
-            reference_gap=0.0,
-        )
-        engine.recommendation.decision = Decision(
-            action="stop",
-            selected_strategy="test-strategy",
-            reason_code="TEST_COMPLETE",
-            evidence={"quality": 1.0},
-        )
-
-    def fake_explain(engine: Any) -> None:
-        calls.append("explain")
-        engine.recommendation.explanation = Explanation(
-            summary="Runner lifecycle completed.",
-            selected_strategy="test-strategy",
-            evidence={"quality": 1.0},
-        )
-
-    monkeypatch.setattr(runner_module, "analyze", fake_analyze)
-    monkeypatch.setattr(runner_module, "evaluate", fake_evaluate)
-    monkeypatch.setattr(runner_module, "decide", fake_decide)
-    monkeypatch.setattr(runner_module, "explain", fake_explain)
-
-
-def test_run_coordinates_lifecycle_and_returns_recommendation(
-    monkeypatch: pytest.MonkeyPatch,
-    tmp_path: Path,
-) -> None:
-    calls: list[str] = []
-    _install_successful_stages(monkeypatch, calls)
-    writer = RecordingWriter(calls)
-
-    recommendation = runner_module.run(
-        {"example": True},
-        domain=object(),
-        registry=object(),
-        policy=object(),
-        explainer=object(),
-        writer=writer,
-        output_dir=tmp_path,
-        run_name="runner-smoke",
+def _catalog() -> Catalog:
+    return Catalog(
+        formulations=(ExampleFormulation(),),
+        operations=(ExampleOperation(limit=2),),
+        solvers=(
+            ExampleSolver(
+                name="reference",
+                reference_flag=True,
+                expected_improvement=0.0,
+            ),
+            ExampleSolver(
+                name="candidate",
+                values={"x": 0, "y": 1},
+                expected_improvement=0.1,
+                cost=0.01,
+            ),
+            ExampleSolver(
+                name="failed",
+                fail=True,
+            ),
+        ),
     )
 
-    assert isinstance(recommendation, Recommendation)
-    assert calls == [
-        "analyze",
-        "evaluate",
-        "decide",
-        "explain",
-        "write",
-    ]
-    assert recommendation.utility_assessment is not None
+
+def test_full_stage_workflow_retains_failures_and_writes_artifact(
+    tmp_path: Path,
+) -> None:
+    recommendation = run(
+        ExampleDomain(name="workflow"),
+        catalog=_catalog(),
+        analyzer=Analyzer(),
+        utility=OperationalUtility(),
+        policy=ChintropicStopPolicy(),
+        explainer=DefaultExplainer(),
+        writer=JsonRecommendationWriter(),
+        output_dir=tmp_path,
+        run_name="workflow",
+    )
+
+    assert recommendation.analysis is not None
+    assert len(recommendation.analysis.strategies) == 3
+    assert len(recommendation.executions) == 3
+    assert sum(item.succeeded for item in recommendation.executions) == 2
+    assert sum(item.failed for item in recommendation.executions) == 1
+    assert len(recommendation.evaluations) == 2
+    assert recommendation.failures[0]["strategy"].endswith(":failed")
+    assert recommendation.assessment is not None
     assert recommendation.decision is not None
-    assert recommendation.decision.action == "stop"
     assert recommendation.explanation is not None
-    assert recommendation.output_path == str(tmp_path / "runner-smoke.json")
+    assert recommendation.output_path is not None
     assert Path(recommendation.output_path).exists()
 
+    assert recommendation.logs[0] == "OptEngine started."
+    assert "Analysis started." in recommendation.logs
+    assert "Evaluation started." in recommendation.logs
+    assert "Decision started." in recommendation.logs
+    assert "Explanation started." in recommendation.logs
+    assert "OptEngine finished." in recommendation.logs
+    assert recommendation.logs[-1].startswith("Write completed:")
 
-def test_writer_receives_completed_recommendation(
-    monkeypatch: pytest.MonkeyPatch,
+    payload = json.loads(Path(recommendation.output_path).read_text())
+    assert payload["domain"]["name"] == "workflow"
+    assert payload["analysis"]["fingerprint"]
+    assert len(payload["executions"]) == 3
+    assert payload["assessment"]["feasible"] is True
+    assert payload["decision"]["action"] in {
+        "stop",
+        "switch",
+        "scale",
+    }
+    assert "utility_assessment" not in payload
+    assert payload["failures"][0]["error_type"] == "RuntimeError"
+
+    # Recommendation serialization is explicit and idempotent.
+    first = recommendation.to_dict()
+    second = recommendation.to_dict()
+    assert first == second
+    assert recommendation.input_summary == recommendation.domain_summary
+    assert recommendation.utility_assessment is recommendation.assessment
+
+
+def test_requested_strategy_runs_only_that_strategy(
     tmp_path: Path,
 ) -> None:
-    calls: list[str] = []
-    _install_successful_stages(monkeypatch, calls)
-    writer = RecordingWriter(calls)
-
-    runner_module.run(
-        {"example": True},
-        domain=object(),
-        registry=object(),
-        policy=object(),
-        explainer=object(),
-        writer=writer,
+    requested = ("example:example-formulation:example-operation:candidate",)
+    recommendation = run(
+        ExampleDomain(),
+        catalog=_catalog(),
+        policy=ChintropicStopPolicy(),
+        explainer=DefaultExplainer(),
+        writer=JsonRecommendationWriter(),
+        requested_strategies=requested,
         output_dir=tmp_path,
-        run_name="completed",
     )
-
-    assert writer.utility_seen is not None
-    assert writer.decision_seen is not None
-    assert writer.explanation_seen is not None
-    assert writer.logs_seen == [
-        "OptEngine started.",
-        "OptEngine finished.",
-    ]
+    assert recommendation.analysis is not None
+    assert recommendation.analysis.strategy_names == requested
+    assert len(recommendation.executions) == 1
 
 
-def test_stage_failure_stops_later_stages_and_writer(
-    monkeypatch: pytest.MonkeyPatch,
+def test_execution_instance_delegates_to_public_runner(
     tmp_path: Path,
 ) -> None:
-    calls: list[str] = []
-
-    def fail_analyze(engine: Any) -> None:
-        calls.append("analyze")
-        raise RuntimeError("analysis failed")
-
-    monkeypatch.setattr(runner_module, "analyze", fail_analyze)
-    monkeypatch.setattr(
-        runner_module,
-        "evaluate",
-        lambda engine: calls.append("evaluate"),
+    instance = ExecutionInstance(
+        name="instance",
+        domain=ExampleDomain(),
+        catalog=_catalog(),
+        policy=ChintropicStopPolicy(),
+        explainer=DefaultExplainer(),
+        writer=JsonRecommendationWriter(),
+        utility=OperationalUtility(),
+        analyzer=Analyzer(),
+        requested_strategies=(
+            "example:example-formulation:example-operation:reference",
+        ),
+        output_dir=tmp_path,
+        render=False,
+        metadata={"ticket": "PR"},
     )
-    monkeypatch.setattr(
-        runner_module,
-        "decide",
-        lambda engine: calls.append("decide"),
-    )
-    monkeypatch.setattr(
-        runner_module,
-        "explain",
-        lambda engine: calls.append("explain"),
-    )
+    recommendation = instance.execute()
+    assert recommendation.output_path is not None
+    assert Path(recommendation.output_path).name.startswith("instance_")
 
-    writer = RecordingWriter(calls)
 
-    with pytest.raises(RuntimeError, match="analysis failed"):
-        runner_module.run(
-            {"example": True},
-            domain=object(),
-            registry=object(),
-            policy=object(),
-            explainer=object(),
-            writer=writer,
+def test_runner_rejects_non_domain_and_writer_rejects_empty_name(
+    tmp_path: Path,
+) -> None:
+    with pytest.raises(TypeError, match="Domain aggregate"):
+        run(
+            object(),
+            catalog=_catalog(),
+            policy=ChintropicStopPolicy(),
+            explainer=DefaultExplainer(),
+            writer=JsonRecommendationWriter(),
             output_dir=tmp_path,
         )
 
-    assert calls == ["analyze"]
-
-
-def test_render_true_uses_cli_abstraction(
-    monkeypatch: pytest.MonkeyPatch,
-    tmp_path: Path,
-) -> None:
-    stage_calls: list[str] = []
-    _install_successful_stages(monkeypatch, stage_calls)
-    writer = RecordingWriter(stage_calls)
-
-    cli_calls: list[tuple[Any, ...]] = []
-
-    monkeypatch.setattr(
-        runner_module,
-        "banner",
-        lambda title: cli_calls.append(("banner", title)),
-    )
-    monkeypatch.setattr(
-        runner_module,
-        "block",
-        lambda label, value, **kwargs: cli_calls.append(
-            ("block", label, str(value), kwargs)
+    recommendation = run(
+        ExampleDomain(),
+        catalog=_catalog(),
+        policy=ChintropicStopPolicy(),
+        explainer=DefaultExplainer(),
+        writer=JsonRecommendationWriter(),
+        requested_strategies=(
+            "example:example-formulation:example-operation:reference",
         ),
+        output_dir=tmp_path,
+        run_name="valid",
     )
-    monkeypatch.setattr(
-        runner_module,
-        "footer",
-        lambda value: cli_calls.append(("footer", value)),
-    )
+    with pytest.raises(ValueError, match="run_name"):
+        JsonRecommendationWriter().write(
+            recommendation,
+            tmp_path,
+            " ",
+        )
 
-    runner_module.run(
-        {"example": True},
-        domain=object(),
-        registry=object(),
-        policy=object(),
-        explainer=object(),
-        writer=writer,
+
+def test_rendered_workflow_exposes_each_stage(
+    tmp_path: Path,
+    capsys,
+) -> None:
+    run(
+        ExampleDomain(),
+        catalog=_catalog(),
+        policy=ChintropicStopPolicy(),
+        explainer=DefaultExplainer(),
+        writer=JsonRecommendationWriter(),
+        requested_strategies=(
+            "example:example-formulation:example-operation:reference",
+        ),
         output_dir=tmp_path,
         render=True,
         title="OptEngine :: Test",
-        run_name="render",
     )
-
-    assert cli_calls[0] == ("banner", "OptEngine :: Test")
-    labels = [call[1] for call in cli_calls if call[0] == "block"]
-    assert labels == [
-        "problem",
-        "analysis",
-        "evaluation",
-        "decision",
-        "reason",
-        "artifact",
-    ]
-    assert cli_calls[-1] == ("footer", "Runtime Complete")
+    output = capsys.readouterr().out
+    assert "> domain" in output
+    assert "> analysis" in output
+    assert "> evaluation" in output
+    assert "> decision" in output
+    assert "> reason" in output
+    assert "> output" in output

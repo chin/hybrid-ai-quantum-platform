@@ -1,4 +1,4 @@
-.PHONY: help bootstrap run portfolio dev test runtime-test regression-test coverage lint format format-check build version docs status benchmark validate artifact portfolio-artifact ci release clean publish
+.PHONY: help bootstrap run portfolio dev test runtime-test regression-test contract-coverage coverage lint format format-check build version docs status benchmark validate artifact portfolio-artifact ci release clean publish
 
 # make run       Run OptEngine quickstart only
 # make portfolio Run the bounded portfolio vertical slice
@@ -24,8 +24,51 @@ define compact_pass
 endef
 
 help: ## Show available commands
-	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | \
+# 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | \
 	awk 'BEGIN {FS = ":.*?## "}; {printf "%-14s %s\n", $$1, $$2}'
+	help:
+	@printf '%s\n' \
+		'OptEngine commands' \
+		'' \
+		'Development' \
+		'  help                 Show available commands' \
+		'  bootstrap            Verify the toolchain and synchronize the development environment' \
+		'  dev                  Clean, format, and run all pre-merge checks' \
+		'  clean                Remove disposable generated files and caches' \
+		'' \
+		'Quality' \
+		'  format               Format source code' \
+		'  format-check         Verify formatting without modifying source code' \
+		'  lint                 Run static analysis' \
+		'  test                 Execute the software test suite' \
+		'  coverage             Execute the test suite with branch coverage' \
+		'  contract-coverage    Require 100% coverage of reusable OOP contracts' \
+		'  runtime-test         Execute runtime lifecycle and failure-path tests' \
+		'  regression-test      Execute exhaustive foundation regression tests' \
+		'  ci                   Run the local CI quality gate' \
+		'' \
+		'Domains' \
+		'  Max-Cut' \
+		'    run                Run the Max-Cut OptEngine quickstart' \
+		'    artifact           Run and promote the latest Max-Cut quickstart output' \
+		'' \
+		'  Portfolio' \
+		'    portfolio          Run the bounded portfolio vertical slice' \
+		'    portfolio-artifact Run and promote the latest portfolio output' \
+		'' \
+		'Research and validation' \
+		'  benchmark            Run performance benchmarks' \
+		'  validate             Run research validation' \
+		'' \
+		'Documentation' \
+		'  docs                 Build or validate documentation' \
+		'' \
+		'Release' \
+		'  build                Build source and wheel distributions' \
+		'  version              Preview the next semantic version and Git tag' \
+		'  release-check        Clean and run all local release-readiness checks' \
+		'  release              Trigger the official GitHub release workflow' \
+		'  publish              Publish distributions to a package registry'
 
 bootstrap: ## Verify the toolchain and synchronize the development environment
 	$(call compact_step,toolchain.python)
@@ -100,6 +143,9 @@ test: bootstrap ## Execute the software test suite
 
 coverage: bootstrap ## Execute the test suite with branch coverage
 	@$(DEV_COMMAND) coverage
+
+contract-coverage: bootstrap ## Require 100% coverage of reusable OOP contracts
+	@$(DEV_COMMAND) contract-coverage
 
 runtime-test: bootstrap ## Execute runtime lifecycle and failure-path tests
 	@$(DEV_COMMAND) runtime-test

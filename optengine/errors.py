@@ -6,11 +6,11 @@ class OptEngineError(Exception):
 
 
 class NoCompatibleStrategyError(OptEngineError):
-    """Raised when no registered strategy supports an interpretation."""
+    """Raised when no available object collaboration produces a Strategy."""
 
 
 class IncompatibleStrategyError(OptEngineError):
-    """Raised when a strategy's formulation, operation, and solver conflict."""
+    """Raised when a Strategy is assembled from incompatible collaborators."""
 
     def __init__(
         self,
@@ -24,11 +24,21 @@ class IncompatibleStrategyError(OptEngineError):
         self.formulation = formulation
         self.operation = operation
         self.solver = solver
-
         super().__init__(
             "Incompatible strategy components: "
             f"strategy={strategy!r}, "
             f"formulation={formulation!r}, "
             f"operation={operation!r}, "
             f"solver={solver!r}."
+        )
+
+
+class MissingDependencyError(OptEngineError):
+    """Raised when a concrete plugin's external dependency is unavailable."""
+
+    def __init__(self, dependency: str, plugin: str) -> None:
+        self.dependency = dependency
+        self.plugin = plugin
+        super().__init__(
+            f"{plugin} requires the optional runtime dependency {dependency!r}."
         )

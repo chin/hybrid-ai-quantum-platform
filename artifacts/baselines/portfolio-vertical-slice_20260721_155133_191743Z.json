@@ -1,0 +1,514 @@
+{
+  "analysis": {
+    "interpretation": {
+      "allocation_increment": 0.25,
+      "asset_count": 3,
+      "assets": [
+        "Growth",
+        "Income",
+        "Defense"
+      ],
+      "max_assets": 3,
+      "risk_aversion": 1.0,
+      "total_units": 4
+    },
+    "metadata": {
+      "capabilities": [
+        "annealing",
+        "cqm",
+        "exact-search",
+        "qubo"
+      ],
+      "domain": "bounded-portfolio"
+    },
+    "strategies": [
+      {
+        "domain": "bounded-portfolio",
+        "formulation": "portfolio-cqm",
+        "metadata": {
+          "role": "reference"
+        },
+        "name": "portfolio-exact",
+        "operation": "exact-search",
+        "solver": "dimod-cqm-exact"
+      },
+      {
+        "domain": "bounded-portfolio",
+        "formulation": "portfolio-qubo",
+        "metadata": {
+          "role": "candidate"
+        },
+        "name": "portfolio-local-annealing",
+        "operation": "annealing",
+        "solver": "dwave-local"
+      }
+    ]
+  },
+  "completed_at": "2026-07-21T15:51:33.191684+00:00",
+  "decision": {
+    "action": "stop",
+    "evidence": {
+      "confidence": 1.0,
+      "confidence_threshold": 0.7,
+      "execution_cost": 32768.0,
+      "expected_improvement": 0.0,
+      "feasible": true,
+      "improvement_threshold": 0.05,
+      "marginal_utility": -32768.0,
+      "minimum_marginal_utility": 0.0,
+      "reference_gap": 0.0,
+      "target_reference_gap": 0.0,
+      "utility": 0.084
+    },
+    "next_strategy": null,
+    "reason_code": "REFERENCE_TARGET_REACHED",
+    "resource_change": {},
+    "selected_strategy": "portfolio-exact"
+  },
+  "evaluations": [
+    {
+      "candidate": {
+        "formulation": "portfolio-cqm",
+        "metadata": {
+          "budget": {},
+          "configuration": {},
+          "is_reference": true
+        },
+        "native_metrics": {
+          "confidence": 1.0,
+          "evaluated_candidates": 32768,
+          "expected_improvement": 0.0,
+          "feasible_candidates": 15,
+          "is_reference": true
+        },
+        "native_score": -0.084,
+        "operation": "exact-search",
+        "provenance": {
+          "execution": "local",
+          "library": "dimod",
+          "solver": "ExactCQMSolver"
+        },
+        "resource_cost": 32768.0,
+        "runtime_s": 0.15695662499638274,
+        "solver": "dimod-cqm-exact",
+        "status": "complete",
+        "strategy": "portfolio-exact",
+        "values": {
+          "sample": {
+            "units::Defense": 0,
+            "units::Growth": 3,
+            "units::Income": 1
+          }
+        }
+      },
+      "feasible": true,
+      "metrics": {
+        "active_assets": 2,
+        "allocation_units": {
+          "Defense": 0,
+          "Growth": 3,
+          "Income": 1
+        },
+        "allocations": {
+          "Defense": 0.0,
+          "Growth": 0.75,
+          "Income": 0.25
+        },
+        "budget_feasible": true,
+        "cardinality_feasible": true,
+        "expected_return": 0.11,
+        "increment_feasible": true,
+        "risk": 0.026,
+        "runtime_s": 0.15695662499638274,
+        "total_allocation": 1.0,
+        "utility": 0.084
+      },
+      "policy_evidence": {},
+      "provenance": {
+        "domain": "bounded-portfolio"
+      },
+      "quality": 0.084,
+      "reference": {
+        "is_reference": true
+      },
+      "strategy": "portfolio-exact",
+      "utility_inputs": {
+        "confidence": 1.0,
+        "execution_cost": 32768.0,
+        "expected_improvement": 0.0,
+        "feasible": true,
+        "is_reference": true,
+        "quality": 0.084,
+        "utility": 0.084
+      }
+    },
+    {
+      "candidate": {
+        "formulation": "portfolio-qubo",
+        "metadata": {
+          "budget": {
+            "iterations": 10
+          },
+          "configuration": {
+            "lagrange_multiplier": 20.0
+          }
+        },
+        "native_metrics": {
+          "confidence": 0.75,
+          "expected_improvement": 0.0,
+          "history": [
+            {
+              "batch_best_energy": -0.0840000000011969,
+              "batch_energy_variance": 11.644321128829292,
+              "batch_max_energy": 19.950500000000375,
+              "batch_mean_energy": 0.5338443749991985,
+              "batch_min_energy": -0.0840000000011969,
+              "batch_time_s": 0.07943866704590619,
+              "best_so_far_energy": -0.0840000000011969,
+              "elapsed_s": 0.079590208013542,
+              "improved": true,
+              "improvement_in_native_score": 0.0,
+              "iteration": 1
+            },
+            {
+              "batch_best_energy": -0.0840000000011969,
+              "batch_energy_variance": 20.784102916735026,
+              "batch_max_energy": 19.96000000000049,
+              "batch_mean_energy": 1.0324806249989797,
+              "batch_min_energy": -0.0840000000011969,
+              "batch_time_s": 0.08061095897573978,
+              "best_so_far_energy": -0.0840000000011969,
+              "elapsed_s": 0.16030758299166337,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 2
+            },
+            {
+              "batch_best_energy": -0.0840000000011969,
+              "batch_energy_variance": 3.9614573560554165,
+              "batch_max_energy": 19.939999999999145,
+              "batch_mean_energy": 0.13303999999911412,
+              "batch_min_energy": -0.0840000000011969,
+              "batch_time_s": 0.08084729197435081,
+              "best_so_far_energy": -0.0840000000011969,
+              "elapsed_s": 0.24130741599947214,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 3
+            },
+            {
+              "batch_best_energy": -0.0840000000011969,
+              "batch_energy_variance": 13.514021059577821,
+              "batch_max_energy": 19.96000000000049,
+              "batch_mean_energy": 0.6328231249991404,
+              "batch_min_energy": -0.0840000000011969,
+              "batch_time_s": 0.0787856659735553,
+              "best_so_far_energy": -0.0840000000011969,
+              "elapsed_s": 0.3202269999892451,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 4
+            },
+            {
+              "batch_best_energy": -0.0840000000011969,
+              "batch_energy_variance": 19.004623903157725,
+              "batch_max_energy": 19.968124999999873,
+              "batch_mean_energy": 0.9331362499992792,
+              "batch_min_energy": -0.0840000000011969,
+              "batch_time_s": 0.07922324998071417,
+              "best_so_far_energy": -0.0840000000011969,
+              "elapsed_s": 0.39958479098277166,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 5
+            },
+            {
+              "batch_best_energy": -0.0840000000011969,
+              "batch_energy_variance": 9.739341080811991,
+              "batch_max_energy": 19.94137499999988,
+              "batch_mean_energy": 0.433886249999191,
+              "batch_min_energy": -0.0840000000011969,
+              "batch_time_s": 0.07855066598858684,
+              "best_so_far_energy": -0.0840000000011969,
+              "elapsed_s": 0.47829216602258384,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 6
+            },
+            {
+              "batch_best_energy": -0.0840000000011969,
+              "batch_energy_variance": 15.356867458714936,
+              "batch_max_energy": 19.9512499999978,
+              "batch_mean_energy": 0.7320137499993598,
+              "batch_min_energy": -0.0840000000011969,
+              "batch_time_s": 0.07984887500060722,
+              "best_so_far_energy": -0.0840000000011969,
+              "elapsed_s": 0.558296250004787,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 7
+            },
+            {
+              "batch_best_energy": -0.0840000000011969,
+              "batch_energy_variance": 9.76461081867443,
+              "batch_max_energy": 19.96000000000049,
+              "batch_mean_energy": 0.43288374999929147,
+              "batch_min_energy": -0.0840000000011969,
+              "batch_time_s": 0.0786334170261398,
+              "best_so_far_energy": -0.0840000000011969,
+              "elapsed_s": 0.6370902080088854,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 8
+            },
+            {
+              "batch_best_energy": -0.0840000000011969,
+              "batch_energy_variance": 15.363507647106822,
+              "batch_max_energy": 19.950500000002194,
+              "batch_mean_energy": 0.7309668749992443,
+              "batch_min_energy": -0.0840000000011969,
+              "batch_time_s": 0.07934116601245478,
+              "best_so_far_energy": -0.0840000000011969,
+              "elapsed_s": 0.7165637500002049,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 9
+            },
+            {
+              "batch_best_energy": -0.0840000000011969,
+              "batch_energy_variance": 13.525011909448308,
+              "batch_max_energy": 19.968124999999873,
+              "batch_mean_energy": 0.632271874999451,
+              "batch_min_energy": -0.0840000000011969,
+              "batch_time_s": 0.079010916990228,
+              "best_so_far_energy": -0.0840000000011969,
+              "elapsed_s": 0.7956827500020154,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 10
+            }
+          ],
+          "iterations": 10,
+          "num_sweeps": 2000,
+          "reads_per_iteration": 200,
+          "total_reads": 2000
+        },
+        "native_score": -0.0840000000011969,
+        "operation": "annealing",
+        "provenance": {
+          "execution": "local",
+          "library": "dwave-samplers",
+          "sampler": "SimulatedAnnealingSampler"
+        },
+        "resource_cost": null,
+        "runtime_s": 0.795686665980611,
+        "solver": "dwave-local",
+        "status": "complete",
+        "strategy": "portfolio-local-annealing",
+        "values": {
+          "sample": {
+            "units::Defense": 0,
+            "units::Growth": 3,
+            "units::Income": 1
+          }
+        }
+      },
+      "feasible": true,
+      "metrics": {
+        "active_assets": 2,
+        "allocation_units": {
+          "Defense": 0,
+          "Growth": 3,
+          "Income": 1
+        },
+        "allocations": {
+          "Defense": 0.0,
+          "Growth": 0.75,
+          "Income": 0.25
+        },
+        "budget_feasible": true,
+        "cardinality_feasible": true,
+        "expected_return": 0.11,
+        "increment_feasible": true,
+        "risk": 0.026,
+        "runtime_s": 0.795686665980611,
+        "total_allocation": 1.0,
+        "utility": 0.084
+      },
+      "policy_evidence": {},
+      "provenance": {
+        "domain": "bounded-portfolio"
+      },
+      "quality": 0.084,
+      "reference": {
+        "is_reference": false
+      },
+      "strategy": "portfolio-local-annealing",
+      "utility_inputs": {
+        "confidence": 0.75,
+        "execution_cost": 0.795686665980611,
+        "expected_improvement": 0.0,
+        "feasible": true,
+        "is_reference": false,
+        "quality": 0.084,
+        "utility": 0.084
+      }
+    }
+  ],
+  "explanation": {
+    "alternatives": [
+      "portfolio-local-annealing"
+    ],
+    "evidence": {
+      "confidence": 1.0,
+      "confidence_threshold": 0.7,
+      "execution_cost": 32768.0,
+      "expected_improvement": 0.0,
+      "feasible": true,
+      "improvement_threshold": 0.05,
+      "marginal_utility": -32768.0,
+      "minimum_marginal_utility": 0.0,
+      "reference_gap": 0.0,
+      "target_reference_gap": 0.0,
+      "utility": 0.084
+    },
+    "limitations": [],
+    "selected_strategy": "portfolio-exact",
+    "summary": "OptEngine decided to stop with strategy 'portfolio-exact' because the configured reference target was reached."
+  },
+  "failures": [],
+  "input_summary": {
+    "allocation_increment": 0.25,
+    "asset_count": 3,
+    "assets": [
+      "Growth",
+      "Income",
+      "Defense"
+    ],
+    "max_assets": 3,
+    "risk_aversion": 1.0,
+    "total_units": 4
+  },
+  "logs": [
+    "OptEngine started.",
+    "Analysis started.",
+    "Analysis completed.",
+    "Evaluation started.",
+    "Evaluation completed.",
+    "Decision started.",
+    "Decision completed: stop.",
+    "OptEngine finished."
+  ],
+  "output_path": "outputs/portfolio-vertical-slice_20260721_155133_191743Z.json",
+  "provenance": {
+    "optengine_version": "0.1.1",
+    "platform": "macOS-26.5.2-arm64-arm-64bit-Mach-O",
+    "python_implementation": "CPython",
+    "python_version": "3.14.6"
+  },
+  "run_id": "de352a5f-907d-476f-9c1c-ec53b1573220",
+  "started_at": "2026-07-21T15:51:32.222884+00:00",
+  "utility_assessment": {
+    "confidence": 1.0,
+    "evidence": {
+      "evaluation_count": 2,
+      "feasible_count": 2,
+      "reference_quality": 0.084,
+      "strategy_utilities": [
+        {
+          "confidence": 1.0,
+          "evidence": {
+            "confidence": 1.0,
+            "execution_cost": 32768.0,
+            "expected_improvement": 0.0,
+            "feasible": true,
+            "is_reference": true,
+            "quality": 0.084,
+            "reference_gap": 0.0,
+            "utility": 0.084
+          },
+          "execution_cost": 32768.0,
+          "expected_improvement": 0.0,
+          "feasible": true,
+          "marginal_utility": -32768.0,
+          "quality": 0.084,
+          "reference_gap": 0.0,
+          "strategy": "portfolio-exact",
+          "utility": 0.084
+        },
+        {
+          "confidence": 0.75,
+          "evidence": {
+            "confidence": 0.75,
+            "execution_cost": 0.795686665980611,
+            "expected_improvement": 0.0,
+            "feasible": true,
+            "is_reference": false,
+            "quality": 0.084,
+            "reference_gap": 0.0,
+            "utility": 0.084
+          },
+          "execution_cost": 0.795686665980611,
+          "expected_improvement": 0.0,
+          "feasible": true,
+          "marginal_utility": -0.795686665980611,
+          "quality": 0.084,
+          "reference_gap": 0.0,
+          "strategy": "portfolio-local-annealing",
+          "utility": 0.084
+        }
+      ]
+    },
+    "execution_cost": 32768.0,
+    "expected_improvement": 0.0,
+    "feasible": true,
+    "marginal_utility": -32768.0,
+    "reference_gap": 0.0,
+    "selected_strategy": "portfolio-exact",
+    "strategies": [
+      {
+        "confidence": 1.0,
+        "evidence": {
+          "confidence": 1.0,
+          "execution_cost": 32768.0,
+          "expected_improvement": 0.0,
+          "feasible": true,
+          "is_reference": true,
+          "quality": 0.084,
+          "reference_gap": 0.0,
+          "utility": 0.084
+        },
+        "execution_cost": 32768.0,
+        "expected_improvement": 0.0,
+        "feasible": true,
+        "marginal_utility": -32768.0,
+        "quality": 0.084,
+        "reference_gap": 0.0,
+        "strategy": "portfolio-exact",
+        "utility": 0.084
+      },
+      {
+        "confidence": 0.75,
+        "evidence": {
+          "confidence": 0.75,
+          "execution_cost": 0.795686665980611,
+          "expected_improvement": 0.0,
+          "feasible": true,
+          "is_reference": false,
+          "quality": 0.084,
+          "reference_gap": 0.0,
+          "utility": 0.084
+        },
+        "execution_cost": 0.795686665980611,
+        "expected_improvement": 0.0,
+        "feasible": true,
+        "marginal_utility": -0.795686665980611,
+        "quality": 0.084,
+        "reference_gap": 0.0,
+        "strategy": "portfolio-local-annealing",
+        "utility": 0.084
+      }
+    ],
+    "utility": 0.084
+  }
+}

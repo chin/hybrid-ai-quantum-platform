@@ -4,20 +4,19 @@ from optengine.engine import OptEngine
 
 
 def decide(engine: OptEngine) -> None:
-    analysis = engine.recommendation.analysis
-    if analysis is None:
+    """Assess all executions and apply Stop/Switch/Scale policy."""
+
+    if engine.analysis is None:
         raise RuntimeError("OptEngine has no analysis.")
 
     engine.log("Decision started.")
-
-    assessment = engine.utility_model.assess(
-        evaluations=engine.recommendation.evaluations,
-        analysis=analysis,
+    assessment = engine.utility.assess(
+        engine.executions,
+        engine.analysis,
     )
-    engine.recommendation.utility_assessment = assessment
+    engine.recommendation.assessment = assessment
     engine.recommendation.decision = engine.policy.apply(
         assessment=assessment,
-        analysis=analysis,
+        analysis=engine.analysis,
     )
-
     engine.log(f"Decision completed: {engine.recommendation.decision.action}.")

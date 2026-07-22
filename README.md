@@ -1,169 +1,222 @@
 # OptEngine by OptChin
 
-## A feasibility-aware modular optimization platform
+## A feasibility-aware polymorphic optimization platform
 
 **Quantifying operational optimality to simplify decision optionality**
 
-OptEngine translates a business or research problem into a mathematical representation, maps that representation to interchangeable library-backed execution strategies, independently evaluates the results, and produces an evidence-grounded Stop/Switch/Scale recommendation.
+OptEngine coordinates domain-owned problem meaning with interchangeable
+formulations, operations, solvers, utility behavior, and Stop/Switch/Scale
+policy. External libraries execute algorithms. OptEngine owns translation,
+composition, independent domain evaluation, comparative assessment,
+recommendation, and reproducible evidence.
 
-OptEngine is not a replacement for optimization libraries. It composes and governs them.
-
-## Implemented vertical slices
-
-### Max-Cut reference workflow
+## Quickstart
 
 ```bash
 make run
 ```
 
-This executes:
+The Max-Cut reference workflow is:
 
 ```text
-NetworkX graph
-→ MaxCutDomain
-→ quadratic binary interpretation
-→ QUBO formulation
-→ dimod exact solver and D-Wave local annealing
-→ independent cut evaluation
-→ OperationalUtilityModel
-→ Stop/Switch/Scale
-→ Recommendation JSON
+MaxCut aggregate
+→ Domain.interpret()
+→ Objective
+→ Expression
+→ Curve
+→ QUBO.express(Objective)
+→ Model
+→ ExactSearch / Annealing
+→ DimodExact / DWaveLocal
+→ Solver.Result
+→ Model.decode()
+→ MaxCut.Candidate
+→ MaxCut.interpret(Candidate)
+→ MaxCut.Evaluation
+→ OperationalUtility.assess()
+→ Assessment
+→ Stop / Switch / Scale
+→ Explanation
+→ Recommendation
+→ JSON
 ```
 
-### Bounded portfolio workflow
+Run the bounded portfolio workflow with:
 
 ```bash
 make portfolio
 ```
 
-This executes:
+Its user-facing configuration is
+[`config/examples/portfolio.json`](config/examples/portfolio.json).
+
+## Architecture
+
+The engine follows one invariant stage pattern:
 
 ```text
-portfolio configuration
-→ PortfolioDomain
-→ bounded allocation interpretation
-→ dimod CQM reference formulation
-→ exact CQM execution and local-annealing QUBO execution
-→ independent return/risk/constraint evaluation
-→ OperationalUtilityModel
-→ Stop/Switch/Scale
-→ Recommendation JSON
+ANALYZE
+  Domain.interpret()
+  Formulation.express(Objective)
+  Model filters compatible Operations
+  Operation filters compatible Solvers
+  Analysis returns N Strategies
+
+EVALUATE
+  each Strategy executes independently
+  Operation.prepare(Model) returns Request
+  Solver.execute(Request) returns Solver.Result
+  Model.decode(Result) returns Domain Candidate
+  Domain.interpret(Candidate) returns Domain Evaluation
+  Execution records success or failure
+
+DECIDE
+  Utility.assess(Executions, Analysis) returns Assessment
+  Policy.apply(Assessment) returns Stop, Switch, or Scale
+
+EXPLAIN
+  Explainer returns Explanation
+
+WRITE
+  Writer persists Recommendation
 ```
 
-The default business-readable configuration is [`config/examples/portfolio.json`](config/examples/portfolio.json). Results are written to `outputs/portfolio-vertical-slice_<timestamp>.json`.
+`OptEngine`, the runner, and the stages contain no Max-Cut or portfolio
+branches. Compatibility is evaluated from the actual `Curve`: value types,
+value counts, output types, degree, constraints, and limits. It is not selected
+from a labeled objective type.
 
-## Bootstrap and common commands
+## Canonical object vocabulary
 
-```bash
-make bootstrap          # Verify tools and synchronize the uv environment.
-make run                # Run the Max-Cut vertical slice.
-make portfolio          # Run the portfolio vertical slice.
-make test               # Run the complete pytest suite.
-make runtime-test       # Run runtime lifecycle and failure-path tests.
-make regression-test    # Run the full suite with branch coverage.
-make coverage           # Generate terminal and HTML coverage reports.
-make dev                # Clean, format, test, lint, and build.
-make artifact           # Run and promote a fresh Max-Cut output.
-make portfolio-artifact # Run and promote a fresh portfolio output.
-```
-
-`make artifact` now runs the corresponding workflow first, so it does not depend on an output surviving `make dev` cleanup.
-
-## Runtime components
-
-| Component | Responsibility |
+| Object | Responsibility |
 |---|---|
-| `Domain` | Validates input, defines domain meaning, and independently evaluates candidates. |
-| `Interpretation` | Stores variables, objective meaning, constraints, capabilities, and domain data. |
-| `Formulation` | Builds a library-native mathematical model such as a BQM or CQM. |
-| `Operation` | Describes the requested method, such as exact search or annealing. |
-| Concrete `Solver` | Calls an existing library/backend and normalizes its native output. |
-| `Candidate` | Contains solver-native values, score, telemetry, cost, and provenance. |
-| `Evaluation` | Contains independently calculated feasibility, quality, and domain metrics. |
-| `UtilityModel` | Converts evaluations into generic utility evidence. |
-| `Policy` | Produces Stop, Switch, or Scale from utility evidence. |
-| `Explainer` | Converts the structured decision into a grounded explanation. |
-| `Recommendation` | Persists the complete run state, evidence, failures, and output path. |
-| `OptEngine` | Holds the live collaborators and state for one execution. |
-| `runner.run()` | Coordinates the lifecycle without containing domain-specific logic. |
+| `Domain` | Aggregate root and owner of domain meaning. |
+| `Objective` | Mathematical intent of the populated Domain. |
+| `Expression` | Variables, terms, constraints, and constant. |
+| `Curve` | Structural profile used for real-time compatibility. |
+| `Formulation` | Polymorphic transformer with `express(Objective)`. |
+| `Model` | Solver-oriented mathematical representation. |
+| `Operation` | Algorithmic action prepared for a Model. |
+| `Solver` | Concrete backend executor. |
+| `Solver.Result` | Normalized native execution result. |
+| `Strategy` | Immutable compatible Formulation/Model/Operation/Solver plan. |
+| `Execution` | Immutable record of one isolated Strategy attempt. |
+| `Candidate` | Domain-owned proposed output. |
+| `Evaluation` | Domain-owned interpretation of a Candidate. |
+| `Utility` | Behavior that compares executions. |
+| `Assessment` | Persistent result produced by Utility. |
+| `Policy` | Stop/Switch/Scale decision behavior. |
+| `Decision` | `Stop`, `Switch`, or `Scale` value object. |
+| `Explanation` | Human-readable evidence-grounded rationale. |
+| `Recommendation` | Complete persistent workflow result. |
 
-## External-library boundary
-
-```text
-Domain Interpretation
-→ Formulation
-→ Concrete Solver
-→ external library/backend
-→ Candidate
-```
-
-External libraries own algorithm execution. OptEngine owns translation, composition, normalization, independent evaluation, utility, policy, explanation, and reproducibility.
-
-Current adapters use:
-
-- NetworkX for graph inputs;
-- `dimod` for BQM/CQM models and exact solving;
-- `dwave-samplers` for local simulated annealing.
-
-The actual private OptChin utility mathematics is not yet connected. `OperationalUtilityModel` is the deterministic public fallback, and `OptChinUtilityAdapter` is the tested integration boundary.
-
-## Create a new problem domain
-
-Start with:
-
-- [Problem Domain Creation Template](docs/problem-domain-template.md)
-- [`templates/problem_domain.py`](templates/problem_domain.py)
-
-The essential rule is:
+Capabilities are nested inside their owners:
 
 ```text
-solver-native evidence belongs in Candidate
-business/scientific meaning belongs in Domain Evaluation
+Formulation.Capability
+Operation.Capability
+Operation.Request
+Solver.Capability
+Solver.Result
 ```
 
-## Create a repeatable execution
+Concrete extension names do not repeat their base type:
 
-Use:
-
-- [Execution Instance Template](docs/execution-instance-template.md)
-- [`templates/execution_instance.py`](templates/execution_instance.py)
-- [`optengine.execution.ExecutionInstance`](optengine/execution.py)
-
-This allows researchers and decision-makers to define a named run without modifying the engine or runner.
-
-## Outputs and curated artifacts
-
-`outputs/` contains disposable timestamped run results. `artifacts/` contains deliberately promoted evidence with metadata.
-
-```bash
-make artifact
-make portfolio-artifact
+```text
+QUBO(Formulation)
+CQM(Formulation)
+ExactSearch(Operation)
+Annealing(Operation)
+DimodExact(Solver)
+DimodCQMExact(Solver)
+DWaveLocal(Solver)
 ```
 
-Promotion preserves the source output and gives each promoted run a unique timestamp-derived version.
+## Domain aggregates
+
+The Domain object is the aggregate. There is no separate generic input
+aggregate attached as `domain.input`.
+
+```python
+domain = MaxCut(
+    name="triangle",
+    graph=MaxCut.Graph(
+        vertices=(...),
+        edges=(...),
+    ),
+)
+```
+
+```python
+portfolio = Portfolio(
+    name="balanced",
+    assets=(...),
+    covariances=(...),
+    parameters=Portfolio.Parameters(...),
+)
+```
+
+Nested entities and relationships collaborate through object references. An
+edge contains vertices; a covariance contains assets.
 
 ## Verification
 
-See [Testing and Verification](docs/testing.md). The suite verifies public runtime behavior, failure isolation, exact and annealing strategies, mathematical evaluation, utility and policy branches, JSON serialization, and portfolio execution.
+```bash
+make test               # Complete test suite.
+make runtime-test       # Stages, execution isolation, utility, and policy.
+make contract-coverage  # 100% coverage of reusable OOP contracts.
+make coverage           # Complete repository coverage report.
+make regression-test    # Full regression suite with branch coverage.
+make dev                # Format and run the complete release-quality gate.
+```
+
+The reusable contract suite is deliberately domain-extensible through
+[`tests/contracts/domain.py`](tests/contracts/domain.py).
+
+External backend tests use `pytest.importorskip` so core contracts remain
+testable even when `dimod` or `dwave-samplers` is not installed. A synchronized
+development environment runs those integrations through `make test`.
+
+## Commands
+
+```bash
+make bootstrap
+make run
+make portfolio
+make test
+make runtime-test
+make contract-coverage
+make coverage
+make artifact
+make portfolio-artifact
+make dev
+make release-check
+```
 
 ## Documentation
 
-- [Portfolio vertical slice](docs/portfolio-vertical-slice.md)
-- [Problem domain template](docs/problem-domain-template.md)
-- [Execution instance template](docs/execution-instance-template.md)
+- [Idempotent polymorphic OOP architecture](docs/idempotent-polymorphic-oop.md)
+- [PR verification checklist](docs/PR_CHECKLIST_POLYMORPHIC_REFACTOR.md)
+- [Verification report](docs/VERIFICATION_REPORT_POLYMORPHIC_REFACTOR.md)
 - [Testing and verification](docs/testing.md)
-- [GitHub Project automation](docs/project-automation.md)
 - [Detailed architecture](docs/detailed-architecture.md)
 - [Mermaid architecture](docs/mermaid-architecture.md)
+- [Problem Domain extension guide](docs/problem-domain-template.md)
+- [Execution Instance guide](docs/execution-instance-template.md)
+- [Portfolio vertical slice](docs/portfolio-vertical-slice.md)
+- [GitHub Project automation](docs/project-automation.md)
 - [Release roadmap](docs/ROADMAP.md)
-- [Makefile execution guide](docs/MAKEFILE.md)
 
-## Deferred capabilities
+## External-library boundary
 
-AI may later propose interpretations, strategies, solver settings, warm starts, or explanations. Quantum backends may later provide additional concrete Solver implementations. Neither capability replaces deterministic constraint validation, independent evaluation, utility, or policy.
+Current adapters use NetworkX for graph ingestion, `dimod` for BQM/CQM
+construction and exact solving, and `dwave-samplers` for local simulated
+annealing. The private OptChin mathematics can be connected through
+`OptChinUtility`; `OperationalUtility` is the deterministic public
+implementation. Both return the same `Assessment` contract.
 
 ## License
 
-OptEngine is licensed under the Apache License, Version 2.0. See [`LICENSE`](LICENSE).
+Apache License 2.0. See [`LICENSE`](LICENSE).
 
 Copyright © 2026 Chinyere "Chin" Isaac-Heslop.

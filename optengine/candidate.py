@@ -1,33 +1,28 @@
 from __future__ import annotations
 
-from dataclasses import dataclass, field, replace
-from typing import Any, Mapping
+from abc import ABC, abstractmethod
+from typing import TYPE_CHECKING, Any, Mapping
+
+if TYPE_CHECKING:
+    from optengine.domains.base import Domain
+    from optengine.evaluation import Evaluation
 
 
-@dataclass(frozen=True, kw_only=True)
-class Candidate:
-    """A normalized result returned by a concrete solver."""
+class Candidate(ABC):
+    """Base protocol for a Domain-owned proposed result."""
 
-    strategy: str = ""
-    formulation: str
-    operation: str
-    solver: str
-    values: Mapping[str, Any]
-    native_score: float | None
-    status: str
-    runtime_s: float | None = None
-    resource_cost: float | None = None
-    native_metrics: Mapping[str, Any] = field(default_factory=dict)
-    metadata: Mapping[str, Any] = field(default_factory=dict)
-    provenance: Mapping[str, Any] = field(default_factory=dict)
+    @property
+    @abstractmethod
+    def domain(self) -> Domain:
+        raise NotImplementedError  # pragma: no cover
 
-    def assigned_to(self, strategy: str) -> Candidate:
-        if self.strategy and self.strategy != strategy:
-            raise ValueError("Candidate is already assigned to a different strategy.")
-        return replace(self, strategy=strategy)
-
-    def with_values(
+    @abstractmethod
+    def _interpret_in(
         self,
-        values: Mapping[str, Any],
-    ) -> Candidate:
-        return replace(self, values=dict(values))
+        domain: Domain,
+    ) -> Evaluation:
+        raise NotImplementedError  # pragma: no cover
+
+    @abstractmethod
+    def to_dict(self) -> Mapping[str, Any]:
+        raise NotImplementedError  # pragma: no cover
