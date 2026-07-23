@@ -1,103 +1,164 @@
 from __future__ import annotations
 
+from math import inf
+
 import networkx as nx
 import pytest
 
-from optengine.candidate import Candidate
-from optengine.domains.maxcut import MaxCutDomain
-from optengine.formulations.qubo import QUBOFormulation
-from optengine.operations.exact import ExactSearchOperation
-from optengine.solvers.dimod_exact import DimodExactSolver
-from optengine.strategy import Strategy
+from optengine.domains.base import Domain
+from optengine.domains.maxcut import MaxCut
+from optengine.mathematics import ValueType
+from tests.contracts import DomainContract
 
 
-def make_strategy(domain: MaxCutDomain) -> Strategy:
-    return Strategy(
-        name="maxcut-test",
-        domain=domain,
-        formulation=QUBOFormulation(),
-        operation=ExactSearchOperation(),
-        solver=DimodExactSolver(),
+def make_triangle(*, target: float | None = None) -> MaxCut:
+    a = MaxCut.Vertex(identifier="A")
+    b = MaxCut.Vertex(identifier="B")
+    c = MaxCut.Vertex(identifier="C")
+    return MaxCut(
+        name="triangle",
+        graph=MaxCut.Graph(
+            vertices=(a, b, c),
+            edges=(
+                MaxCut.Edge(first=a, second=b),
+                MaxCut.Edge(first=b, second=c),
+                MaxCut.Edge(first=a, second=c),
+            ),
+        ),
+        parameters=MaxCut.Parameters(
+            target_cut_value=target,
+        ),
     )
 
 
-def make_candidate(sample: dict[int, int]) -> Candidate:
-    return Candidate(
-        strategy="maxcut-test",
-        formulation="qubo",
-        operation="exact-search",
-        solver="dimod-exact",
-        values={"sample": sample},
-        native_score=None,
-        status="complete",
-        metadata={},
-        provenance={},
-    )
+class TestMaxCutDomainContract(DomainContract):
+    def make_domain(self) -> Domain:
+        return make_triangle()
 
-
-def test_interpret_input_accepts_weighted_undirected_graph() -> None:
-    graph = nx.Graph()
-    graph.add_weighted_edges_from([(0, 1, 2.0), (1, 2, 3.0)])
-
-    interpretation = MaxCutDomain().interpret_input(graph)
-
-    assert interpretation.domain == "max-cut"
-    assert interpretation.summary["nodes"] == 3
-    assert interpretation.summary["edges"] == 2
-    assert interpretation.objective_sense == "maximize"
-    assert interpretation.domain_data is graph
-
-
-def test_interpret_input_rejects_non_graph() -> None:
-    with pytest.raises(TypeError, match="NetworkX graph"):
-        MaxCutDomain().interpret_input({"not": "a graph"})
-
-
-def test_interpret_input_rejects_directed_graph() -> None:
-    graph = nx.DiGraph()
-    graph.add_edge(0, 1)
-
-    with pytest.raises(ValueError, match="undirected"):
-        MaxCutDomain().interpret_input(graph)
-
-
-def test_interpret_candidate_calculates_weighted_cut() -> None:
-    graph = nx.Graph()
-    graph.add_weighted_edges_from([(0, 1, 2.0), (1, 2, 3.0)])
-    domain = MaxCutDomain()
-    interpretation = domain.interpret_input(graph)
-
-    evaluation = domain.interpret_candidate(
-        interpretation,
-        make_candidate({0: 0, 1: 1, 2: 0}),
-        make_strategy(domain),
-    )
-
-    assert evaluation.feasible is True
-    assert evaluation.quality == 5.0
-    assert evaluation.metrics["cut_value"] == 5.0
-    assert evaluation.utility_inputs["quality"] == 5.0
-
-
-@pytest.mark.parametrize(
-    "sample",
-    [
-        {0: 0},
-        {0: 0, 1: 1, 2: 0},
-        {0: 0, 1: 2},
-    ],
-)
-def test_interpret_candidate_rejects_invalid_assignment(
-    sample: dict[int, int],
-) -> None:
-    graph = nx.Graph()
-    graph.add_edge(0, 1)
-    domain = MaxCutDomain()
-    interpretation = domain.interpret_input(graph)
-
-    with pytest.raises(ValueError, match="candidate assignment"):
-        domain.interpret_candidate(
-            interpretation,
-            make_candidate(sample),
-            make_strategy(domain),
+    def make_candidate(self, domain: Domain):
+        assert isinstance(domain, MaxCut)
+        a, b, c = domain.V
+        return MaxCut.Candidate(
+            _domain=domain,
+            partition=MaxCut.Partition(assignments={a: 1, b: 0, c: 0}),
+            native_score=-2.0,
+            strategy="contract",
         )
+
+
+def test_maxcut_object_collaboration_and_objective() -> None:
+    domain = make_triangle(target=2.0)
+    a, b, c = domain.V
+    assert domain.graph.vertex("A") is a
+    assert domain.graph.total_weight == 3.0
+    assert not domain.graph.weighted
+    assert domain.graph.to_dict()["edges"][0]["first"] == "A"
+    assert domain.summary["vertices"] == 3
+    assert domain.summary["parameters"]["target_cut_value"] == 2.0
+
+    expression = domain.objective.expression
+    assert expression.curve.input_types == (
+        ValueType.BINARY,
+        ValueType.BINARY,
+        ValueType.BINARY,
+    )
+    assert expression.curve.input_count == 3
+    assert expression.curve.degree == 2
+    assert not expression.curve.constrained
+    assert expression.evaluate({"A": 1, "B": 0, "C": 0}) == 2.0
+
+    partition = MaxCut.Partition(assignments={a: 1, b: 0, c: 0})
+    assert domain.objective.evaluate(partition) == 2.0
+    assert domain.E[0].crosses(partition)
+    assert domain.E[0].cut_value(partition) == 1.0
+    assert not domain.E[1].crosses(partition)
+    assert domain.E[1].cut_value(partition) == 0.0
+
+    candidate = MaxCut.Candidate(
+        _domain=domain,
+        partition=partition,
+        native_score=-2.0,
+        strategy="manual",
+    )
+    evaluation = domain.interpret(candidate)
+    assert evaluation.feasible
+    assert evaluation.cut_value == 2.0
+    assert evaluation.quality == 2.0
+    assert evaluation.target_reached
+    assert len(evaluation.cut_edges) == 2
+    assert evaluation.state.code == "feasible"
+    assert candidate.to_dict()["selected"] == ["A"]
+    assert set(candidate.to_dict()["unselected"]) == {"B", "C"}
+
+
+def test_maxcut_infeasible_candidate_and_partition_errors() -> None:
+    domain = make_triangle()
+    a, b, _ = domain.V
+    partial = MaxCut.Candidate(
+        _domain=domain,
+        partition=MaxCut.Partition(assignments={a: 1, b: 0}),
+        native_score=None,
+        strategy="partial",
+    )
+    evaluation = domain.interpret(partial)
+    assert not evaluation.feasible
+    assert evaluation.cut_value is None
+    assert evaluation.cut_edges == ()
+    assert evaluation.quality is None
+    assert not evaluation.target_reached
+    assert evaluation.state.code == "infeasible"
+
+    with pytest.raises(ValueError, match="binary"):
+        MaxCut.Partition(assignments={a: 2})
+    with pytest.raises(ValueError, match="missing"):
+        MaxCut.Partition(assignments={a: 1}).side_of(b)
+
+
+def test_maxcut_validation_errors() -> None:
+    a = MaxCut.Vertex(identifier="A")
+    b = MaxCut.Vertex(identifier="B")
+    outsider = MaxCut.Vertex(identifier="outside")
+
+    with pytest.raises(ValueError, match="self-loop"):
+        MaxCut.Edge(first=a, second=a)
+    with pytest.raises(ValueError, match="finite"):
+        MaxCut.Edge(first=a, second=b, weight=inf)
+    with pytest.raises(ValueError, match="at least one"):
+        MaxCut.Graph(vertices=(), edges=())
+    with pytest.raises(ValueError, match="vertices must be unique"):
+        MaxCut.Graph(vertices=(a, a), edges=())
+    edge = MaxCut.Edge(first=a, second=b)
+    with pytest.raises(ValueError, match="edges must be unique"):
+        MaxCut.Graph(vertices=(a, b), edges=(edge, edge))
+    with pytest.raises(ValueError, match="unknown vertex"):
+        MaxCut.Graph(
+            vertices=(a, b),
+            edges=(MaxCut.Edge(first=a, second=outsider),),
+        )
+    graph = MaxCut.Graph(vertices=(a, b), edges=(edge,))
+    with pytest.raises(KeyError, match="Unknown"):
+        graph.vertex("missing")
+    with pytest.raises(ValueError, match="target_cut_value"):
+        MaxCut.Parameters(target_cut_value=inf)
+    with pytest.raises(ValueError, match="name"):
+        MaxCut(name=" ", graph=graph)
+
+
+def test_maxcut_networkx_adapter_and_rejections() -> None:
+    graph = nx.Graph()
+    graph.add_edge("A", "B", weight=2.5)
+    domain = MaxCut.from_networkx(graph, name="weighted")
+    assert domain.graph.weighted
+    assert domain.graph.total_weight == 2.5
+    assert domain.graph.vertex("A").variable.value_type is ValueType.BINARY
+
+    with pytest.raises(TypeError, match="NetworkX"):
+        MaxCut.from_networkx(object())
+    directed = nx.DiGraph()
+    directed.add_edge(1, 2)
+    with pytest.raises(ValueError, match="undirected"):
+        MaxCut.from_networkx(directed)
+    loop = nx.Graph()
+    loop.add_edge(1, 1)
+    with pytest.raises(ValueError, match="self-loop"):
+        MaxCut.from_networkx(loop)

@@ -1,11 +1,35 @@
 import os
 import sys
+import textwrap
 from collections.abc import Iterable, Iterator
 from contextlib import contextmanager
 from dataclasses import dataclass
 
 
-BANNER_WIDTH = 62
+__all__ = [
+    "BANNER_WIDTH",
+    "Block",
+    "banner",
+    "blank",
+    "block",
+    "detail",
+    "failure",
+    "footer",
+    "heading",
+    "item",
+    "progress",
+    "result",
+    "section",
+    "step",
+    "success",
+    "tool_block",
+    "tool_result",
+    "value",
+]
+
+
+BANNER_WIDTH = 72
+DETAIL_LABEL_WIDTH = 16
 
 _PASS_GREEN = "\033[32m"
 _FAIL_RED = "\033[31m"
@@ -16,12 +40,12 @@ _CYAN = "\033[36m"
 _YELLOW = "\033[33m"
 _BLUE = "\033[34m"
 _MAGENTA = "\033[35m"
+_DIM = "\033[2m"
 
 _BLOCK_VALUE_COLORS = {
-    # "problem": _BLUE,
     "decision": _YELLOW,
-    # "reason": None,
     "artifact": _CYAN,
+    "output": _CYAN,
 }
 
 
@@ -63,8 +87,78 @@ def banner(title: str) -> None:
     print()
 
 
+def heading(title: str) -> None:
+    """Render a human-readable runtime section heading."""
+
+    print(_colorize(title, _MAGENTA))
+    print(_colorize("─" * min(BANNER_WIDTH, max(18, len(title) + 4)), _DIM))
+
+
 def step(name: str, *, color: str | None = None) -> None:
     print(_colorize(f"> {name}", color), flush=True)
+
+
+def detail(
+    label: str,
+    message: object,
+    *,
+    indent: int = 2,
+    color: str | None = None,
+) -> None:
+    """Render an aligned, terminal-width-aware label/value pair."""
+
+    prefix = " " * indent
+    continuation = " " * (indent + DETAIL_LABEL_WIDTH)
+    width = max(24, BANNER_WIDTH - indent - DETAIL_LABEL_WIDTH)
+    source_lines = str(message).splitlines() or [""]
+    lines: list[str] = []
+    for source in source_lines:
+        lines.extend(
+            textwrap.wrap(
+                source,
+                width=width,
+                break_long_words=False,
+                break_on_hyphens=False,
+            )
+            or [""]
+        )
+
+    first = f"{prefix}{label:<{DETAIL_LABEL_WIDTH}}{lines[0]}"
+    print(_colorize(first, color))
+    for line in lines[1:]:
+        print(_colorize(f"{continuation}{line}", color))
+
+
+def item(marker: str, message: object, *, indent: int = 2) -> None:
+    """Render one compact list entry with aligned wrapped continuation."""
+
+    prefix = " " * indent
+    marker_width = 5
+    continuation = " " * (indent + marker_width)
+    width = max(24, BANNER_WIDTH - indent - marker_width)
+    lines = textwrap.wrap(
+        str(message),
+        width=width,
+        break_long_words=False,
+        break_on_hyphens=False,
+    ) or [""]
+    print(f"{prefix}{marker:<{marker_width}}{lines[0]}")
+    for line in lines[1:]:
+        print(f"{continuation}{line}")
+
+
+def progress(message: str = "Processing ...") -> None:
+    """Render a flushed progress marker before synchronous work begins."""
+
+    print(_colorize(f"  … {message}", _CYAN), flush=True)
+
+
+def result(message: object, *, ok: bool = True) -> None:
+    """Render a compact terminal result line."""
+
+    marker = "✓" if ok else "✗"
+    color = _PASS_GREEN if ok else _FAIL_RED
+    print(_colorize(f"  {marker} {message}", color))
 
 
 def success(message: str = "complete") -> None:

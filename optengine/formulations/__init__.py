@@ -1,9 +1,10 @@
 from optengine.formulations.base import Formulation, Model
-from optengine.formulations.qubo import QUBOFormulation, QUBOModel
+from optengine.formulations.cqm import CQM
+from optengine.formulations.qubo import QUBO
 
 __all__ = [
+    "CQM",
     "Formulation",
     "Model",
-    "QUBOFormulation",
-    "QUBOModel",
+    "QUBO",
 ]

@@ -1,48 +1,47 @@
 from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
-from dataclasses import asdict
-from typing import Any, Protocol
+from typing import TYPE_CHECKING, Any, Protocol
 
-from optengine.analysis import Analysis
-from optengine.evaluation import Evaluation
 from optengine.utility.base import (
-    StrategyUtility,
-    UtilityAssessment,
-    UtilityModel,
+    Assessment,
+    StrategyAssessment,
+    Utility,
 )
+
+if TYPE_CHECKING:
+    from optengine.analysis import Analysis
+    from optengine.execution import Execution
 
 
 class OptChinAssessor(Protocol):
     def __call__(
         self,
         payload: Mapping[str, Any],
-    ) -> UtilityAssessment | Mapping[str, Any]:
+    ) -> Assessment | Mapping[str, Any]:
         raise NotImplementedError
 
 
-class OptChinUtilityAdapter(UtilityModel):
-    """Connect a private OptChin assessor to the public utility contract."""
+class OptChinUtility(Utility):
+    """Connect a private OptChin assessor to the public Utility contract."""
 
     def __init__(self, assessor: OptChinAssessor) -> None:
         self._assessor = assessor
 
     def assess(
         self,
-        evaluations: Sequence[Evaluation],
+        executions: Sequence[Execution],
         analysis: Analysis | None,
-    ) -> UtilityAssessment:
-        result = self._assessor(self._payload(evaluations, analysis))
+    ) -> Assessment:
+        result = self._assessor(self._payload(executions, analysis))
 
-        if isinstance(result, UtilityAssessment):
+        if isinstance(result, Assessment):
             return result
 
         if not isinstance(result, Mapping):
-            raise TypeError(
-                "OptChin assessor must return UtilityAssessment or a mapping."
-            )
+            raise TypeError("OptChin assessor must return Assessment or a mapping.")
 
-        return UtilityAssessment(
+        return Assessment(
             selected_strategy=result.get("selected_strategy"),
             feasible=bool(result.get("feasible", False)),
             utility=self._optional_float(result.get("utility")),
@@ -62,61 +61,41 @@ class OptChinUtilityAdapter(UtilityModel):
 
     @staticmethod
     def _payload(
-        evaluations: Sequence[Evaluation],
+        executions: Sequence[Execution],
         analysis: Analysis | None,
     ) -> Mapping[str, Any]:
         return {
-            "analysis": None if analysis is None else asdict(analysis),
-            "evaluations": [
-                {
-                    "strategy": evaluation.strategy,
-                    "feasible": evaluation.feasible,
-                    "quality": evaluation.quality,
-                    "metrics": dict(evaluation.metrics),
-                    "reference": dict(evaluation.reference),
-                    "utility_inputs": (evaluation.evidence_for_utility()),
-                    "candidate": {
-                        "formulation": evaluation.candidate.formulation,
-                        "operation": evaluation.candidate.operation,
-                        "solver": evaluation.candidate.solver,
-                        "native_score": evaluation.candidate.native_score,
-                        "native_metrics": dict(evaluation.candidate.native_metrics),
-                        "runtime_s": evaluation.candidate.runtime_s,
-                        "resource_cost": (evaluation.candidate.resource_cost),
-                        "status": evaluation.candidate.status,
-                        "provenance": dict(evaluation.candidate.provenance),
-                    },
-                }
-                for evaluation in evaluations
-            ],
+            "analysis": (None if analysis is None else analysis.to_dict()),
+            "executions": [execution.to_dict() for execution in executions],
         }
 
     @staticmethod
-    def _strategy_from_mapping(value: Any) -> StrategyUtility:
+    def _strategy_from_mapping(
+        value: Any,
+    ) -> StrategyAssessment:
         if not isinstance(value, Mapping):
-            raise TypeError("OptChin strategy utility must be a mapping.")
+            raise TypeError("OptChin Strategy assessment must be a mapping.")
 
-        return StrategyUtility(
+        return StrategyAssessment(
             strategy=str(value["strategy"]),
             feasible=bool(value.get("feasible", False)),
-            quality=OptChinUtilityAdapter._optional_float(value.get("quality")),
-            utility=OptChinUtilityAdapter._optional_float(value.get("utility")),
-            marginal_utility=OptChinUtilityAdapter._optional_float(
+            quality=OptChinUtility._optional_float(value.get("quality")),
+            utility=OptChinUtility._optional_float(value.get("utility")),
+            marginal_utility=OptChinUtility._optional_float(
                 value.get("marginal_utility")
             ),
-            expected_improvement=OptChinUtilityAdapter._optional_float(
+            expected_improvement=OptChinUtility._optional_float(
                 value.get("expected_improvement")
             ),
-            execution_cost=OptChinUtilityAdapter._optional_float(
-                value.get("execution_cost")
-            ),
-            confidence=OptChinUtilityAdapter._optional_float(value.get("confidence")),
-            reference_gap=OptChinUtilityAdapter._optional_float(
-                value.get("reference_gap")
-            ),
+            execution_cost=OptChinUtility._optional_float(value.get("execution_cost")),
+            confidence=OptChinUtility._optional_float(value.get("confidence")),
+            reference_gap=OptChinUtility._optional_float(value.get("reference_gap")),
             evidence=dict(value.get("evidence", {})),
         )
 
     @staticmethod
     def _optional_float(value: Any) -> float | None:
         return None if value is None else float(value)
+
+
+OptChinUtilityAdapter = OptChinUtility

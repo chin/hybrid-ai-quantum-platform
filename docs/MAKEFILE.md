@@ -1,402 +1,290 @@
 # OptEngine Makefile Execution Guide
 
-This guide defines the supported `make` commands for OptEngine, what each command executes, whether it changes the working tree, and when it should be used.
-
-The Makefile is the public command interface for local development, continuous-integration parity, release preparation, artifact promotion, and official release dispatch. The underlying development commands are centralized in `tools/dev.py` so local execution and GitHub Actions can use the same implementations.
-
-## Command model
-
-OptEngine separates five kinds of work:
-
-1. **Execution** — run the platform demonstration.
-2. **Mutation** — intentionally format or clean local files.
-3. **Verification** — check the repository without changing tracked source.
-4. **Release preparation** — verify that the package builds from a clean generated state.
-5. **Official operations** — create or publish release artifacts through GitHub.
-
-This separation prevents CI from silently fixing files, keeps release actions explicit, and makes every command's side effects predictable.
+The Makefile is the supported developer interface for OptEngine. It keeps
+execution, verification, artifact promotion, and release operations behind
+stable commands while `tools/dev.py` centralizes the underlying tool calls.
 
 ## Command summary
 
-| Command | Purpose | Changes tracked source? | Generates or deletes local files? |
+| Command | Purpose | Source mutation | Disposable output |
 |---|---|---:|---:|
-| `make help` | Show the supported command interface | No | No |
-| `make bootstrap` | Verify tools and synchronize the environment | No | May update the local virtual environment |
-| `make run` | Run the OptEngine quickstart | No | Writes a disposable output JSON |
-| `make dev` | Format and run the complete pre-merge gate | Formatting only | Builds distributions |
-| `make format` | Apply Ruff formatting | Possibly | No |
-| `make format-check` | Verify formatting without fixing it | No | No |
+| `make help` | List supported commands | No | No |
+| `make bootstrap` | Verify tools and synchronize the `uv` environment | No | Environment only |
+| `make run` | Run the Max-Cut reference workflow | No | `outputs/*.json` |
+| `make portfolio` | Run the bounded portfolio workflow | No | `outputs/*.json` |
+| `make test` | Run the complete pytest suite | No | Test caches |
+| `make runtime-test` | Run stage, execution, Utility, and policy tests | No | Test caches |
+| `make contract-coverage` | Require 100% coverage of reusable OOP contracts | No | Coverage data |
+| `make coverage` | Run complete repository branch coverage | No | Coverage reports |
+| `make regression-test` | Run the full regression suite with branch coverage | No | Coverage data |
+| `make format` | Apply Ruff formatting | Yes | No |
+| `make format-check` | Check Ruff formatting | No | No |
 | `make lint` | Run Ruff static analysis | No | No |
-| `make test` | Run the pytest suite | No | Test caches may be created |
-| `make status` | Show branch and working-tree state | No | No |
-| `make ci` | Run the complete non-mutating quality gate | No | Test caches may be created |
-| `make build` | Build the wheel and source distribution | No | Writes `dist/` and build metadata |
-| `make release-check` | Clean generated state, then run CI and build | No | Deletes and regenerates disposable build files |
-| `make version` | Preview the next semantic version and Git tag | No | No |
-| `make release` | Dispatch the official GitHub release workflow | No | Remote GitHub workflow creates release artifacts |
-| `make artifact` | Promote a selected output into the artifact registry | Possibly | Writes curated artifact content |
-| `make clean` | Remove disposable outputs, caches, and build products | No | Deletes disposable local files |
-| `make docs` | Reserved documentation validation command | No | Not implemented yet |
-| `make benchmark` | Reserved performance benchmark command | No | Not implemented yet |
-| `make validate` | Reserved research-validation command | No | Not implemented yet |
-| `make publish` | Reserved package-registry publication command | No | Not implemented yet |
+| `make ci` | Run the non-mutating local CI gate | No | Test/coverage caches |
+| `make dev` | Format, then run release readiness | Formatting only | Build/test products |
+| `make build` | Build wheel and source distributions | No | `dist/`, build metadata |
+| `make release-check` | Clean, run CI, and build | No | Rebuilt disposable products |
+| `make version` | Preview the next semantic version and tag | No | No |
+| `make release` | Dispatch the official GitHub release workflow | No | Remote release products |
+| `make artifact` | Run and promote the latest Max-Cut output | Curated evidence | Output and artifact files |
+| `make portfolio-artifact` | Run and promote the latest portfolio output | Curated evidence | Output and artifact files |
+| `make clean` | Remove disposable outputs, caches, and build products | No | Deletes disposable files |
+| `make docs` | Reserved documentation validation target | No | Not implemented |
+| `make benchmark` | Reserved benchmark target | No | Not implemented |
+| `make validate` | Reserved research-validation target | No | Not implemented |
+| `make publish` | Reserved package-registry target | No | Not implemented |
 
-## Execution graph
+## Execution workflows
+
+### Reference workflows
 
 ```text
 make run
 └── bootstrap
-    └── OptEngine quickstart
+    └── demos/quickstart.py
+        └── timestamped Max-Cut Recommendation JSON
 
+make portfolio
+└── bootstrap
+    └── demos/portfolio_vertical_slice.py
+        └── timestamped portfolio Recommendation JSON
+```
+
+The demonstration commands execute the public OptEngine API. They do not
+format source, run the test suite, or promote outputs automatically.
+
+### Verification workflows
+
+```text
+make test
+└── complete pytest suite
+
+make runtime-test
+├── analysis and Strategy discovery
+├── independent Execution and failure isolation
+├── stage orchestration
+├── Utility → Assessment
+└── Stop / Switch / Scale
+
+make contract-coverage
+└── 100% statement coverage for reusable contracts:
+    ├── Compatibility and Catalog
+    ├── mathematical value objects
+    ├── Domain base contract
+    ├── Objective and Interpretation
+    ├── Formulation and Model
+    ├── Operation and Request
+    ├── Solver and Result
+    ├── Analysis and Strategy
+    ├── Execution and Evaluation
+    └── Utility and Assessment
+
+make coverage
+└── complete repository branch-coverage report
+
+make regression-test
+└── full test tree with branch coverage
+```
+
+`make contract-coverage` is the extension-safety gate. It proves exhaustive
+coverage of the domain-neutral object contracts that concrete Domains,
+Formulations, Operations, Solvers, and Utilities extend. Concrete adapter
+coverage is reported separately because optional external libraries may be
+unavailable in a minimal environment.
+
+### CI and development workflows
+
+```text
 make ci
 └── bootstrap
-    └── status
-        └── format-check
-            └── lint
-                └── test
+    ├── status
+    ├── format-check
+    ├── lint
+    ├── contract-coverage
+    └── coverage
 
 make dev
 └── bootstrap
-    └── format
-        └── release-check command group
-            └── ci
-                ├── status
-                ├── format-check
-                ├── lint
-                └── test
-            └── build
+    ├── clean
+    ├── format
+    └── release-check
+        ├── ci
+        └── build
 
 make release-check
 └── bootstrap
-    └── clean
-        └── release-check command group
-            └── ci
-                ├── status
-                ├── format-check
-                ├── lint
-                └── test
-            └── build
-
-make version
-└── bootstrap
-    ├── next semantic version
-    └── next Git tag
-
-make release
-├── require `main`
-├── require a clean working tree
-├── require synchronized `origin/main`
-├── require authenticated GitHub CLI
-├── preview the semantic version and tag
-└── dispatch `.github/workflows/release.yml`
+    ├── clean
+    ├── ci
+    └── build
 ```
 
-## Why the commands are separated
+`make ci` is non-mutating with respect to tracked source. `make dev` is the
+developer preparation path and may format source before running the same
+verification gates.
 
-### `make run`
-
-`make run` executes the public quickstart:
-
-```bash
-make run
-```
-
-It is intentionally separate from development validation. Running the platform should not automatically format source, execute the entire test suite, or build distributions.
-
-The quickstart writes a disposable JSON result under `outputs/`.
-
-### `make dev`
-
-`make dev` is the canonical local command before committing code or updating a pull request:
-
-```bash
-make dev
-```
-
-It performs:
-
-```text
-format
-status
-format-check
-lint
-test
-build
-```
-
-The formatter runs first because this is the developer-preparation path. After formatting, the same non-mutating checks used by CI verify that the repository is compliant. The package build is included because a change should not be considered merge-ready if the distributable package cannot be built.
-
-`make dev` does not run `clean`. Repeated development checks should not delete quickstart outputs and caches on every execution.
-
-### `make ci`
-
-`make ci` is the canonical non-mutating quality gate:
-
-```bash
-make ci
-```
-
-It performs:
-
-```text
-status
-format-check
-lint
-test
-```
-
-CI checks formatting but never fixes it. A CI system must report that committed files are incorrectly formatted rather than silently rewriting them.
-
-The repository state before and after `make ci` should be equivalent except for disposable test caches:
-
-```bash
-git status --short
-make ci
-git status --short
-```
-
-### `make release-check`
-
-`make release-check` verifies release readiness from a clean generated state:
-
-```bash
-make release-check
-```
-
-It performs:
-
-```text
-clean
-status
-format-check
-lint
-test
-build
-```
-
-The clean step removes stale `dist/`, `build/`, caches, generated outputs, and package metadata before the package is rebuilt. This proves that the wheel and source distribution were produced from the current source rather than left over from an earlier execution.
-
-This command is stricter than `make ci`, but it does not create a Git tag or GitHub Release.
-
-### `make version`
-
-`make version` previews what Python Semantic Release will produce:
-
-```bash
-make version
-```
-
-It prints:
-
-- the next semantic version;
-- the corresponding Git tag.
-
-The command succeeds only on a branch configured as a release branch, normally `main`. A feature branch should fail cleanly because feature branches are not allowed to create official releases.
-
-Before the first release, the required result is:
-
-```text
-0.1.0
-v0.1.0
-```
-
-### `make release`
-
-`make release` starts the official GitHub release process:
-
-```bash
-make release
-```
-
-It is intentionally not a local quality-gate bundle. Quality and build checks have already been performed through:
-
-- `make dev`;
-- GitHub Actions;
-- protected-branch checks;
-- `make release-check`.
-
-The release target should verify:
-
-- the current branch is `main`;
-- the working tree is clean;
-- local `main` matches `origin/main`;
-- the GitHub CLI is installed and authenticated;
-- the semantic version and tag can be calculated.
-
-It then dispatches `.github/workflows/release.yml`.
-
-### `make clean`
-
-`make clean` removes disposable generated state:
-
-```bash
-make clean
-```
-
-It removes:
-
-- generated files under `outputs/`, except `.gitkeep`;
-- `.pytest_cache`;
-- `.ruff_cache`;
-- `build/`;
-- `dist/`;
-- top-level `*.egg-info`;
-- Python `__pycache__` directories.
-
-It is used automatically by `make release-check`, where a clean package build is important. It is not used automatically by `make dev`, because normal iteration should not repeatedly erase quickstart outputs and caches.
-
-### `make artifact`
-
-`make artifact` promotes a selected disposable output into the curated artifact registry:
-
-```bash
-make artifact
-```
-
-Artifact promotion remains explicit because it changes curated evidence. A normal test, CI, or release check must not automatically decide that an output should become a retained artifact.
-
-The intended workflow is:
-
-```bash
-make run
-make artifact
-```
+## Command details
 
 ### `make bootstrap`
 
-Most executable commands depend on `bootstrap`.
-
-It verifies:
-
-- Python 3.10 or newer;
-- Git;
-- Make;
-- `uv`.
-
-It then synchronizes the development environment with:
+`bootstrap` verifies Python, Git, Make, and `uv`, then runs:
 
 ```bash
 uv sync
 ```
 
-Centralizing this behavior means contributors do not need to manually activate a virtual environment before using the public Makefile commands.
+This installs the declared development and runtime dependencies. Backend
+integration tests and demos require the synchronized environment because they
+use `dimod`, `dwave-samplers`, and NetworkX.
 
-### `make help`
+### `make run`
 
-Run:
-
-```bash
-make help
-```
-
-The help target reads target descriptions directly from the Makefile. Every public target should therefore include a concise `##` description.
-
-## Reserved commands
-
-### `make docs`
-
-This target is reserved for automated documentation checks. It should not be added to `ci` until it executes a real command and returns a nonzero status when documentation is invalid.
-
-A practical first implementation could check Markdown formatting and links.
-
-### `make benchmark`
-
-This target is reserved for reproducible performance benchmarks. A meaningful implementation requires:
-
-- a stable benchmark workload;
-- controlled inputs and random seeds;
-- warm-up behavior;
-- repeated measurements;
-- recorded environment metadata;
-- a policy for regressions or comparison baselines.
-
-A benchmark that only times the quickstart once is not a reliable performance gate.
-
-### `make validate`
-
-This target is reserved for research and model validation. A meaningful implementation requires:
-
-- a stated validation claim;
-- reference inputs or datasets;
-- expected invariants or acceptance thresholds;
-- deterministic configuration;
-- retained validation evidence;
-- explicit failure conditions.
-
-Validation should not be treated as another name for unit testing.
-
-### `make publish`
-
-This target is reserved for package-registry publication. It is distinct from creating a GitHub Release.
-
-A future implementation may publish a previously built and verified distribution to a package registry through trusted publishing. It must not publish directly from an arbitrary developer branch.
-
-## Standard workflows
-
-### Run OptEngine
+Runs the Max-Cut reference workflow:
 
 ```bash
 make run
 ```
 
-### Work on a feature
+The workflow exercises:
+
+```text
+MaxCut
+→ Objective
+→ Expression
+→ Curve
+→ QUBO
+→ ExactSearch and Annealing
+→ DimodExact and DWaveLocal
+→ Candidate
+→ Evaluation
+→ Utility
+→ Assessment
+→ Stop / Switch / Scale
+→ Recommendation
+```
+
+### `make portfolio`
+
+Runs the bounded portfolio workflow from
+`config/examples/portfolio.json`:
 
 ```bash
-make run
+make portfolio
+```
+
+The Domain is the aggregate root. The same engine stages execute without
+portfolio-specific branching.
+
+### `make test`
+
+Runs all unit, contract, integration, regression, CLI, writer, artifact, and
+project-automation tests:
+
+```bash
 make test
 ```
 
-Use the narrow commands during iteration.
+External backend tests use `pytest.importorskip`. In a synchronized environment
+those tests execute; in a minimal environment they report explicit skips
+instead of preventing core contract verification.
 
-### Prepare a branch for commit or pull-request update
+### `make runtime-test`
+
+Runs the focused runtime set:
+
+```bash
+make runtime-test
+```
+
+The target covers real-time compatibility, N-Strategy analysis, isolated
+execution, Utility assessment, policy decisions, rendering, and writing.
+
+### `make contract-coverage`
+
+Requires 100% coverage of reusable object contracts:
+
+```bash
+make contract-coverage
+```
+
+The target intentionally names domain-neutral modules and fails below 100%.
+New concrete Domains should extend `tests/contracts/domain.py` rather than
+copying the same aggregate and interpretation tests.
+
+### `make coverage`
+
+Runs complete package branch coverage and writes terminal and HTML reports:
+
+```bash
+make coverage
+```
+
+This report includes optional adapters. Its percentage can differ from the
+contract gate when external backends are not installed.
+
+### `make regression-test`
+
+Runs all tests with branch coverage:
+
+```bash
+make regression-test
+```
+
+Use it when changing lifecycle behavior, compatibility, artifacts, public
+imports, or output schemas.
+
+### `make artifact` and `make portfolio-artifact`
+
+Promotion is explicit and non-destructive:
+
+```bash
+make artifact
+make portfolio-artifact
+```
+
+Each target first runs its workflow, then promotes the selected disposable
+output into the curated artifact registry. Tests and CI never promote evidence
+automatically.
+
+### `make clean`
+
+Removes disposable generated state while preserving tracked placeholders and
+curated evidence. It is part of `make release-check`, not routine execution.
+
+### `make release`
+
+The release target requires:
+
+- branch `main`;
+- clean working tree;
+- synchronized `origin/main`;
+- authenticated GitHub CLI;
+- a valid semantic-release preview.
+
+It then dispatches `.github/workflows/release.yml`. The workflow remains a
+manual operation rather than a push-triggered release.
+
+## Recommended use
+
+During implementation:
+
+```bash
+make test
+make contract-coverage
+```
+
+Before updating a pull request:
 
 ```bash
 make dev
-git status --short
-git add <intentional-files>
-git commit -m "feat: describe the change"
-git push
 ```
 
-### Reproduce the non-mutating CI gate locally
+Before a release:
 
 ```bash
-make ci
-```
-
-### Perform a clean release-readiness check
-
-```bash
-make release-check
-```
-
-### Create an official release
-
-After every intended pull request has merged:
-
-```bash
-git checkout main
-git pull --ff-only origin main
 make release-check
 make version
 make release
 ```
 
-### Promote an execution result
-
-```bash
-make run
-make artifact
-```
-
-## Design invariants
-
-The Makefile should preserve these rules:
-
-1. `make ci` never fixes source files.
-2. `make dev` is the single complete pre-merge developer command.
-3. `make release-check` proves a clean package build without creating a release.
-4. `make release` performs only the official release operation and its preconditions.
-5. `make artifact` remains an explicit curation action.
-6. Placeholder commands are not included in gates until they perform real validation.
-7. The Makefile remains the public interface; `tools/dev.py` remains the centralized command implementation.
+For the complete refactor verification sequence, use
+[`PR_CHECKLIST_POLYMORPHIC_REFACTOR.md`](PR_CHECKLIST_POLYMORPHIC_REFACTOR.md).

@@ -51,8 +51,14 @@ jobs:
       - name: Run tests
         run: uv run pytest -v
 
-      - name: Run quickstart smoke test
+      - name: Require reusable contract coverage
+        run: uv run python tools/dev.py contract-coverage
+
+      - name: Run Max-Cut quickstart smoke test
         run: uv run python demos/quickstart.py
+
+      - name: Run portfolio smoke test
+        run: uv run python demos/portfolio_vertical_slice.py
 
       - name: Build package
         run: uv build

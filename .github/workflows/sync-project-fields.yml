@@ -1,0 +1,53 @@
+name: Synchronize project fields
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  sync:
+    name: sync
+    runs-on: ubuntu-latest
+
+    env:
+      GH_TOKEN: ${{ secrets.PROJECT_TOKEN }}
+      PROJECT_OWNER: ${{ vars.PROJECT_OWNER }}
+      PROJECT_NUMBER: ${{ vars.PROJECT_NUMBER }}
+      PROJECT_START_FIELD: Start date
+      PROJECT_END_FIELD: End date
+      PROJECT_ITERATION_FIELD: Iteration
+      PROJECT_IN_PROGRESS_VALUES: In Progress,Started
+      PROJECT_DONE_VALUES: Done,Closed
+
+    steps:
+      - name: Pull-request validation
+        if: github.event_name == 'pull_request'
+        run: |
+          echo "Project synchronization is deferred until changes reach main."
+
+      - name: Check out repository
+        if: github.event_name != 'pull_request'
+        uses: actions/checkout@v7
+
+      - name: Validate project configuration
+        if: github.event_name != 'pull_request'
+        run: |
+          test -n "$GH_TOKEN" || {
+            echo "PROJECT_TOKEN secret is required"
+            exit 1
+          }
+          test -n "$PROJECT_OWNER" || {
+            echo "PROJECT_OWNER variable is required"
+            exit 1
+          }
+          test -n "$PROJECT_NUMBER" || {
+            echo "PROJECT_NUMBER variable is required"
+            exit 1
+          }
+
+      - name: Synchronize project fields
+        if: github.event_name != 'pull_request'
+        run: python tools/sync_project_fields.py

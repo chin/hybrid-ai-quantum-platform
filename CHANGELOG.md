@@ -2,6 +2,29 @@
 
 <!-- version list -->
 
+## Unreleased
+
+### Architecture
+
+- Refactor the runtime into an idempotent polymorphic object-collaboration
+  model with Domain aggregates, Curve-driven compatibility, nested
+  capabilities, N-Strategy analysis, isolated executions, and canonical
+  fingerprints.
+- Canonicalize `Model`, `Assessment`, `Utility`, and
+  `Formulation.express(Objective)` terminology.
+
+### Testing
+
+- Add reusable Domain contract tests, architecture guardrails, failure-path
+  regressions, backend integration regressions, and a 100% reusable-contract
+  coverage gate.
+
+### Documentation
+
+- Publish the polymorphic OOP architecture, extension templates, Makefile
+  verification guide, ordered PR checklist, and verification report.
+
+
 ## v0.1.1 (2026-07-16)
 
 ### Bug Fixes

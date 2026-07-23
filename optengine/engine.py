@@ -2,29 +2,29 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 from optengine.recommendation import Recommendation
 
 if TYPE_CHECKING:
+    from optengine.analysis import Analysis, Analyzer
+    from optengine.catalog import Catalog
     from optengine.domains.base import Domain
+    from optengine.execution import Execution
     from optengine.explainers.base import Explainer
-    from optengine.interpretation import Interpretation
     from optengine.policy.base import Policy
-    from optengine.registry import StrategyRegistry
-    from optengine.strategy import Strategy
-    from optengine.utility.base import UtilityModel
+    from optengine.utility.base import Utility
     from optengine.writers.base import RecommendationWriter
 
 
 @dataclass
 class OptEngine:
-    """Live state and collaborators for one execution."""
+    """Live execution object that coordinates the invariant stage pattern."""
 
-    input_data: Any
     domain: Domain
-    registry: StrategyRegistry
-    utility_model: UtilityModel
+    catalog: Catalog
+    analyzer: Analyzer
+    utility: Utility
     policy: Policy
     explainer: Explainer
     writer: RecommendationWriter
@@ -34,8 +34,8 @@ class OptEngine:
     render: bool = False
     title: str = "OptEngine :: Runtime"
     run_name: str = "run"
-    interpretation: Interpretation | None = None
-    strategies: list[Strategy] = field(default_factory=list)
+    analysis: Analysis | None = None
+    executions: list[Execution] = field(default_factory=list)
     started: bool = False
     completed: bool = False
 

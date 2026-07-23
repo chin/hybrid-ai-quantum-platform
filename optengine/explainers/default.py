@@ -4,60 +4,81 @@ from collections.abc import Sequence
 
 from optengine.analysis import Analysis
 from optengine.decision import Decision
-from optengine.evaluation import Evaluation
+from optengine.execution import Execution
 from optengine.explanation import Explanation
 from optengine.explainers.base import Explainer
-from optengine.utility.base import UtilityAssessment
+from optengine.utility.base import Assessment
 
 
 class DefaultExplainer(Explainer):
+    """Deterministic operational explanation of Stop/Switch/Scale."""
+
+    _SUMMARIES = {
+        "NO_FEASIBLE_CANDIDATE": (
+            "OptEngine decided to switch because no feasible evaluated "
+            "candidate is available."
+        ),
+        "REFERENCE_TARGET_REACHED": (
+            "OptEngine decided to stop because the selected strategy reached "
+            "the configured reference target."
+        ),
+        "LOW_CONFIDENCE": (
+            "OptEngine decided to switch because the selected strategy did "
+            "not meet the configured confidence threshold."
+        ),
+        "ADDITIONAL_SEARCH_JUSTIFIED": (
+            "OptEngine decided to scale because the selected strategy's "
+            "expected improvement justifies additional execution."
+        ),
+        "MARGINAL_UTILITY_EXHAUSTED": (
+            "OptEngine decided to stop because additional execution is not "
+            "justified by the current marginal utility."
+        ),
+    }
+
     def explain(
         self,
+        *,
         decision: Decision,
-        evaluations: Sequence[Evaluation],
-        assessment: UtilityAssessment | None = None,
-        analysis: Analysis | None = None,
+        executions: Sequence[Execution],
+        assessment: Assessment,
+        analysis: Analysis,
     ) -> Explanation:
-        strategy = decision.selected_strategy or "no selected strategy"
-
-        summaries = {
-            "NO_FEASIBLE_CANDIDATE": (
-                "OptEngine decided to switch because no feasible evaluated "
-                "candidate is available."
-            ),
-            "REFERENCE_TARGET_REACHED": (
-                f"OptEngine decided to stop with strategy '{strategy}' because "
-                "the configured reference target was reached."
-            ),
-            "LOW_CONFIDENCE": (
-                f"OptEngine decided to switch from strategy '{strategy}' because "
-                "the evaluation did not meet the confidence threshold."
-            ),
-            "ADDITIONAL_SEARCH_JUSTIFIED": (
-                f"OptEngine decided to scale strategy '{strategy}' because "
-                "additional execution is justified by the expected improvement."
-            ),
-            "MARGINAL_UTILITY_EXHAUSTED": (
-                f"OptEngine decided to stop strategy '{strategy}' because "
-                "additional execution is not justified by the current marginal utility."
-            ),
-        }
-
-        summary = summaries.get(
+        selected = decision.selected_strategy
+        base = self._SUMMARIES.get(
             decision.reason_code,
-            (
-                f"OptEngine decided to {decision.action} using strategy "
-                f"'{strategy}' based on the available evidence."
-            ),
+            f"OptEngine decided to {decision.action} from the available evidence.",
+        )
+        summary = (
+            base
+            if selected is None
+            else f"{base[:-1]} using strategy '{selected}'."
+            if base.endswith(".")
+            else f"{base} using strategy '{selected}'."
         )
 
+        alternatives = tuple(
+            execution.strategy.name
+            for execution in executions
+            if execution.strategy.name != selected
+        )
+        limitations = tuple(
+            f"{execution.strategy.name}: {execution.failure.message}"
+            for execution in executions
+            if execution.failed and execution.failure is not None
+        )
+
+        evidence = {
+            "reason_code": decision.reason_code,
+            "assessment": assessment.to_dict(),
+            "strategy_count": len(analysis.strategies),
+            "execution_count": len(executions),
+            **dict(decision.evidence),
+        }
         return Explanation(
             summary=summary,
-            selected_strategy=decision.selected_strategy,
-            evidence=dict(decision.evidence),
-            alternatives=tuple(
-                evaluation.strategy
-                for evaluation in evaluations
-                if evaluation.strategy != decision.selected_strategy
-            ),
+            selected_strategy=selected,
+            evidence=evidence,
+            alternatives=alternatives,
+            limitations=limitations,
         )

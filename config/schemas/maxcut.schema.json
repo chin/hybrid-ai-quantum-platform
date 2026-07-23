@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://optchin.dev/schemas/maxcut.schema.json",
+  "title": "OptEngine Max-Cut execution",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["name", "problem", "execution"],
+  "properties": {
+    "name": {"type": "string", "minLength": 1},
+    "problem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["edges"],
+      "properties": {
+        "nodes": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": ["string", "integer"]},
+          "default": []
+        },
+        "edges": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["left", "right"],
+            "properties": {
+              "left": {"type": ["string", "integer"]},
+              "right": {"type": ["string", "integer"]},
+              "weight": {"type": "number", "default": 1.0}
+            }
+          }
+        }
+      }
+    },
+    "execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "strategies": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1},
+          "default": []
+        },
+        "render": {"type": "boolean", "default": true},
+        "output_dir": {"type": "string", "minLength": 1, "default": "outputs"}
+      }
+    }
+  }
+}

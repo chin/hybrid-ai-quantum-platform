@@ -1,14 +1,11 @@
 from __future__ import annotations
 
-from collections.abc import Sequence
 from dataclasses import dataclass
 
 from optengine.analysis import Analysis
-from optengine.decision import Decision
-from optengine.evaluation import Evaluation
+from optengine.decision import Decision, Scale, Stop, Switch
 from optengine.policy.base import Policy
-from optengine.utility.base import UtilityAssessment
-from optengine.utility.operational import OperationalUtilityModel
+from optengine.utility.base import Assessment
 
 
 @dataclass(frozen=True, kw_only=True)
@@ -20,7 +17,7 @@ class ChintropicStopConfig:
 
 
 class ChintropicStopPolicy(Policy):
-    """Operational Stop/Switch/Scale policy for the public foundation."""
+    """Operational Stop/Switch/Scale policy."""
 
     def __init__(
         self,
@@ -30,86 +27,62 @@ class ChintropicStopPolicy(Policy):
 
     def apply(
         self,
-        assessment: UtilityAssessment | Sequence[Evaluation],
+        assessment: Assessment,
         analysis: Analysis | None = None,
     ) -> Decision:
-        normalized = self._normalize_assessment(
-            assessment=assessment,
-            analysis=analysis,
-        )
-
         evidence = {
-            "feasible": normalized.feasible,
-            "utility": normalized.utility,
-            "marginal_utility": normalized.marginal_utility,
-            "expected_improvement": normalized.expected_improvement,
-            "execution_cost": normalized.execution_cost,
-            "confidence": normalized.confidence,
-            "reference_gap": normalized.reference_gap,
+            "feasible": assessment.feasible,
+            "utility": assessment.utility,
+            "marginal_utility": assessment.marginal_utility,
+            "expected_improvement": assessment.expected_improvement,
+            "execution_cost": assessment.execution_cost,
+            "confidence": assessment.confidence,
+            "reference_gap": assessment.reference_gap,
             "confidence_threshold": self.config.confidence_threshold,
             "improvement_threshold": self.config.improvement_threshold,
             "minimum_marginal_utility": (self.config.minimum_marginal_utility),
-            "target_reference_gap": self.config.target_reference_gap,
+            "target_reference_gap": (self.config.target_reference_gap),
         }
 
-        if not normalized.feasible or normalized.selected_strategy is None:
-            return Decision(
-                action="switch",
+        if not assessment.feasible or assessment.selected_strategy is None:
+            return Switch(
                 selected_strategy=None,
                 reason_code="NO_FEASIBLE_CANDIDATE",
                 evidence=evidence,
             )
 
         if (
-            normalized.reference_gap is not None
-            and normalized.reference_gap <= self.config.target_reference_gap
+            assessment.reference_gap is not None
+            and assessment.reference_gap <= self.config.target_reference_gap
         ):
-            return Decision(
-                action="stop",
-                selected_strategy=normalized.selected_strategy,
+            return Stop(
+                selected_strategy=assessment.selected_strategy,
                 reason_code="REFERENCE_TARGET_REACHED",
                 evidence=evidence,
             )
 
-        confidence = float(normalized.confidence or 0.0)
+        confidence = float(assessment.confidence or 0.0)
         if confidence < self.config.confidence_threshold:
-            return Decision(
-                action="switch",
-                selected_strategy=normalized.selected_strategy,
+            return Switch(
+                selected_strategy=assessment.selected_strategy,
                 reason_code="LOW_CONFIDENCE",
                 evidence=evidence,
             )
 
-        expected_improvement = float(normalized.expected_improvement or 0.0)
-        marginal_utility = float(normalized.marginal_utility or 0.0)
-
+        expected_improvement = float(assessment.expected_improvement or 0.0)
+        marginal_utility = float(assessment.marginal_utility or 0.0)
         if (
             expected_improvement >= self.config.improvement_threshold
             and marginal_utility >= self.config.minimum_marginal_utility
         ):
-            return Decision(
-                action="scale",
-                selected_strategy=normalized.selected_strategy,
+            return Scale(
+                selected_strategy=assessment.selected_strategy,
                 reason_code="ADDITIONAL_SEARCH_JUSTIFIED",
                 evidence=evidence,
             )
 
-        return Decision(
-            action="stop",
-            selected_strategy=normalized.selected_strategy,
+        return Stop(
+            selected_strategy=assessment.selected_strategy,
             reason_code="MARGINAL_UTILITY_EXHAUSTED",
             evidence=evidence,
-        )
-
-    @staticmethod
-    def _normalize_assessment(
-        assessment: UtilityAssessment | Sequence[Evaluation],
-        analysis: Analysis | None,
-    ) -> UtilityAssessment:
-        if isinstance(assessment, UtilityAssessment):
-            return assessment
-
-        return OperationalUtilityModel().assess(
-            evaluations=tuple(assessment),
-            analysis=analysis,
         )

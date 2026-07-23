@@ -1,30 +1,46 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, ClassVar, Mapping
 
 if TYPE_CHECKING:
-    from optengine.candidate import Candidate
     from optengine.evaluation import Evaluation
     from optengine.interpretation import Interpretation
-    from optengine.strategy import Strategy
+    from optengine.objective import Objective
 
 
 class Domain(ABC):
+    """Aggregate root and semantic owner for one optimization problem."""
+
+    domain_type: ClassVar[str]
     name: str
 
-    @abstractmethod
-    def interpret_input(
+    def interpret(
         self,
-        input_data: Any,
-    ) -> Interpretation:
-        raise NotImplementedError
+        subject: Any | None = None,
+    ) -> Interpretation | Evaluation:
+        target = self if subject is None else subject
+        interpreter = getattr(target, "_interpret_in", None)
+        if not callable(interpreter):
+            raise TypeError(
+                f"{type(target).__name__} cannot be interpreted by "
+                f"{type(self).__name__}."
+            )
+        return interpreter(self)
+
+    @property
+    @abstractmethod
+    def objective(self) -> Objective:
+        raise NotImplementedError  # pragma: no cover
+
+    @property
+    @abstractmethod
+    def summary(self) -> Mapping[str, Any]:
+        raise NotImplementedError  # pragma: no cover
 
     @abstractmethod
-    def interpret_candidate(
+    def _interpret_in(
         self,
-        interpretation: Interpretation,
-        candidate: Candidate,
-        strategy: Strategy,
-    ) -> Evaluation:
-        raise NotImplementedError
+        domain: Domain,
+    ) -> Interpretation:
+        raise NotImplementedError  # pragma: no cover

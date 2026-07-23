@@ -1,0 +1,13 @@
+{
+  "category": "baselines",
+  "created_utc": "20260722_225939Z",
+  "description": "Curated OptEngine output for quickstart.",
+  "metadata": {
+    "artifact_type": "run-output",
+    "promoted_from": "outputs"
+  },
+  "name": "quickstart",
+  "path": "artifacts/baselines/quickstart_20260722_225939_401717Z.json",
+  "source": "outputs/quickstart_20260722_225939_401717Z.json",
+  "version": "20260722_225939_401717Z"
+}

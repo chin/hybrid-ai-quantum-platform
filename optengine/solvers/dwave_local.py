@@ -1,68 +1,69 @@
 from __future__ import annotations
 
+import importlib.util
 import time
-from typing import Any, Mapping
+from typing import Any, ClassVar
 
-from dwave.samplers import SimulatedAnnealingSampler
-
-from optengine.candidate import Candidate
-from optengine.formulations.base import Model
-from optengine.formulations.qubo import QUBOModel
-from optengine.operations.annealing import AnnealingOperation
+from optengine.errors import MissingDependencyError
+from optengine.formulations.qubo import QUBO
+from optengine.mathematics import ValueType
+from optengine.operations.annealing import Annealing
 from optengine.operations.base import Operation
 from optengine.solvers.base import Solver
 
 
-class DWaveLocalSolver(Solver):
-    name = "dwave-local"
+class DWaveLocal(Solver):
+    name: ClassVar[str] = "dwave-local"
 
-    def supports(
-        self,
-        model: Model,
-        operation: Operation,
-    ) -> bool:
-        return isinstance(model, QUBOModel) and isinstance(
-            operation,
-            AnnealingOperation,
-        )
+    capability = Solver.Capability(
+        operation_types=(Annealing,),
+        model_types=(QUBO.Model,),
+        input_types=frozenset({ValueType.BINARY}),
+        supports_constraints=False,
+    )
 
-    def execute(
-        self,
-        model: Model,
-        operation: Operation,
-        configuration: Mapping[str, Any],
-        budget: Mapping[str, Any],
-    ) -> Candidate:
-        if not isinstance(model, QUBOModel):
-            raise TypeError("DWaveLocalSolver requires a QUBOModel.")
+    @property
+    def available(self) -> bool:
+        try:
+            return importlib.util.find_spec("dwave.samplers") is not None
+        except ModuleNotFoundError:
+            return False
 
-        if not isinstance(operation, AnnealingOperation):
-            raise TypeError("DWaveLocalSolver requires AnnealingOperation.")
+    def execute(self, request: Operation.Request) -> Solver.Result:
+        if not self.compatibility(
+            operation=request.operation,
+            model=request.model,
+        ):
+            raise TypeError("DWaveLocal received an incompatible Request.")
 
-        iterations = int(budget.get("iterations", 1))
-        if iterations <= 0:
-            raise ValueError("iterations must be greater than zero")
+        try:
+            from dwave.samplers import SimulatedAnnealingSampler
+        except ImportError as error:
+            raise MissingDependencyError(
+                "dwave-samplers",
+                self.name,
+            ) from error
 
-        if operation.reads_per_iteration <= 0:
-            raise ValueError("reads_per_iteration must be greater than zero")
-
-        if operation.num_sweeps <= 0:
-            raise ValueError("num_sweeps must be greater than zero")
+        model = request.model
+        operation = request.operation
+        if not isinstance(model, QUBO.Model):
+            raise TypeError("DWaveLocal requires QUBO.Model.")
+        if not isinstance(operation, Annealing):
+            raise TypeError("DWaveLocal requires Annealing.")
 
         sampler = SimulatedAnnealingSampler()
         best_sample: dict[Any, int] = {}
         best_energy = float("inf")
+        previous_best = float("inf")
         history: list[dict[str, Any]] = []
         started = time.perf_counter()
-        previous_best = float("inf")
 
-        for iteration in range(iterations):
+        for iteration in range(operation.iterations):
             batch_started = time.perf_counter()
             sample_kwargs: dict[str, Any] = {
                 "num_reads": operation.reads_per_iteration,
                 "num_sweeps": operation.num_sweeps,
             }
-
             if operation.seed is not None:
                 sample_kwargs["seed"] = operation.seed + iteration
 
@@ -71,7 +72,6 @@ class DWaveLocalSolver(Solver):
                 **sample_kwargs,
             )
             batch_runtime_s = time.perf_counter() - batch_started
-
             batch_best = sampleset.first
             batch_energy = float(batch_best.energy)
             energies = [float(value) for value in sampleset.record.energy]
@@ -82,7 +82,6 @@ class DWaveLocalSolver(Solver):
 
             improved = batch_energy < best_energy
             improvement = 0.0
-
             if improved:
                 improvement = (
                     0.0
@@ -114,27 +113,23 @@ class DWaveLocalSolver(Solver):
         runtime_s = time.perf_counter() - started
         recent_improvement = float(history[-1]["improvement_in_native_score"])
 
-        return Candidate(
-            formulation=model.formulation,
-            operation=operation.name,
-            solver=self.name,
-            values={"sample": best_sample},
+        return Solver.Result(
+            values=best_sample,
             native_score=best_energy,
             status="complete",
             runtime_s=runtime_s,
             resource_cost=None,
-            native_metrics={
+            metrics={
                 "history": history,
-                "iterations": iterations,
+                "iterations": operation.iterations,
                 "reads_per_iteration": operation.reads_per_iteration,
                 "num_sweeps": operation.num_sweeps,
-                "total_reads": (iterations * operation.reads_per_iteration),
+                "total_reads": (operation.iterations * operation.reads_per_iteration),
                 "expected_improvement": recent_improvement,
                 "confidence": 0.75,
             },
             metadata={
-                "configuration": dict(configuration),
-                "budget": dict(budget),
+                "budget": dict(request.budget),
             },
             provenance={
                 "library": "dwave-samplers",
@@ -142,3 +137,6 @@ class DWaveLocalSolver(Solver):
                 "execution": "local",
             },
         )
+
+
+DWaveLocalSolver = DWaveLocal
