@@ -65,6 +65,10 @@ dist/
 # Project outputs
 # -----------------------------------------------------------------------------
 .DS_Store
+
+debug/*
+!debug/.gitkeep
+
 outputs/*
 !outputs/.gitkeep
 

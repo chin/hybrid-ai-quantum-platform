@@ -1,0 +1,13 @@
+{
+  "category": "baselines",
+  "created_utc": "20260723_194539Z",
+  "description": "Curated OptEngine output for portfolio-vertical-slice.",
+  "metadata": {
+    "artifact_type": "run-output",
+    "promoted_from": "outputs"
+  },
+  "name": "portfolio-vertical-slice",
+  "path": "artifacts/baselines/portfolio-vertical-slice_20260723_194539_097245Z.json",
+  "source": "outputs/portfolio-vertical-slice_20260723_194539_097245Z.json",
+  "version": "20260723_194539_097245Z"
+}
