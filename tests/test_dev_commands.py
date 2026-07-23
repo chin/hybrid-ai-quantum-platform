@@ -112,3 +112,36 @@ def test_version_preview_calculates_on_feature_branch_without_changing_sources(
     assert "> version.next" in output
     assert "> version.tag" in output
     assert "> version.branch" in output
+
+
+def test_dev_imports_tomli_when_tomllib_is_unavailable(monkeypatch) -> None:
+    import builtins
+    import runpy
+    import sys
+    import types
+
+    fake_tomli = types.ModuleType("tomli")
+    fake_tomli.loads = lambda value: {"value": value}
+    monkeypatch.setitem(sys.modules, "tomli", fake_tomli)
+
+    real_import = builtins.__import__
+
+    def import_without_tomllib(
+        name: str,
+        globals=None,
+        locals=None,
+        fromlist=(),
+        level: int = 0,
+    ):
+        if name == "tomllib":
+            raise ModuleNotFoundError("No module named 'tomllib'")
+        return real_import(name, globals, locals, fromlist, level)
+
+    monkeypatch.setattr(builtins, "__import__", import_without_tomllib)
+
+    namespace = runpy.run_path(
+        dev.ROOT / "tools" / "dev.py",
+        run_name="tools.dev_python310_probe",
+    )
+
+    assert namespace["tomllib"] is fake_tomli
