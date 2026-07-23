@@ -23,4 +23,4 @@ A domain CLI should normally provide:
 - [ ] Register the CLI in `default_domain_cli_registry()`
 - [ ] Add config, direct-argument, interactive, validation, and end-to-end tests
 
-Start with [`templates/domain_cli.py`](../templates/domain_cli.py).
+Start with [`config/templates/domain_cli.py`](../config/templates/domain_cli.py).

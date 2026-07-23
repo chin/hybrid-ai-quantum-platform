@@ -87,4 +87,4 @@ Then add concrete tests for entity validation, relationship behavior,
 Objective mathematics, Candidate decoding, and every independent feasibility
 dimension.
 
-See [`templates/problem_domain.py`](../templates/problem_domain.py).
+See [`config/templates/problem_domain.py`](../config/templates/problem_domain.py).

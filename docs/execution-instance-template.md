@@ -31,4 +31,4 @@ Strategy names are canonical:
 domain-type:formulation:operation:solver
 ```
 
-See [`templates/execution_instance.py`](../templates/execution_instance.py).
+See [`config/templates/execution_instance.py`](../config/templates/execution_instance.py).
