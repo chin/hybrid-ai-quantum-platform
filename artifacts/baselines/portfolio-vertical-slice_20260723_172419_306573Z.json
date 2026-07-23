@@ -1,0 +1,2185 @@
+{
+  "analysis": {
+    "compatibility": [
+      {
+        "collaborator": "cqm",
+        "evidence": {
+          "accepted_input_types": [
+            "binary",
+            "integer",
+            "real"
+          ],
+          "accepted_output_types": [
+            "real"
+          ],
+          "curve": {
+            "constraint_count": 5,
+            "constraint_degrees": [
+              1,
+              1,
+              1,
+              1,
+              1
+            ],
+            "degree": 2,
+            "input_count": 15,
+            "input_types": [
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary"
+            ],
+            "output_count": 1,
+            "output_types": [
+              "real"
+            ]
+          },
+          "maximum_constraint_degree": 2,
+          "maximum_degree": 2,
+          "maximum_inputs": null,
+          "maximum_outputs": 1,
+          "supports_constraints": true
+        },
+        "reasons": [],
+        "stage": "formulation",
+        "supported": true
+      },
+      {
+        "collaborator": "cqm",
+        "evidence": {
+          "model": {
+            "curve": {
+              "constraint_count": 5,
+              "constraint_degrees": [
+                1,
+                1,
+                1,
+                1,
+                1
+              ],
+              "degree": 2,
+              "input_count": 15,
+              "input_types": [
+                "binary",
+                "binary",
+                "binary",
+                "binary",
+                "binary",
+                "binary",
+                "binary",
+                "binary",
+                "binary",
+                "binary",
+                "binary",
+                "binary",
+                "binary",
+                "binary",
+                "binary"
+              ],
+              "output_count": 1,
+              "output_types": [
+                "real"
+              ]
+            },
+            "fingerprint": "c5cde77651f323839ea988475a2d7e2809a41b37a8b095ab71ac3efa1016926f",
+            "formulation": "cqm",
+            "metadata": {
+              "objective_sense": "maximize",
+              "source_curve": {
+                "constraint_count": 5,
+                "constraint_degrees": [
+                  1,
+                  1,
+                  1,
+                  1,
+                  1
+                ],
+                "degree": 2,
+                "input_count": 15,
+                "input_types": [
+                  "binary",
+                  "binary",
+                  "binary",
+                  "binary",
+                  "binary",
+                  "binary",
+                  "binary",
+                  "binary",
+                  "binary",
+                  "binary",
+                  "binary",
+                  "binary",
+                  "binary",
+                  "binary",
+                  "binary"
+                ],
+                "output_count": 1,
+                "output_types": [
+                  "real"
+                ]
+              }
+            }
+          }
+        },
+        "reasons": [],
+        "stage": "expression",
+        "supported": true
+      },
+      {
+        "collaborator": "cqm:exact-search",
+        "evidence": {
+          "accepted_input_types": [
+            "binary",
+            "integer"
+          ],
+          "curve": {
+            "constraint_count": 5,
+            "constraint_degrees": [
+              1,
+              1,
+              1,
+              1,
+              1
+            ],
+            "degree": 2,
+            "input_count": 15,
+            "input_types": [
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary"
+            ],
+            "output_count": 1,
+            "output_types": [
+              "real"
+            ]
+          },
+          "maximum_degree": 2,
+          "maximum_inputs": 18,
+          "model_types": [],
+          "supports_constraints": true
+        },
+        "reasons": [],
+        "stage": "operation",
+        "supported": true
+      },
+      {
+        "collaborator": "cqm:exact-search:dimod-cqm-exact",
+        "evidence": {
+          "accepted_input_types": [
+            "binary",
+            "integer"
+          ],
+          "available": true,
+          "curve": {
+            "constraint_count": 5,
+            "constraint_degrees": [
+              1,
+              1,
+              1,
+              1,
+              1
+            ],
+            "degree": 2,
+            "input_count": 15,
+            "input_types": [
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary"
+            ],
+            "output_count": 1,
+            "output_types": [
+              "real"
+            ]
+          },
+          "maximum_inputs": null,
+          "model": "Model",
+          "model_types": [
+            "optengine.formulations.cqm.CQM.Model"
+          ],
+          "operation": "exact-search",
+          "operation_types": [
+            "optengine.operations.exact.ExactSearch"
+          ],
+          "supports_constraints": true
+        },
+        "reasons": [],
+        "stage": "solver",
+        "supported": true
+      },
+      {
+        "collaborator": "cqm:exact-search:dimod-exact",
+        "evidence": {
+          "accepted_input_types": [
+            "binary"
+          ],
+          "available": true,
+          "curve": {
+            "constraint_count": 5,
+            "constraint_degrees": [
+              1,
+              1,
+              1,
+              1,
+              1
+            ],
+            "degree": 2,
+            "input_count": 15,
+            "input_types": [
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary"
+            ],
+            "output_count": 1,
+            "output_types": [
+              "real"
+            ]
+          },
+          "maximum_inputs": null,
+          "model": "Model",
+          "model_types": [
+            "optengine.formulations.qubo.QUBO.Model"
+          ],
+          "operation": "exact-search",
+          "operation_types": [
+            "optengine.operations.exact.ExactSearch"
+          ],
+          "supports_constraints": false
+        },
+        "reasons": [
+          "unsupported Model type",
+          "constrained Models are not supported"
+        ],
+        "stage": "solver",
+        "supported": false
+      },
+      {
+        "collaborator": "cqm:exact-search:dwave-local",
+        "evidence": {
+          "accepted_input_types": [
+            "binary"
+          ],
+          "available": true,
+          "curve": {
+            "constraint_count": 5,
+            "constraint_degrees": [
+              1,
+              1,
+              1,
+              1,
+              1
+            ],
+            "degree": 2,
+            "input_count": 15,
+            "input_types": [
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary"
+            ],
+            "output_count": 1,
+            "output_types": [
+              "real"
+            ]
+          },
+          "maximum_inputs": null,
+          "model": "Model",
+          "model_types": [
+            "optengine.formulations.qubo.QUBO.Model"
+          ],
+          "operation": "exact-search",
+          "operation_types": [
+            "optengine.operations.annealing.Annealing"
+          ],
+          "supports_constraints": false
+        },
+        "reasons": [
+          "unsupported Operation type",
+          "unsupported Model type",
+          "constrained Models are not supported"
+        ],
+        "stage": "solver",
+        "supported": false
+      },
+      {
+        "collaborator": "cqm:annealing",
+        "evidence": {
+          "accepted_input_types": [
+            "binary"
+          ],
+          "curve": {
+            "constraint_count": 5,
+            "constraint_degrees": [
+              1,
+              1,
+              1,
+              1,
+              1
+            ],
+            "degree": 2,
+            "input_count": 15,
+            "input_types": [
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary"
+            ],
+            "output_count": 1,
+            "output_types": [
+              "real"
+            ]
+          },
+          "maximum_degree": 2,
+          "maximum_inputs": null,
+          "model_types": [],
+          "supports_constraints": false
+        },
+        "reasons": [
+          "constrained Models are not supported"
+        ],
+        "stage": "operation",
+        "supported": false
+      },
+      {
+        "collaborator": "qubo",
+        "evidence": {
+          "accepted_input_types": [
+            "binary"
+          ],
+          "accepted_output_types": [
+            "real"
+          ],
+          "curve": {
+            "constraint_count": 5,
+            "constraint_degrees": [
+              1,
+              1,
+              1,
+              1,
+              1
+            ],
+            "degree": 2,
+            "input_count": 15,
+            "input_types": [
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary"
+            ],
+            "output_count": 1,
+            "output_types": [
+              "real"
+            ]
+          },
+          "maximum_constraint_degree": 2,
+          "maximum_degree": 2,
+          "maximum_inputs": null,
+          "maximum_outputs": 1,
+          "supports_constraints": true
+        },
+        "reasons": [],
+        "stage": "formulation",
+        "supported": true
+      },
+      {
+        "collaborator": "qubo",
+        "evidence": {
+          "model": {
+            "coefficient_count": 147,
+            "curve": {
+              "constraint_count": 0,
+              "constraint_degrees": [],
+              "degree": 2,
+              "input_count": 17,
+              "input_types": [
+                "binary",
+                "binary",
+                "binary",
+                "binary",
+                "binary",
+                "binary",
+                "binary",
+                "binary",
+                "binary",
+                "binary",
+                "binary",
+                "binary",
+                "binary",
+                "binary",
+                "binary",
+                "binary",
+                "binary"
+              ],
+              "output_count": 1,
+              "output_types": [
+                "real"
+              ]
+            },
+            "fingerprint": "852bcc3456b882f39da6f2f14303ea5e3bf292d30feac8213641e07decb1fafb",
+            "formulation": "qubo",
+            "metadata": {
+              "lagrange_multiplier": 20.0,
+              "objective_sense": "maximize",
+              "source": "cqm",
+              "source_curve": {
+                "constraint_count": 5,
+                "constraint_degrees": [
+                  1,
+                  1,
+                  1,
+                  1,
+                  1
+                ],
+                "degree": 2,
+                "input_count": 15,
+                "input_types": [
+                  "binary",
+                  "binary",
+                  "binary",
+                  "binary",
+                  "binary",
+                  "binary",
+                  "binary",
+                  "binary",
+                  "binary",
+                  "binary",
+                  "binary",
+                  "binary",
+                  "binary",
+                  "binary",
+                  "binary"
+                ],
+                "output_count": 1,
+                "output_types": [
+                  "real"
+                ]
+              }
+            }
+          }
+        },
+        "reasons": [],
+        "stage": "expression",
+        "supported": true
+      },
+      {
+        "collaborator": "qubo:exact-search",
+        "evidence": {
+          "accepted_input_types": [
+            "binary",
+            "integer"
+          ],
+          "curve": {
+            "constraint_count": 0,
+            "constraint_degrees": [],
+            "degree": 2,
+            "input_count": 17,
+            "input_types": [
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary"
+            ],
+            "output_count": 1,
+            "output_types": [
+              "real"
+            ]
+          },
+          "maximum_degree": 2,
+          "maximum_inputs": 18,
+          "model_types": [],
+          "supports_constraints": true
+        },
+        "reasons": [],
+        "stage": "operation",
+        "supported": true
+      },
+      {
+        "collaborator": "qubo:exact-search:dimod-cqm-exact",
+        "evidence": {
+          "accepted_input_types": [
+            "binary",
+            "integer"
+          ],
+          "available": true,
+          "curve": {
+            "constraint_count": 0,
+            "constraint_degrees": [],
+            "degree": 2,
+            "input_count": 17,
+            "input_types": [
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary"
+            ],
+            "output_count": 1,
+            "output_types": [
+              "real"
+            ]
+          },
+          "maximum_inputs": null,
+          "model": "Model",
+          "model_types": [
+            "optengine.formulations.cqm.CQM.Model"
+          ],
+          "operation": "exact-search",
+          "operation_types": [
+            "optengine.operations.exact.ExactSearch"
+          ],
+          "supports_constraints": true
+        },
+        "reasons": [
+          "unsupported Model type"
+        ],
+        "stage": "solver",
+        "supported": false
+      },
+      {
+        "collaborator": "qubo:exact-search:dimod-exact",
+        "evidence": {
+          "accepted_input_types": [
+            "binary"
+          ],
+          "available": true,
+          "curve": {
+            "constraint_count": 0,
+            "constraint_degrees": [],
+            "degree": 2,
+            "input_count": 17,
+            "input_types": [
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary"
+            ],
+            "output_count": 1,
+            "output_types": [
+              "real"
+            ]
+          },
+          "maximum_inputs": null,
+          "model": "Model",
+          "model_types": [
+            "optengine.formulations.qubo.QUBO.Model"
+          ],
+          "operation": "exact-search",
+          "operation_types": [
+            "optengine.operations.exact.ExactSearch"
+          ],
+          "supports_constraints": false
+        },
+        "reasons": [],
+        "stage": "solver",
+        "supported": true
+      },
+      {
+        "collaborator": "qubo:exact-search:dwave-local",
+        "evidence": {
+          "accepted_input_types": [
+            "binary"
+          ],
+          "available": true,
+          "curve": {
+            "constraint_count": 0,
+            "constraint_degrees": [],
+            "degree": 2,
+            "input_count": 17,
+            "input_types": [
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary"
+            ],
+            "output_count": 1,
+            "output_types": [
+              "real"
+            ]
+          },
+          "maximum_inputs": null,
+          "model": "Model",
+          "model_types": [
+            "optengine.formulations.qubo.QUBO.Model"
+          ],
+          "operation": "exact-search",
+          "operation_types": [
+            "optengine.operations.annealing.Annealing"
+          ],
+          "supports_constraints": false
+        },
+        "reasons": [
+          "unsupported Operation type"
+        ],
+        "stage": "solver",
+        "supported": false
+      },
+      {
+        "collaborator": "qubo:annealing",
+        "evidence": {
+          "accepted_input_types": [
+            "binary"
+          ],
+          "curve": {
+            "constraint_count": 0,
+            "constraint_degrees": [],
+            "degree": 2,
+            "input_count": 17,
+            "input_types": [
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary"
+            ],
+            "output_count": 1,
+            "output_types": [
+              "real"
+            ]
+          },
+          "maximum_degree": 2,
+          "maximum_inputs": null,
+          "model_types": [],
+          "supports_constraints": false
+        },
+        "reasons": [],
+        "stage": "operation",
+        "supported": true
+      },
+      {
+        "collaborator": "qubo:annealing:dimod-cqm-exact",
+        "evidence": {
+          "accepted_input_types": [
+            "binary",
+            "integer"
+          ],
+          "available": true,
+          "curve": {
+            "constraint_count": 0,
+            "constraint_degrees": [],
+            "degree": 2,
+            "input_count": 17,
+            "input_types": [
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary"
+            ],
+            "output_count": 1,
+            "output_types": [
+              "real"
+            ]
+          },
+          "maximum_inputs": null,
+          "model": "Model",
+          "model_types": [
+            "optengine.formulations.cqm.CQM.Model"
+          ],
+          "operation": "annealing",
+          "operation_types": [
+            "optengine.operations.exact.ExactSearch"
+          ],
+          "supports_constraints": true
+        },
+        "reasons": [
+          "unsupported Operation type",
+          "unsupported Model type"
+        ],
+        "stage": "solver",
+        "supported": false
+      },
+      {
+        "collaborator": "qubo:annealing:dimod-exact",
+        "evidence": {
+          "accepted_input_types": [
+            "binary"
+          ],
+          "available": true,
+          "curve": {
+            "constraint_count": 0,
+            "constraint_degrees": [],
+            "degree": 2,
+            "input_count": 17,
+            "input_types": [
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary"
+            ],
+            "output_count": 1,
+            "output_types": [
+              "real"
+            ]
+          },
+          "maximum_inputs": null,
+          "model": "Model",
+          "model_types": [
+            "optengine.formulations.qubo.QUBO.Model"
+          ],
+          "operation": "annealing",
+          "operation_types": [
+            "optengine.operations.exact.ExactSearch"
+          ],
+          "supports_constraints": false
+        },
+        "reasons": [
+          "unsupported Operation type"
+        ],
+        "stage": "solver",
+        "supported": false
+      },
+      {
+        "collaborator": "qubo:annealing:dwave-local",
+        "evidence": {
+          "accepted_input_types": [
+            "binary"
+          ],
+          "available": true,
+          "curve": {
+            "constraint_count": 0,
+            "constraint_degrees": [],
+            "degree": 2,
+            "input_count": 17,
+            "input_types": [
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary"
+            ],
+            "output_count": 1,
+            "output_types": [
+              "real"
+            ]
+          },
+          "maximum_inputs": null,
+          "model": "Model",
+          "model_types": [
+            "optengine.formulations.qubo.QUBO.Model"
+          ],
+          "operation": "annealing",
+          "operation_types": [
+            "optengine.operations.annealing.Annealing"
+          ],
+          "supports_constraints": false
+        },
+        "reasons": [],
+        "stage": "solver",
+        "supported": true
+      }
+    ],
+    "domain": {
+      "assets": [
+        {
+          "expected_return": 0.12,
+          "maximum_allocation": 1.0,
+          "minimum_allocation": 0.0,
+          "name": "Growth",
+          "variance": 0.04
+        },
+        {
+          "expected_return": 0.08,
+          "maximum_allocation": 1.0,
+          "minimum_allocation": 0.0,
+          "name": "Income",
+          "variance": 0.02
+        },
+        {
+          "expected_return": 0.05,
+          "maximum_allocation": 1.0,
+          "minimum_allocation": 0.0,
+          "name": "Defense",
+          "variance": 0.01
+        }
+      ],
+      "covariances": [
+        {
+          "first": "Growth",
+          "second": "Income",
+          "value": 0.006
+        },
+        {
+          "first": "Growth",
+          "second": "Defense",
+          "value": 0.002
+        },
+        {
+          "first": "Income",
+          "second": "Defense",
+          "value": 0.003
+        }
+      ],
+      "domain_type": "portfolio",
+      "name": "portfolio-vertical-slice",
+      "parameters": {
+        "allocation_increment": 0.25,
+        "budget": 1.0,
+        "maximum_assets": 3,
+        "risk_aversion": 1.0,
+        "total_units": 4
+      }
+    },
+    "fingerprint": "55536c1c57c82db5c29dc3864a01bc9cb7e3217f9335b96f758ab29a77e00ed0",
+    "interpretation": {
+      "curve": {
+        "constraint_count": 5,
+        "constraint_degrees": [
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "degree": 2,
+        "input_count": 15,
+        "input_types": [
+          "binary",
+          "binary",
+          "binary",
+          "binary",
+          "binary",
+          "binary",
+          "binary",
+          "binary",
+          "binary",
+          "binary",
+          "binary",
+          "binary",
+          "binary",
+          "binary",
+          "binary"
+        ],
+        "output_count": 1,
+        "output_types": [
+          "real"
+        ]
+      },
+      "domain_type": "portfolio",
+      "fingerprint": "e3d01c6fcceb6bb0e9c0cda5bedc54c232cf8f1dee1b76230b5237779d31b396",
+      "metadata": {},
+      "name": "portfolio-vertical-slice",
+      "summary": {
+        "assets": [
+          {
+            "expected_return": 0.12,
+            "maximum_allocation": 1.0,
+            "minimum_allocation": 0.0,
+            "name": "Growth",
+            "variance": 0.04
+          },
+          {
+            "expected_return": 0.08,
+            "maximum_allocation": 1.0,
+            "minimum_allocation": 0.0,
+            "name": "Income",
+            "variance": 0.02
+          },
+          {
+            "expected_return": 0.05,
+            "maximum_allocation": 1.0,
+            "minimum_allocation": 0.0,
+            "name": "Defense",
+            "variance": 0.01
+          }
+        ],
+        "covariances": [
+          {
+            "first": "Growth",
+            "second": "Income",
+            "value": 0.006
+          },
+          {
+            "first": "Growth",
+            "second": "Defense",
+            "value": 0.002
+          },
+          {
+            "first": "Income",
+            "second": "Defense",
+            "value": 0.003
+          }
+        ],
+        "domain_type": "portfolio",
+        "name": "portfolio-vertical-slice",
+        "parameters": {
+          "allocation_increment": 0.25,
+          "budget": 1.0,
+          "maximum_assets": 3,
+          "risk_aversion": 1.0,
+          "total_units": 4
+        }
+      }
+    },
+    "metadata": {
+      "formulation_count": 2,
+      "operation_count": 2,
+      "solver_count": 3,
+      "strategy_count": 2
+    },
+    "strategies": [
+      {
+        "domain": "portfolio",
+        "fingerprint": "222cacf0bef28e252d76105c2e262f61d83fdc7ff8d14d3f0cc952119e63fdf9",
+        "formulation": "cqm",
+        "metadata": {},
+        "model": {
+          "curve": {
+            "constraint_count": 5,
+            "constraint_degrees": [
+              1,
+              1,
+              1,
+              1,
+              1
+            ],
+            "degree": 2,
+            "input_count": 15,
+            "input_types": [
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary"
+            ],
+            "output_count": 1,
+            "output_types": [
+              "real"
+            ]
+          },
+          "fingerprint": "c5cde77651f323839ea988475a2d7e2809a41b37a8b095ab71ac3efa1016926f",
+          "formulation": "cqm",
+          "metadata": {
+            "objective_sense": "maximize",
+            "source_curve": {
+              "constraint_count": 5,
+              "constraint_degrees": [
+                1,
+                1,
+                1,
+                1,
+                1
+              ],
+              "degree": 2,
+              "input_count": 15,
+              "input_types": [
+                "binary",
+                "binary",
+                "binary",
+                "binary",
+                "binary",
+                "binary",
+                "binary",
+                "binary",
+                "binary",
+                "binary",
+                "binary",
+                "binary",
+                "binary",
+                "binary",
+                "binary"
+              ],
+              "output_count": 1,
+              "output_types": [
+                "real"
+              ]
+            }
+          }
+        },
+        "name": "portfolio:cqm:exact-search:dimod-cqm-exact",
+        "operation": "exact-search",
+        "operation_configuration": {
+          "max_variables": 18
+        },
+        "reference": true,
+        "solver": "dimod-cqm-exact",
+        "solver_configuration": {}
+      },
+      {
+        "domain": "portfolio",
+        "fingerprint": "d14be915494fd9d46a0d3d8755967ab4c79e9ad5efb6654f0c90b915b75ee159",
+        "formulation": "qubo",
+        "metadata": {},
+        "model": {
+          "coefficient_count": 147,
+          "curve": {
+            "constraint_count": 0,
+            "constraint_degrees": [],
+            "degree": 2,
+            "input_count": 17,
+            "input_types": [
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary"
+            ],
+            "output_count": 1,
+            "output_types": [
+              "real"
+            ]
+          },
+          "fingerprint": "852bcc3456b882f39da6f2f14303ea5e3bf292d30feac8213641e07decb1fafb",
+          "formulation": "qubo",
+          "metadata": {
+            "lagrange_multiplier": 20.0,
+            "objective_sense": "maximize",
+            "source": "cqm",
+            "source_curve": {
+              "constraint_count": 5,
+              "constraint_degrees": [
+                1,
+                1,
+                1,
+                1,
+                1
+              ],
+              "degree": 2,
+              "input_count": 15,
+              "input_types": [
+                "binary",
+                "binary",
+                "binary",
+                "binary",
+                "binary",
+                "binary",
+                "binary",
+                "binary",
+                "binary",
+                "binary",
+                "binary",
+                "binary",
+                "binary",
+                "binary",
+                "binary"
+              ],
+              "output_count": 1,
+              "output_types": [
+                "real"
+              ]
+            }
+          }
+        },
+        "name": "portfolio:qubo:annealing:dwave-local",
+        "operation": "annealing",
+        "operation_configuration": {
+          "iterations": 10,
+          "num_sweeps": 2000,
+          "reads_per_iteration": 200,
+          "seed": 11
+        },
+        "reference": false,
+        "solver": "dwave-local",
+        "solver_configuration": {}
+      }
+    ]
+  },
+  "assessment": {
+    "confidence": 1.0,
+    "evidence": {
+      "execution_count": 2,
+      "feasible_count": 2,
+      "reference_quality": 0.084,
+      "strategy_assessments": [
+        {
+          "confidence": 1.0,
+          "evidence": {
+            "confidence": 1.0,
+            "execution_cost": 32768.0,
+            "execution_status": "complete",
+            "expected_improvement": 0.0,
+            "feasible": true,
+            "is_reference": true,
+            "quality": 0.084,
+            "reference_gap": 0.0,
+            "utility": 0.084
+          },
+          "execution_cost": 32768.0,
+          "expected_improvement": 0.0,
+          "feasible": true,
+          "marginal_utility": -32768.0,
+          "quality": 0.084,
+          "reference_gap": 0.0,
+          "strategy": "portfolio:cqm:exact-search:dimod-cqm-exact",
+          "utility": 0.084
+        },
+        {
+          "confidence": 0.75,
+          "evidence": {
+            "confidence": 0.75,
+            "execution_cost": 0.8352155829779804,
+            "execution_status": "complete",
+            "expected_improvement": 0.0,
+            "feasible": true,
+            "is_reference": false,
+            "quality": 0.084,
+            "reference_gap": 0.0,
+            "utility": 0.084
+          },
+          "execution_cost": 0.8352155829779804,
+          "expected_improvement": 0.0,
+          "feasible": true,
+          "marginal_utility": -0.8352155829779804,
+          "quality": 0.084,
+          "reference_gap": 0.0,
+          "strategy": "portfolio:qubo:annealing:dwave-local",
+          "utility": 0.084
+        }
+      ],
+      "successful_count": 2
+    },
+    "execution_cost": 32768.0,
+    "expected_improvement": 0.0,
+    "feasible": true,
+    "marginal_utility": -32768.0,
+    "reference_gap": 0.0,
+    "selected_strategy": "portfolio:cqm:exact-search:dimod-cqm-exact",
+    "strategies": [
+      {
+        "confidence": 1.0,
+        "evidence": {
+          "confidence": 1.0,
+          "execution_cost": 32768.0,
+          "execution_status": "complete",
+          "expected_improvement": 0.0,
+          "feasible": true,
+          "is_reference": true,
+          "quality": 0.084,
+          "reference_gap": 0.0,
+          "utility": 0.084
+        },
+        "execution_cost": 32768.0,
+        "expected_improvement": 0.0,
+        "feasible": true,
+        "marginal_utility": -32768.0,
+        "quality": 0.084,
+        "reference_gap": 0.0,
+        "strategy": "portfolio:cqm:exact-search:dimod-cqm-exact",
+        "utility": 0.084
+      },
+      {
+        "confidence": 0.75,
+        "evidence": {
+          "confidence": 0.75,
+          "execution_cost": 0.8352155829779804,
+          "execution_status": "complete",
+          "expected_improvement": 0.0,
+          "feasible": true,
+          "is_reference": false,
+          "quality": 0.084,
+          "reference_gap": 0.0,
+          "utility": 0.084
+        },
+        "execution_cost": 0.8352155829779804,
+        "expected_improvement": 0.0,
+        "feasible": true,
+        "marginal_utility": -0.8352155829779804,
+        "quality": 0.084,
+        "reference_gap": 0.0,
+        "strategy": "portfolio:qubo:annealing:dwave-local",
+        "utility": 0.084
+      }
+    ],
+    "utility": 0.084
+  },
+  "completed_at": "2026-07-23T17:24:19.306514+00:00",
+  "decision": {
+    "action": "stop",
+    "evidence": {
+      "confidence": 1.0,
+      "confidence_threshold": 0.7,
+      "execution_cost": 32768.0,
+      "expected_improvement": 0.0,
+      "feasible": true,
+      "improvement_threshold": 0.05,
+      "marginal_utility": -32768.0,
+      "minimum_marginal_utility": 0.0,
+      "reference_gap": 0.0,
+      "target_reference_gap": 0.0,
+      "utility": 0.084
+    },
+    "next_strategy": null,
+    "reason_code": "REFERENCE_TARGET_REACHED",
+    "resource_change": {},
+    "selected_strategy": "portfolio:cqm:exact-search:dimod-cqm-exact",
+    "should_continue": false
+  },
+  "domain": {
+    "assets": [
+      {
+        "expected_return": 0.12,
+        "maximum_allocation": 1.0,
+        "minimum_allocation": 0.0,
+        "name": "Growth",
+        "variance": 0.04
+      },
+      {
+        "expected_return": 0.08,
+        "maximum_allocation": 1.0,
+        "minimum_allocation": 0.0,
+        "name": "Income",
+        "variance": 0.02
+      },
+      {
+        "expected_return": 0.05,
+        "maximum_allocation": 1.0,
+        "minimum_allocation": 0.0,
+        "name": "Defense",
+        "variance": 0.01
+      }
+    ],
+    "covariances": [
+      {
+        "first": "Growth",
+        "second": "Income",
+        "value": 0.006
+      },
+      {
+        "first": "Growth",
+        "second": "Defense",
+        "value": 0.002
+      },
+      {
+        "first": "Income",
+        "second": "Defense",
+        "value": 0.003
+      }
+    ],
+    "domain_type": "portfolio",
+    "name": "portfolio-vertical-slice",
+    "parameters": {
+      "allocation_increment": 0.25,
+      "budget": 1.0,
+      "maximum_assets": 3,
+      "risk_aversion": 1.0,
+      "total_units": 4
+    }
+  },
+  "executions": [
+    {
+      "candidate": {
+        "allocation": {
+          "Defense": 0.0,
+          "Growth": 0.75,
+          "Income": 0.25
+        },
+        "domain_type": "portfolio",
+        "native_score": -0.084,
+        "raw_choices": {
+          "choice::Defense::0": 1,
+          "choice::Defense::1": 0,
+          "choice::Defense::2": 0,
+          "choice::Defense::3": 0,
+          "choice::Defense::4": 0,
+          "choice::Growth::0": 0,
+          "choice::Growth::1": 0,
+          "choice::Growth::2": 0,
+          "choice::Growth::3": 1,
+          "choice::Growth::4": 0,
+          "choice::Income::0": 0,
+          "choice::Income::1": 1,
+          "choice::Income::2": 0,
+          "choice::Income::3": 0,
+          "choice::Income::4": 0
+        },
+        "strategy": "portfolio:cqm:exact-search:dimod-cqm-exact"
+      },
+      "evaluation": {
+        "candidate": {
+          "allocation": {
+            "Defense": 0.0,
+            "Growth": 0.75,
+            "Income": 0.25
+          },
+          "domain_type": "portfolio",
+          "native_score": -0.084,
+          "raw_choices": {
+            "choice::Defense::0": 1,
+            "choice::Defense::1": 0,
+            "choice::Defense::2": 0,
+            "choice::Defense::3": 0,
+            "choice::Defense::4": 0,
+            "choice::Growth::0": 0,
+            "choice::Growth::1": 0,
+            "choice::Growth::2": 0,
+            "choice::Growth::3": 1,
+            "choice::Growth::4": 0,
+            "choice::Income::0": 0,
+            "choice::Income::1": 1,
+            "choice::Income::2": 0,
+            "choice::Income::3": 0,
+            "choice::Income::4": 0
+          },
+          "strategy": "portfolio:cqm:exact-search:dimod-cqm-exact"
+        },
+        "domain_type": "portfolio",
+        "feasible": true,
+        "metrics": {
+          "active_assets": 2,
+          "allocations": {
+            "Defense": 0.0,
+            "Growth": 0.75,
+            "Income": 0.25
+          },
+          "bounds_feasible": true,
+          "budget_feasible": true,
+          "cardinality_feasible": true,
+          "expected_return": 0.11,
+          "increment_feasible": true,
+          "one_choice_feasible": true,
+          "risk": 0.026,
+          "total_allocation": 1.0,
+          "utility": 0.084
+        },
+        "quality": 0.084,
+        "state": "feasible",
+        "strategy": "portfolio:cqm:exact-search:dimod-cqm-exact",
+        "utility_inputs": {
+          "feasible": true,
+          "quality": 0.084,
+          "utility": 0.084
+        }
+      },
+      "failure": null,
+      "fingerprint": "89ab7d53a50bb9902a59af1cec743c698f28006c7bf42454b126caff8a4c6474",
+      "result": {
+        "metadata": {
+          "budget": {}
+        },
+        "metrics": {
+          "confidence": 1.0,
+          "evaluated_candidates": 32768,
+          "expected_improvement": 0.0,
+          "feasible_candidates": 15,
+          "is_reference": true
+        },
+        "native_score": -0.084,
+        "provenance": {
+          "execution": "local",
+          "library": "dimod",
+          "solver": "ExactCQMSolver"
+        },
+        "resource_cost": 32768.0,
+        "runtime_s": 0.17098008305765688,
+        "status": "complete",
+        "values": {
+          "choice::Defense::0": 1,
+          "choice::Defense::1": 0,
+          "choice::Defense::2": 0,
+          "choice::Defense::3": 0,
+          "choice::Defense::4": 0,
+          "choice::Growth::0": 0,
+          "choice::Growth::1": 0,
+          "choice::Growth::2": 0,
+          "choice::Growth::3": 1,
+          "choice::Growth::4": 0,
+          "choice::Income::0": 0,
+          "choice::Income::1": 1,
+          "choice::Income::2": 0,
+          "choice::Income::3": 0,
+          "choice::Income::4": 0
+        }
+      },
+      "runtime_s": 0.1712508749915287,
+      "status": "complete",
+      "strategy": {
+        "domain": "portfolio",
+        "fingerprint": "222cacf0bef28e252d76105c2e262f61d83fdc7ff8d14d3f0cc952119e63fdf9",
+        "formulation": "cqm",
+        "metadata": {},
+        "model": {
+          "curve": {
+            "constraint_count": 5,
+            "constraint_degrees": [
+              1,
+              1,
+              1,
+              1,
+              1
+            ],
+            "degree": 2,
+            "input_count": 15,
+            "input_types": [
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary"
+            ],
+            "output_count": 1,
+            "output_types": [
+              "real"
+            ]
+          },
+          "fingerprint": "c5cde77651f323839ea988475a2d7e2809a41b37a8b095ab71ac3efa1016926f",
+          "formulation": "cqm",
+          "metadata": {
+            "objective_sense": "maximize",
+            "source_curve": {
+              "constraint_count": 5,
+              "constraint_degrees": [
+                1,
+                1,
+                1,
+                1,
+                1
+              ],
+              "degree": 2,
+              "input_count": 15,
+              "input_types": [
+                "binary",
+                "binary",
+                "binary",
+                "binary",
+                "binary",
+                "binary",
+                "binary",
+                "binary",
+                "binary",
+                "binary",
+                "binary",
+                "binary",
+                "binary",
+                "binary",
+                "binary"
+              ],
+              "output_count": 1,
+              "output_types": [
+                "real"
+              ]
+            }
+          }
+        },
+        "name": "portfolio:cqm:exact-search:dimod-cqm-exact",
+        "operation": "exact-search",
+        "operation_configuration": {
+          "max_variables": 18
+        },
+        "reference": true,
+        "solver": "dimod-cqm-exact",
+        "solver_configuration": {}
+      }
+    },
+    {
+      "candidate": {
+        "allocation": {
+          "Defense": 0.0,
+          "Growth": 0.75,
+          "Income": 0.25
+        },
+        "domain_type": "portfolio",
+        "native_score": -0.0840000000011969,
+        "raw_choices": {
+          "choice::Defense::0": 1,
+          "choice::Defense::1": 0,
+          "choice::Defense::2": 0,
+          "choice::Defense::3": 0,
+          "choice::Defense::4": 0,
+          "choice::Growth::0": 0,
+          "choice::Growth::1": 0,
+          "choice::Growth::2": 0,
+          "choice::Growth::3": 1,
+          "choice::Growth::4": 0,
+          "choice::Income::0": 0,
+          "choice::Income::1": 1,
+          "choice::Income::2": 0,
+          "choice::Income::3": 0,
+          "choice::Income::4": 0
+        },
+        "strategy": "portfolio:qubo:annealing:dwave-local"
+      },
+      "evaluation": {
+        "candidate": {
+          "allocation": {
+            "Defense": 0.0,
+            "Growth": 0.75,
+            "Income": 0.25
+          },
+          "domain_type": "portfolio",
+          "native_score": -0.0840000000011969,
+          "raw_choices": {
+            "choice::Defense::0": 1,
+            "choice::Defense::1": 0,
+            "choice::Defense::2": 0,
+            "choice::Defense::3": 0,
+            "choice::Defense::4": 0,
+            "choice::Growth::0": 0,
+            "choice::Growth::1": 0,
+            "choice::Growth::2": 0,
+            "choice::Growth::3": 1,
+            "choice::Growth::4": 0,
+            "choice::Income::0": 0,
+            "choice::Income::1": 1,
+            "choice::Income::2": 0,
+            "choice::Income::3": 0,
+            "choice::Income::4": 0
+          },
+          "strategy": "portfolio:qubo:annealing:dwave-local"
+        },
+        "domain_type": "portfolio",
+        "feasible": true,
+        "metrics": {
+          "active_assets": 2,
+          "allocations": {
+            "Defense": 0.0,
+            "Growth": 0.75,
+            "Income": 0.25
+          },
+          "bounds_feasible": true,
+          "budget_feasible": true,
+          "cardinality_feasible": true,
+          "expected_return": 0.11,
+          "increment_feasible": true,
+          "one_choice_feasible": true,
+          "risk": 0.026,
+          "total_allocation": 1.0,
+          "utility": 0.084
+        },
+        "quality": 0.084,
+        "state": "feasible",
+        "strategy": "portfolio:qubo:annealing:dwave-local",
+        "utility_inputs": {
+          "feasible": true,
+          "quality": 0.084,
+          "utility": 0.084
+        }
+      },
+      "failure": null,
+      "fingerprint": "d873b7be49915ab77fb38fd1d0d8d9e0883e6d6aa70a1a1ec15ea105f00b4b36",
+      "result": {
+        "metadata": {
+          "budget": {
+            "iterations": 10,
+            "total_reads": 2000
+          }
+        },
+        "metrics": {
+          "confidence": 0.75,
+          "expected_improvement": 0.0,
+          "history": [
+            {
+              "batch_best_energy": -0.0840000000011969,
+              "batch_energy_variance": 11.644321128829292,
+              "batch_max_energy": 19.950500000000375,
+              "batch_mean_energy": 0.5338443749991985,
+              "batch_min_energy": -0.0840000000011969,
+              "batch_time_s": 0.08293612499255687,
+              "best_so_far_energy": -0.0840000000011969,
+              "elapsed_s": 0.08310295804403722,
+              "improved": true,
+              "improvement_in_native_score": 0.0,
+              "iteration": 1
+            },
+            {
+              "batch_best_energy": -0.0840000000011969,
+              "batch_energy_variance": 20.784102916735026,
+              "batch_max_energy": 19.96000000000049,
+              "batch_mean_energy": 1.0324806249989797,
+              "batch_min_energy": -0.0840000000011969,
+              "batch_time_s": 0.08177783293649554,
+              "best_so_far_energy": -0.0840000000011969,
+              "elapsed_s": 0.16505408298689872,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 2
+            },
+            {
+              "batch_best_energy": -0.0840000000011969,
+              "batch_energy_variance": 3.9614573560554165,
+              "batch_max_energy": 19.939999999999145,
+              "batch_mean_energy": 0.13303999999911412,
+              "batch_min_energy": -0.0840000000011969,
+              "batch_time_s": 0.08156291593331844,
+              "best_so_far_energy": -0.0840000000011969,
+              "elapsed_s": 0.24677600001450628,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 3
+            },
+            {
+              "batch_best_energy": -0.0840000000011969,
+              "batch_energy_variance": 13.514021059577821,
+              "batch_max_energy": 19.96000000000049,
+              "batch_mean_energy": 0.6328231249991404,
+              "batch_min_energy": -0.0840000000011969,
+              "batch_time_s": 0.0818521250039339,
+              "best_so_far_energy": -0.0840000000011969,
+              "elapsed_s": 0.32879020797554404,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 4
+            },
+            {
+              "batch_best_energy": -0.0840000000011969,
+              "batch_energy_variance": 19.004623903157725,
+              "batch_max_energy": 19.968124999999873,
+              "batch_mean_energy": 0.9331362499992792,
+              "batch_min_energy": -0.0840000000011969,
+              "batch_time_s": 0.08224158396478742,
+              "best_so_far_energy": -0.0840000000011969,
+              "elapsed_s": 0.4111979999579489,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 5
+            },
+            {
+              "batch_best_energy": -0.0840000000011969,
+              "batch_energy_variance": 9.739341080811991,
+              "batch_max_energy": 19.94137499999988,
+              "batch_mean_energy": 0.433886249999191,
+              "batch_min_energy": -0.0840000000011969,
+              "batch_time_s": 0.08267274999525398,
+              "best_so_far_energy": -0.0840000000011969,
+              "elapsed_s": 0.49404424999374896,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 6
+            },
+            {
+              "batch_best_energy": -0.0840000000011969,
+              "batch_energy_variance": 15.356867458714936,
+              "batch_max_energy": 19.9512499999978,
+              "batch_mean_energy": 0.7320137499993598,
+              "batch_min_energy": -0.0840000000011969,
+              "batch_time_s": 0.0802897079847753,
+              "best_so_far_energy": -0.0840000000011969,
+              "elapsed_s": 0.5744839160470292,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 7
+            },
+            {
+              "batch_best_energy": -0.0840000000011969,
+              "batch_energy_variance": 9.76461081867443,
+              "batch_max_energy": 19.96000000000049,
+              "batch_mean_energy": 0.43288374999929147,
+              "batch_min_energy": -0.0840000000011969,
+              "batch_time_s": 0.0816948750289157,
+              "best_so_far_energy": -0.0840000000011969,
+              "elapsed_s": 0.6563520410563797,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 8
+            },
+            {
+              "batch_best_energy": -0.0840000000011969,
+              "batch_energy_variance": 15.363507647106822,
+              "batch_max_energy": 19.950500000002194,
+              "batch_mean_energy": 0.7309668749992443,
+              "batch_min_energy": -0.0840000000011969,
+              "batch_time_s": 0.08076358295511454,
+              "best_so_far_energy": -0.0840000000011969,
+              "elapsed_s": 0.7372851660475135,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 9
+            },
+            {
+              "batch_best_energy": -0.0840000000011969,
+              "batch_energy_variance": 13.525011909448308,
+              "batch_max_energy": 19.968124999999873,
+              "batch_mean_energy": 0.632271874999451,
+              "batch_min_energy": -0.0840000000011969,
+              "batch_time_s": 0.08173991704825312,
+              "best_so_far_energy": -0.0840000000011969,
+              "elapsed_s": 0.8192057500127703,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 10
+            }
+          ],
+          "iterations": 10,
+          "num_sweeps": 2000,
+          "reads_per_iteration": 200,
+          "total_reads": 2000
+        },
+        "native_score": -0.0840000000011969,
+        "provenance": {
+          "execution": "local",
+          "library": "dwave-samplers",
+          "sampler": "SimulatedAnnealingSampler"
+        },
+        "resource_cost": null,
+        "runtime_s": 0.819210791029036,
+        "status": "complete",
+        "values": {
+          "choice::Defense::0": 1,
+          "choice::Defense::1": 0,
+          "choice::Defense::2": 0,
+          "choice::Defense::3": 0,
+          "choice::Defense::4": 0,
+          "choice::Growth::0": 0,
+          "choice::Growth::1": 0,
+          "choice::Growth::2": 0,
+          "choice::Growth::3": 1,
+          "choice::Growth::4": 0,
+          "choice::Income::0": 0,
+          "choice::Income::1": 1,
+          "choice::Income::2": 0,
+          "choice::Income::3": 0,
+          "choice::Income::4": 0,
+          "slack_va00f434a4f8141f595babbb30b735a2f_0": 1,
+          "slack_va00f434a4f8141f595babbb30b735a2f_1": 0
+        }
+      },
+      "runtime_s": 0.8352155829779804,
+      "status": "complete",
+      "strategy": {
+        "domain": "portfolio",
+        "fingerprint": "d14be915494fd9d46a0d3d8755967ab4c79e9ad5efb6654f0c90b915b75ee159",
+        "formulation": "qubo",
+        "metadata": {},
+        "model": {
+          "coefficient_count": 147,
+          "curve": {
+            "constraint_count": 0,
+            "constraint_degrees": [],
+            "degree": 2,
+            "input_count": 17,
+            "input_types": [
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary",
+              "binary"
+            ],
+            "output_count": 1,
+            "output_types": [
+              "real"
+            ]
+          },
+          "fingerprint": "852bcc3456b882f39da6f2f14303ea5e3bf292d30feac8213641e07decb1fafb",
+          "formulation": "qubo",
+          "metadata": {
+            "lagrange_multiplier": 20.0,
+            "objective_sense": "maximize",
+            "source": "cqm",
+            "source_curve": {
+              "constraint_count": 5,
+              "constraint_degrees": [
+                1,
+                1,
+                1,
+                1,
+                1
+              ],
+              "degree": 2,
+              "input_count": 15,
+              "input_types": [
+                "binary",
+                "binary",
+                "binary",
+                "binary",
+                "binary",
+                "binary",
+                "binary",
+                "binary",
+                "binary",
+                "binary",
+                "binary",
+                "binary",
+                "binary",
+                "binary",
+                "binary"
+              ],
+              "output_count": 1,
+              "output_types": [
+                "real"
+              ]
+            }
+          }
+        },
+        "name": "portfolio:qubo:annealing:dwave-local",
+        "operation": "annealing",
+        "operation_configuration": {
+          "iterations": 10,
+          "num_sweeps": 2000,
+          "reads_per_iteration": 200,
+          "seed": 11
+        },
+        "reference": false,
+        "solver": "dwave-local",
+        "solver_configuration": {}
+      }
+    }
+  ],
+  "explanation": {
+    "alternatives": [
+      "portfolio:qubo:annealing:dwave-local"
+    ],
+    "evidence": {
+      "assessment": {
+        "confidence": 1.0,
+        "evidence": {
+          "execution_count": 2,
+          "feasible_count": 2,
+          "reference_quality": 0.084,
+          "strategy_assessments": [
+            {
+              "confidence": 1.0,
+              "evidence": {
+                "confidence": 1.0,
+                "execution_cost": 32768.0,
+                "execution_status": "complete",
+                "expected_improvement": 0.0,
+                "feasible": true,
+                "is_reference": true,
+                "quality": 0.084,
+                "reference_gap": 0.0,
+                "utility": 0.084
+              },
+              "execution_cost": 32768.0,
+              "expected_improvement": 0.0,
+              "feasible": true,
+              "marginal_utility": -32768.0,
+              "quality": 0.084,
+              "reference_gap": 0.0,
+              "strategy": "portfolio:cqm:exact-search:dimod-cqm-exact",
+              "utility": 0.084
+            },
+            {
+              "confidence": 0.75,
+              "evidence": {
+                "confidence": 0.75,
+                "execution_cost": 0.8352155829779804,
+                "execution_status": "complete",
+                "expected_improvement": 0.0,
+                "feasible": true,
+                "is_reference": false,
+                "quality": 0.084,
+                "reference_gap": 0.0,
+                "utility": 0.084
+              },
+              "execution_cost": 0.8352155829779804,
+              "expected_improvement": 0.0,
+              "feasible": true,
+              "marginal_utility": -0.8352155829779804,
+              "quality": 0.084,
+              "reference_gap": 0.0,
+              "strategy": "portfolio:qubo:annealing:dwave-local",
+              "utility": 0.084
+            }
+          ],
+          "successful_count": 2
+        },
+        "execution_cost": 32768.0,
+        "expected_improvement": 0.0,
+        "feasible": true,
+        "marginal_utility": -32768.0,
+        "reference_gap": 0.0,
+        "selected_strategy": "portfolio:cqm:exact-search:dimod-cqm-exact",
+        "strategies": [
+          {
+            "confidence": 1.0,
+            "evidence": {
+              "confidence": 1.0,
+              "execution_cost": 32768.0,
+              "execution_status": "complete",
+              "expected_improvement": 0.0,
+              "feasible": true,
+              "is_reference": true,
+              "quality": 0.084,
+              "reference_gap": 0.0,
+              "utility": 0.084
+            },
+            "execution_cost": 32768.0,
+            "expected_improvement": 0.0,
+            "feasible": true,
+            "marginal_utility": -32768.0,
+            "quality": 0.084,
+            "reference_gap": 0.0,
+            "strategy": "portfolio:cqm:exact-search:dimod-cqm-exact",
+            "utility": 0.084
+          },
+          {
+            "confidence": 0.75,
+            "evidence": {
+              "confidence": 0.75,
+              "execution_cost": 0.8352155829779804,
+              "execution_status": "complete",
+              "expected_improvement": 0.0,
+              "feasible": true,
+              "is_reference": false,
+              "quality": 0.084,
+              "reference_gap": 0.0,
+              "utility": 0.084
+            },
+            "execution_cost": 0.8352155829779804,
+            "expected_improvement": 0.0,
+            "feasible": true,
+            "marginal_utility": -0.8352155829779804,
+            "quality": 0.084,
+            "reference_gap": 0.0,
+            "strategy": "portfolio:qubo:annealing:dwave-local",
+            "utility": 0.084
+          }
+        ],
+        "utility": 0.084
+      },
+      "confidence": 1.0,
+      "confidence_threshold": 0.7,
+      "execution_cost": 32768.0,
+      "execution_count": 2,
+      "expected_improvement": 0.0,
+      "feasible": true,
+      "improvement_threshold": 0.05,
+      "marginal_utility": -32768.0,
+      "minimum_marginal_utility": 0.0,
+      "reason_code": "REFERENCE_TARGET_REACHED",
+      "reference_gap": 0.0,
+      "strategy_count": 2,
+      "target_reference_gap": 0.0,
+      "utility": 0.084
+    },
+    "limitations": [],
+    "selected_strategy": "portfolio:cqm:exact-search:dimod-cqm-exact",
+    "summary": "OptEngine decided to stop because the selected strategy reached the configured reference target using strategy 'portfolio:cqm:exact-search:dimod-cqm-exact'."
+  },
+  "failures": [],
+  "logs": [
+    "OptEngine started.",
+    "Analysis started.",
+    "Analysis completed: 2 compatible strategies.",
+    "Evaluation started.",
+    "Strategy completed: portfolio:cqm:exact-search:dimod-cqm-exact.",
+    "Strategy completed: portfolio:qubo:annealing:dwave-local.",
+    "Evaluation completed: 2 succeeded, 0 failed.",
+    "Decision started.",
+    "Decision completed: stop.",
+    "Explanation started.",
+    "Explanation completed.",
+    "OptEngine finished.",
+    "Write started."
+  ],
+  "output_path": "outputs/portfolio-vertical-slice_20260723_172419_306573Z.json",
+  "provenance": {
+    "optengine_version": "0.1.1",
+    "platform": "macOS-26.5.2-arm64-arm-64bit-Mach-O",
+    "python_implementation": "CPython",
+    "python_version": "3.14.6"
+  },
+  "run_id": "83741116-869e-48cb-8f5c-6620c37408a4",
+  "started_at": "2026-07-23T17:24:18.092164+00:00"
+}
