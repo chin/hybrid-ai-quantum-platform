@@ -19,11 +19,22 @@ jobs:
       contents: write
 
     steps:
+      - name: Validate release credential
+        env:
+          RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+        run: |
+          test -n "$RELEASE_TOKEN" || {
+            echo "::error::RELEASE_TOKEN repository secret is missing"
+            exit 1
+          }
+
       - name: Check out release branch
         uses: actions/checkout@v7
         with:
           ref: ${{ github.ref_name }}
           fetch-depth: 0
+          token: ${{ secrets.RELEASE_TOKEN }}
+          persist-credentials: true
 
       - name: Pin checkout to triggering commit
         run: git reset --hard "${{ github.sha }}"
@@ -33,10 +44,50 @@ jobs:
         uses: python-semantic-release/python-semantic-release@v10.6.1
         with:
           github_token: ${{ secrets.RELEASE_TOKEN }}
+          build: "true"
+          changelog: "true"
+          commit: "true"
+          push: "true"
+          tag: "true"
+          vcs_release: "true"
           verbosity: "3"
 
+      - name: Report release result
+        env:
+          RELEASED: ${{ steps.release.outputs.released }}
+          PREVIOUS_VERSION: ${{ steps.release.outputs.previous_version }}
+          VERSION: ${{ steps.release.outputs.version }}
+          TAG: ${{ steps.release.outputs.tag }}
+          LINK: ${{ steps.release.outputs.link }}
+          COMMIT_SHA: ${{ steps.release.outputs.commit_sha }}
+        run: |
+          printf 'released=%s\n' "$RELEASED"
+          printf 'previous_version=%s\n' "$PREVIOUS_VERSION"
+          printf 'version=%s\n' "$VERSION"
+          printf 'tag=%s\n' "$TAG"
+          printf 'link=%s\n' "$LINK"
+          printf 'commit_sha=%s\n' "$COMMIT_SHA"
+
+          test "$RELEASED" = "true" || {
+            echo "::error::Semantic Release completed without creating a release."
+            exit 1
+          }
+
+      - name: Verify distributions exist
+        run: |
+          test -d dist || {
+            echo "::error::dist directory was not created"
+            exit 1
+          }
+
+          find dist -maxdepth 1 -type f -print
+
+          test -n "$(find dist -maxdepth 1 -type f -print -quit)" || {
+            echo "::error::No distributions were built"
+            exit 1
+          }
+
       - name: Upload distributions to GitHub Release
-        if: steps.release.outputs.released == 'true'
         uses: python-semantic-release/publish-action@v10.6.1
         with:
           github_token: ${{ secrets.RELEASE_TOKEN }}
