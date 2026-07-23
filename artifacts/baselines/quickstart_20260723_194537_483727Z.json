@@ -1,0 +1,1496 @@
+{
+  "analysis": {
+    "compatibility": [
+      {
+        "collaborator": "qubo",
+        "evidence": {
+          "accepted_input_types": [
+            "binary"
+          ],
+          "accepted_output_types": [
+            "real"
+          ],
+          "curve": {
+            "constraint_count": 0,
+            "constraint_degrees": [],
+            "degree": 2,
+            "input_count": 4,
+            "input_types": [
+              "binary",
+              "binary",
+              "binary",
+              "binary"
+            ],
+            "output_count": 1,
+            "output_types": [
+              "real"
+            ]
+          },
+          "maximum_constraint_degree": 2,
+          "maximum_degree": 2,
+          "maximum_inputs": null,
+          "maximum_outputs": 1,
+          "supports_constraints": true
+        },
+        "reasons": [],
+        "stage": "formulation",
+        "supported": true
+      },
+      {
+        "collaborator": "qubo",
+        "evidence": {
+          "model": {
+            "coefficient_count": 9,
+            "curve": {
+              "constraint_count": 0,
+              "constraint_degrees": [],
+              "degree": 2,
+              "input_count": 4,
+              "input_types": [
+                "binary",
+                "binary",
+                "binary",
+                "binary"
+              ],
+              "output_count": 1,
+              "output_types": [
+                "real"
+              ]
+            },
+            "fingerprint": "17716b54dadec8728d2d1656d38d85b61c9c85e03b41f18bab2d0f52c1194b10",
+            "formulation": "qubo",
+            "metadata": {
+              "lagrange_multiplier": null,
+              "objective_sense": "maximize",
+              "source": "expression",
+              "source_curve": {
+                "constraint_count": 0,
+                "constraint_degrees": [],
+                "degree": 2,
+                "input_count": 4,
+                "input_types": [
+                  "binary",
+                  "binary",
+                  "binary",
+                  "binary"
+                ],
+                "output_count": 1,
+                "output_types": [
+                  "real"
+                ]
+              }
+            }
+          }
+        },
+        "reasons": [],
+        "stage": "expression",
+        "supported": true
+      },
+      {
+        "collaborator": "qubo:exact-search",
+        "evidence": {
+          "accepted_input_types": [
+            "binary",
+            "integer"
+          ],
+          "curve": {
+            "constraint_count": 0,
+            "constraint_degrees": [],
+            "degree": 2,
+            "input_count": 4,
+            "input_types": [
+              "binary",
+              "binary",
+              "binary",
+              "binary"
+            ],
+            "output_count": 1,
+            "output_types": [
+              "real"
+            ]
+          },
+          "maximum_degree": 2,
+          "maximum_inputs": 18,
+          "model_types": [],
+          "supports_constraints": true
+        },
+        "reasons": [],
+        "stage": "operation",
+        "supported": true
+      },
+      {
+        "collaborator": "qubo:exact-search:dimod-exact",
+        "evidence": {
+          "accepted_input_types": [
+            "binary"
+          ],
+          "available": true,
+          "curve": {
+            "constraint_count": 0,
+            "constraint_degrees": [],
+            "degree": 2,
+            "input_count": 4,
+            "input_types": [
+              "binary",
+              "binary",
+              "binary",
+              "binary"
+            ],
+            "output_count": 1,
+            "output_types": [
+              "real"
+            ]
+          },
+          "maximum_inputs": null,
+          "model": "Model",
+          "model_types": [
+            "optengine.formulations.qubo.QUBO.Model"
+          ],
+          "operation": "exact-search",
+          "operation_types": [
+            "optengine.operations.exact.ExactSearch"
+          ],
+          "supports_constraints": false
+        },
+        "reasons": [],
+        "stage": "solver",
+        "supported": true
+      },
+      {
+        "collaborator": "qubo:exact-search:dwave-local",
+        "evidence": {
+          "accepted_input_types": [
+            "binary"
+          ],
+          "available": true,
+          "curve": {
+            "constraint_count": 0,
+            "constraint_degrees": [],
+            "degree": 2,
+            "input_count": 4,
+            "input_types": [
+              "binary",
+              "binary",
+              "binary",
+              "binary"
+            ],
+            "output_count": 1,
+            "output_types": [
+              "real"
+            ]
+          },
+          "maximum_inputs": null,
+          "model": "Model",
+          "model_types": [
+            "optengine.formulations.qubo.QUBO.Model"
+          ],
+          "operation": "exact-search",
+          "operation_types": [
+            "optengine.operations.annealing.Annealing"
+          ],
+          "supports_constraints": false
+        },
+        "reasons": [
+          "unsupported Operation type"
+        ],
+        "stage": "solver",
+        "supported": false
+      },
+      {
+        "collaborator": "qubo:annealing",
+        "evidence": {
+          "accepted_input_types": [
+            "binary"
+          ],
+          "curve": {
+            "constraint_count": 0,
+            "constraint_degrees": [],
+            "degree": 2,
+            "input_count": 4,
+            "input_types": [
+              "binary",
+              "binary",
+              "binary",
+              "binary"
+            ],
+            "output_count": 1,
+            "output_types": [
+              "real"
+            ]
+          },
+          "maximum_degree": 2,
+          "maximum_inputs": null,
+          "model_types": [],
+          "supports_constraints": false
+        },
+        "reasons": [],
+        "stage": "operation",
+        "supported": true
+      },
+      {
+        "collaborator": "qubo:annealing:dimod-exact",
+        "evidence": {
+          "accepted_input_types": [
+            "binary"
+          ],
+          "available": true,
+          "curve": {
+            "constraint_count": 0,
+            "constraint_degrees": [],
+            "degree": 2,
+            "input_count": 4,
+            "input_types": [
+              "binary",
+              "binary",
+              "binary",
+              "binary"
+            ],
+            "output_count": 1,
+            "output_types": [
+              "real"
+            ]
+          },
+          "maximum_inputs": null,
+          "model": "Model",
+          "model_types": [
+            "optengine.formulations.qubo.QUBO.Model"
+          ],
+          "operation": "annealing",
+          "operation_types": [
+            "optengine.operations.exact.ExactSearch"
+          ],
+          "supports_constraints": false
+        },
+        "reasons": [
+          "unsupported Operation type"
+        ],
+        "stage": "solver",
+        "supported": false
+      },
+      {
+        "collaborator": "qubo:annealing:dwave-local",
+        "evidence": {
+          "accepted_input_types": [
+            "binary"
+          ],
+          "available": true,
+          "curve": {
+            "constraint_count": 0,
+            "constraint_degrees": [],
+            "degree": 2,
+            "input_count": 4,
+            "input_types": [
+              "binary",
+              "binary",
+              "binary",
+              "binary"
+            ],
+            "output_count": 1,
+            "output_types": [
+              "real"
+            ]
+          },
+          "maximum_inputs": null,
+          "model": "Model",
+          "model_types": [
+            "optengine.formulations.qubo.QUBO.Model"
+          ],
+          "operation": "annealing",
+          "operation_types": [
+            "optengine.operations.annealing.Annealing"
+          ],
+          "supports_constraints": false
+        },
+        "reasons": [],
+        "stage": "solver",
+        "supported": true
+      }
+    ],
+    "domain": {
+      "domain_type": "max-cut",
+      "edges": 5,
+      "name": "quickstart-max-cut",
+      "parameters": {
+        "target_cut_value": null
+      },
+      "total_weight": 5.0,
+      "vertices": 4,
+      "weighted": false
+    },
+    "fingerprint": "ee4bd1a7cc7bb4a32737e5f16e4842c927885b04dff699bd4a73d6d9d72a09f3",
+    "interpretation": {
+      "curve": {
+        "constraint_count": 0,
+        "constraint_degrees": [],
+        "degree": 2,
+        "input_count": 4,
+        "input_types": [
+          "binary",
+          "binary",
+          "binary",
+          "binary"
+        ],
+        "output_count": 1,
+        "output_types": [
+          "real"
+        ]
+      },
+      "domain_type": "max-cut",
+      "fingerprint": "0ee06456f705cd00d858e730ed0dd80d91a923357d076f12804cf1ef977bbe6c",
+      "metadata": {},
+      "name": "quickstart-max-cut",
+      "summary": {
+        "domain_type": "max-cut",
+        "edges": 5,
+        "name": "quickstart-max-cut",
+        "parameters": {
+          "target_cut_value": null
+        },
+        "total_weight": 5.0,
+        "vertices": 4,
+        "weighted": false
+      }
+    },
+    "metadata": {
+      "formulation_count": 1,
+      "operation_count": 2,
+      "solver_count": 2,
+      "strategy_count": 2
+    },
+    "strategies": [
+      {
+        "domain": "max-cut",
+        "fingerprint": "5907fb3a150a59b227b154172821dfd490421f8be33c19bde8fa1a0c99dfc051",
+        "formulation": "qubo",
+        "metadata": {},
+        "model": {
+          "coefficient_count": 9,
+          "curve": {
+            "constraint_count": 0,
+            "constraint_degrees": [],
+            "degree": 2,
+            "input_count": 4,
+            "input_types": [
+              "binary",
+              "binary",
+              "binary",
+              "binary"
+            ],
+            "output_count": 1,
+            "output_types": [
+              "real"
+            ]
+          },
+          "fingerprint": "17716b54dadec8728d2d1656d38d85b61c9c85e03b41f18bab2d0f52c1194b10",
+          "formulation": "qubo",
+          "metadata": {
+            "lagrange_multiplier": null,
+            "objective_sense": "maximize",
+            "source": "expression",
+            "source_curve": {
+              "constraint_count": 0,
+              "constraint_degrees": [],
+              "degree": 2,
+              "input_count": 4,
+              "input_types": [
+                "binary",
+                "binary",
+                "binary",
+                "binary"
+              ],
+              "output_count": 1,
+              "output_types": [
+                "real"
+              ]
+            }
+          }
+        },
+        "name": "max-cut:qubo:exact-search:dimod-exact",
+        "operation": "exact-search",
+        "operation_configuration": {
+          "max_variables": 18
+        },
+        "reference": true,
+        "solver": "dimod-exact",
+        "solver_configuration": {}
+      },
+      {
+        "domain": "max-cut",
+        "fingerprint": "0f0273d03155f138d83ac859b75725e4c944d23c9fe5801dcddc49198425ca1b",
+        "formulation": "qubo",
+        "metadata": {},
+        "model": {
+          "coefficient_count": 9,
+          "curve": {
+            "constraint_count": 0,
+            "constraint_degrees": [],
+            "degree": 2,
+            "input_count": 4,
+            "input_types": [
+              "binary",
+              "binary",
+              "binary",
+              "binary"
+            ],
+            "output_count": 1,
+            "output_types": [
+              "real"
+            ]
+          },
+          "fingerprint": "17716b54dadec8728d2d1656d38d85b61c9c85e03b41f18bab2d0f52c1194b10",
+          "formulation": "qubo",
+          "metadata": {
+            "lagrange_multiplier": null,
+            "objective_sense": "maximize",
+            "source": "expression",
+            "source_curve": {
+              "constraint_count": 0,
+              "constraint_degrees": [],
+              "degree": 2,
+              "input_count": 4,
+              "input_types": [
+                "binary",
+                "binary",
+                "binary",
+                "binary"
+              ],
+              "output_count": 1,
+              "output_types": [
+                "real"
+              ]
+            }
+          }
+        },
+        "name": "max-cut:qubo:annealing:dwave-local",
+        "operation": "annealing",
+        "operation_configuration": {
+          "iterations": 30,
+          "num_sweeps": 1000,
+          "reads_per_iteration": 100,
+          "seed": 7
+        },
+        "reference": false,
+        "solver": "dwave-local",
+        "solver_configuration": {}
+      }
+    ]
+  },
+  "assessment": {
+    "confidence": 1.0,
+    "evidence": {
+      "execution_count": 2,
+      "feasible_count": 2,
+      "reference_quality": 4.0,
+      "strategy_assessments": [
+        {
+          "confidence": 1.0,
+          "evidence": {
+            "confidence": 1.0,
+            "execution_cost": 16.0,
+            "execution_status": "complete",
+            "expected_improvement": 0.0,
+            "feasible": true,
+            "is_reference": true,
+            "quality": 4.0,
+            "reference_gap": 0.0
+          },
+          "execution_cost": 16.0,
+          "expected_improvement": 0.0,
+          "feasible": true,
+          "marginal_utility": -16.0,
+          "quality": 4.0,
+          "reference_gap": 0.0,
+          "strategy": "max-cut:qubo:exact-search:dimod-exact",
+          "utility": 4.0
+        },
+        {
+          "confidence": 0.75,
+          "evidence": {
+            "confidence": 0.75,
+            "execution_cost": 0.11191145796328783,
+            "execution_status": "complete",
+            "expected_improvement": 0.0,
+            "feasible": true,
+            "is_reference": false,
+            "quality": 4.0,
+            "reference_gap": 0.0
+          },
+          "execution_cost": 0.11191145796328783,
+          "expected_improvement": 0.0,
+          "feasible": true,
+          "marginal_utility": -0.11191145796328783,
+          "quality": 4.0,
+          "reference_gap": 0.0,
+          "strategy": "max-cut:qubo:annealing:dwave-local",
+          "utility": 4.0
+        }
+      ],
+      "successful_count": 2
+    },
+    "execution_cost": 16.0,
+    "expected_improvement": 0.0,
+    "feasible": true,
+    "marginal_utility": -16.0,
+    "reference_gap": 0.0,
+    "selected_strategy": "max-cut:qubo:exact-search:dimod-exact",
+    "strategies": [
+      {
+        "confidence": 1.0,
+        "evidence": {
+          "confidence": 1.0,
+          "execution_cost": 16.0,
+          "execution_status": "complete",
+          "expected_improvement": 0.0,
+          "feasible": true,
+          "is_reference": true,
+          "quality": 4.0,
+          "reference_gap": 0.0
+        },
+        "execution_cost": 16.0,
+        "expected_improvement": 0.0,
+        "feasible": true,
+        "marginal_utility": -16.0,
+        "quality": 4.0,
+        "reference_gap": 0.0,
+        "strategy": "max-cut:qubo:exact-search:dimod-exact",
+        "utility": 4.0
+      },
+      {
+        "confidence": 0.75,
+        "evidence": {
+          "confidence": 0.75,
+          "execution_cost": 0.11191145796328783,
+          "execution_status": "complete",
+          "expected_improvement": 0.0,
+          "feasible": true,
+          "is_reference": false,
+          "quality": 4.0,
+          "reference_gap": 0.0
+        },
+        "execution_cost": 0.11191145796328783,
+        "expected_improvement": 0.0,
+        "feasible": true,
+        "marginal_utility": -0.11191145796328783,
+        "quality": 4.0,
+        "reference_gap": 0.0,
+        "strategy": "max-cut:qubo:annealing:dwave-local",
+        "utility": 4.0
+      }
+    ],
+    "utility": 4.0
+  },
+  "completed_at": "2026-07-23T19:45:37.483668+00:00",
+  "decision": {
+    "action": "stop",
+    "evidence": {
+      "confidence": 1.0,
+      "confidence_threshold": 0.7,
+      "execution_cost": 16.0,
+      "expected_improvement": 0.0,
+      "feasible": true,
+      "improvement_threshold": 0.05,
+      "marginal_utility": -16.0,
+      "minimum_marginal_utility": 0.0,
+      "reference_gap": 0.0,
+      "target_reference_gap": 0.0,
+      "utility": 4.0
+    },
+    "next_strategy": null,
+    "reason_code": "REFERENCE_TARGET_REACHED",
+    "resource_change": {},
+    "selected_strategy": "max-cut:qubo:exact-search:dimod-exact",
+    "should_continue": false
+  },
+  "domain": {
+    "domain_type": "max-cut",
+    "edges": 5,
+    "name": "quickstart-max-cut",
+    "parameters": {
+      "target_cut_value": null
+    },
+    "total_weight": 5.0,
+    "vertices": 4,
+    "weighted": false
+  },
+  "executions": [
+    {
+      "candidate": {
+        "domain_type": "max-cut",
+        "native_score": -4.0,
+        "partition": {
+          "0": 1,
+          "1": 0,
+          "2": 1,
+          "3": 0
+        },
+        "selected": [
+          0,
+          2
+        ],
+        "strategy": "max-cut:qubo:exact-search:dimod-exact",
+        "unselected": [
+          1,
+          3
+        ]
+      },
+      "evaluation": {
+        "candidate": {
+          "domain_type": "max-cut",
+          "native_score": -4.0,
+          "partition": {
+            "0": 1,
+            "1": 0,
+            "2": 1,
+            "3": 0
+          },
+          "selected": [
+            0,
+            2
+          ],
+          "strategy": "max-cut:qubo:exact-search:dimod-exact",
+          "unselected": [
+            1,
+            3
+          ]
+        },
+        "domain_type": "max-cut",
+        "feasible": true,
+        "metrics": {
+          "cut_edges": [
+            {
+              "first": 0,
+              "second": 1,
+              "weight": 1.0
+            },
+            {
+              "first": 0,
+              "second": 3,
+              "weight": 1.0
+            },
+            {
+              "first": 1,
+              "second": 2,
+              "weight": 1.0
+            },
+            {
+              "first": 2,
+              "second": 3,
+              "weight": 1.0
+            }
+          ],
+          "cut_value": 4.0,
+          "target_reached": false
+        },
+        "quality": 4.0,
+        "state": "feasible",
+        "strategy": "max-cut:qubo:exact-search:dimod-exact",
+        "utility_inputs": {
+          "feasible": true,
+          "quality": 4.0
+        }
+      },
+      "failure": null,
+      "fingerprint": "5f38b419b45c273a033b8e693b29f8fc04b1fb8247f8e29d0b903c644ac2c1e7",
+      "result": {
+        "metadata": {
+          "budget": {}
+        },
+        "metrics": {
+          "confidence": 1.0,
+          "evaluated_candidates": 16,
+          "expected_improvement": 0.0,
+          "is_reference": true
+        },
+        "native_score": -4.0,
+        "provenance": {
+          "execution": "local",
+          "library": "dimod",
+          "solver": "ExactSolver"
+        },
+        "resource_cost": 16.0,
+        "runtime_s": 0.000454292050562799,
+        "status": "complete",
+        "values": {
+          "0": 1,
+          "1": 0,
+          "2": 1,
+          "3": 0
+        }
+      },
+      "runtime_s": 0.0005128749180585146,
+      "status": "complete",
+      "strategy": {
+        "domain": "max-cut",
+        "fingerprint": "5907fb3a150a59b227b154172821dfd490421f8be33c19bde8fa1a0c99dfc051",
+        "formulation": "qubo",
+        "metadata": {},
+        "model": {
+          "coefficient_count": 9,
+          "curve": {
+            "constraint_count": 0,
+            "constraint_degrees": [],
+            "degree": 2,
+            "input_count": 4,
+            "input_types": [
+              "binary",
+              "binary",
+              "binary",
+              "binary"
+            ],
+            "output_count": 1,
+            "output_types": [
+              "real"
+            ]
+          },
+          "fingerprint": "17716b54dadec8728d2d1656d38d85b61c9c85e03b41f18bab2d0f52c1194b10",
+          "formulation": "qubo",
+          "metadata": {
+            "lagrange_multiplier": null,
+            "objective_sense": "maximize",
+            "source": "expression",
+            "source_curve": {
+              "constraint_count": 0,
+              "constraint_degrees": [],
+              "degree": 2,
+              "input_count": 4,
+              "input_types": [
+                "binary",
+                "binary",
+                "binary",
+                "binary"
+              ],
+              "output_count": 1,
+              "output_types": [
+                "real"
+              ]
+            }
+          }
+        },
+        "name": "max-cut:qubo:exact-search:dimod-exact",
+        "operation": "exact-search",
+        "operation_configuration": {
+          "max_variables": 18
+        },
+        "reference": true,
+        "solver": "dimod-exact",
+        "solver_configuration": {}
+      }
+    },
+    {
+      "candidate": {
+        "domain_type": "max-cut",
+        "native_score": -4.0,
+        "partition": {
+          "0": 1,
+          "1": 0,
+          "2": 1,
+          "3": 0
+        },
+        "selected": [
+          0,
+          2
+        ],
+        "strategy": "max-cut:qubo:annealing:dwave-local",
+        "unselected": [
+          1,
+          3
+        ]
+      },
+      "evaluation": {
+        "candidate": {
+          "domain_type": "max-cut",
+          "native_score": -4.0,
+          "partition": {
+            "0": 1,
+            "1": 0,
+            "2": 1,
+            "3": 0
+          },
+          "selected": [
+            0,
+            2
+          ],
+          "strategy": "max-cut:qubo:annealing:dwave-local",
+          "unselected": [
+            1,
+            3
+          ]
+        },
+        "domain_type": "max-cut",
+        "feasible": true,
+        "metrics": {
+          "cut_edges": [
+            {
+              "first": 0,
+              "second": 1,
+              "weight": 1.0
+            },
+            {
+              "first": 0,
+              "second": 3,
+              "weight": 1.0
+            },
+            {
+              "first": 1,
+              "second": 2,
+              "weight": 1.0
+            },
+            {
+              "first": 2,
+              "second": 3,
+              "weight": 1.0
+            }
+          ],
+          "cut_value": 4.0,
+          "target_reached": false
+        },
+        "quality": 4.0,
+        "state": "feasible",
+        "strategy": "max-cut:qubo:annealing:dwave-local",
+        "utility_inputs": {
+          "feasible": true,
+          "quality": 4.0
+        }
+      },
+      "failure": null,
+      "fingerprint": "1c1c32fc32e9ec1cb4a625e971b73ae483231b788a41e71286631ae941cb41c8",
+      "result": {
+        "metadata": {
+          "budget": {
+            "iterations": 30,
+            "total_reads": 3000
+          }
+        },
+        "metrics": {
+          "confidence": 0.75,
+          "expected_improvement": 0.0,
+          "history": [
+            {
+              "batch_best_energy": -4.0,
+              "batch_energy_variance": 0.009899999999999999,
+              "batch_max_energy": -3.0,
+              "batch_mean_energy": -3.99,
+              "batch_min_energy": -4.0,
+              "batch_time_s": 0.003254000097513199,
+              "best_so_far_energy": -4.0,
+              "elapsed_s": 0.0033530419459566474,
+              "improved": true,
+              "improvement_in_native_score": 0.0,
+              "iteration": 1
+            },
+            {
+              "batch_best_energy": -4.0,
+              "batch_energy_variance": 0.009899999999999999,
+              "batch_max_energy": -3.0,
+              "batch_mean_energy": -3.99,
+              "batch_min_energy": -4.0,
+              "batch_time_s": 0.0028684590943157673,
+              "best_so_far_energy": -4.0,
+              "elapsed_s": 0.0062987919664010406,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 2
+            },
+            {
+              "batch_best_energy": -4.0,
+              "batch_energy_variance": 0.0196,
+              "batch_max_energy": -3.0,
+              "batch_mean_energy": -3.98,
+              "batch_min_energy": -4.0,
+              "batch_time_s": 0.0031502090860158205,
+              "best_so_far_energy": -4.0,
+              "elapsed_s": 0.00961329194251448,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 3
+            },
+            {
+              "batch_best_energy": -4.0,
+              "batch_energy_variance": 0.0,
+              "batch_max_energy": -4.0,
+              "batch_mean_energy": -4.0,
+              "batch_min_energy": -4.0,
+              "batch_time_s": 0.003282667021267116,
+              "best_so_far_energy": -4.0,
+              "elapsed_s": 0.012988083995878696,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 4
+            },
+            {
+              "batch_best_energy": -4.0,
+              "batch_energy_variance": 0.0,
+              "batch_max_energy": -4.0,
+              "batch_mean_energy": -4.0,
+              "batch_min_energy": -4.0,
+              "batch_time_s": 0.003330292063765228,
+              "best_so_far_energy": -4.0,
+              "elapsed_s": 0.016410166979767382,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 5
+            },
+            {
+              "batch_best_energy": -4.0,
+              "batch_energy_variance": 0.0,
+              "batch_max_energy": -4.0,
+              "batch_mean_energy": -4.0,
+              "batch_min_energy": -4.0,
+              "batch_time_s": 0.0032042079837992787,
+              "best_so_far_energy": -4.0,
+              "elapsed_s": 0.019698374904692173,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 6
+            },
+            {
+              "batch_best_energy": -4.0,
+              "batch_energy_variance": 0.0291,
+              "batch_max_energy": -3.0,
+              "batch_mean_energy": -3.97,
+              "batch_min_energy": -4.0,
+              "batch_time_s": 0.003136125043965876,
+              "best_so_far_energy": -4.0,
+              "elapsed_s": 0.022935374989174306,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 7
+            },
+            {
+              "batch_best_energy": -4.0,
+              "batch_energy_variance": 0.0196,
+              "batch_max_energy": -3.0,
+              "batch_mean_energy": -3.98,
+              "batch_min_energy": -4.0,
+              "batch_time_s": 0.002823249902576208,
+              "best_so_far_energy": -4.0,
+              "elapsed_s": 0.02582766697742045,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 8
+            },
+            {
+              "batch_best_energy": -4.0,
+              "batch_energy_variance": 0.0196,
+              "batch_max_energy": -3.0,
+              "batch_mean_energy": -3.98,
+              "batch_min_energy": -4.0,
+              "batch_time_s": 0.002989624976180494,
+              "best_so_far_energy": -4.0,
+              "elapsed_s": 0.028967458987608552,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 9
+            },
+            {
+              "batch_best_energy": -4.0,
+              "batch_energy_variance": 0.0,
+              "batch_max_energy": -4.0,
+              "batch_mean_energy": -4.0,
+              "batch_min_energy": -4.0,
+              "batch_time_s": 0.0033866249723359942,
+              "best_so_far_energy": -4.0,
+              "elapsed_s": 0.032444374985061586,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 10
+            },
+            {
+              "batch_best_energy": -4.0,
+              "batch_energy_variance": 0.009899999999999999,
+              "batch_max_energy": -3.0,
+              "batch_mean_energy": -3.99,
+              "batch_min_energy": -4.0,
+              "batch_time_s": 0.0033537079580128193,
+              "best_so_far_energy": -4.0,
+              "elapsed_s": 0.03587037499528378,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 11
+            },
+            {
+              "batch_best_energy": -4.0,
+              "batch_energy_variance": 0.009899999999999999,
+              "batch_max_energy": -3.0,
+              "batch_mean_energy": -3.99,
+              "batch_min_energy": -4.0,
+              "batch_time_s": 0.002929584006778896,
+              "best_so_far_energy": -4.0,
+              "elapsed_s": 0.03886400000192225,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 12
+            },
+            {
+              "batch_best_energy": -4.0,
+              "batch_energy_variance": 0.0,
+              "batch_max_energy": -4.0,
+              "batch_mean_energy": -4.0,
+              "batch_min_energy": -4.0,
+              "batch_time_s": 0.0028192499885335565,
+              "best_so_far_energy": -4.0,
+              "elapsed_s": 0.041739791980944574,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 13
+            },
+            {
+              "batch_best_energy": -4.0,
+              "batch_energy_variance": 0.0196,
+              "batch_max_energy": -3.0,
+              "batch_mean_energy": -3.98,
+              "batch_min_energy": -4.0,
+              "batch_time_s": 0.003024957957677543,
+              "best_so_far_energy": -4.0,
+              "elapsed_s": 0.04485700000077486,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 14
+            },
+            {
+              "batch_best_energy": -4.0,
+              "batch_energy_variance": 0.0,
+              "batch_max_energy": -4.0,
+              "batch_mean_energy": -4.0,
+              "batch_min_energy": -4.0,
+              "batch_time_s": 0.0028454590355977416,
+              "best_so_far_energy": -4.0,
+              "elapsed_s": 0.0477579589933157,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 15
+            },
+            {
+              "batch_best_energy": -4.0,
+              "batch_energy_variance": 0.0,
+              "batch_max_energy": -4.0,
+              "batch_mean_energy": -4.0,
+              "batch_min_energy": -4.0,
+              "batch_time_s": 0.0028515829471871257,
+              "best_so_far_energy": -4.0,
+              "elapsed_s": 0.050666458904743195,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 16
+            },
+            {
+              "batch_best_energy": -4.0,
+              "batch_energy_variance": 0.056400000000000006,
+              "batch_max_energy": -3.0,
+              "batch_mean_energy": -3.94,
+              "batch_min_energy": -4.0,
+              "batch_time_s": 0.0030902910511940718,
+              "best_so_far_energy": -4.0,
+              "elapsed_s": 0.05395012500230223,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 17
+            },
+            {
+              "batch_best_energy": -4.0,
+              "batch_energy_variance": 0.009899999999999999,
+              "batch_max_energy": -3.0,
+              "batch_mean_energy": -3.99,
+              "batch_min_energy": -4.0,
+              "batch_time_s": 0.0031562920194119215,
+              "best_so_far_energy": -4.0,
+              "elapsed_s": 0.05720974993892014,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 18
+            },
+            {
+              "batch_best_energy": -4.0,
+              "batch_energy_variance": 0.0,
+              "batch_max_energy": -4.0,
+              "batch_mean_energy": -4.0,
+              "batch_min_energy": -4.0,
+              "batch_time_s": 0.0031247909646481276,
+              "best_so_far_energy": -4.0,
+              "elapsed_s": 0.060459041967988014,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 19
+            },
+            {
+              "batch_best_energy": -4.0,
+              "batch_energy_variance": 0.0196,
+              "batch_max_energy": -3.0,
+              "batch_mean_energy": -3.98,
+              "batch_min_energy": -4.0,
+              "batch_time_s": 0.003171916934661567,
+              "best_so_far_energy": -4.0,
+              "elapsed_s": 0.06373041693586856,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 20
+            },
+            {
+              "batch_best_energy": -4.0,
+              "batch_energy_variance": 0.009899999999999999,
+              "batch_max_energy": -3.0,
+              "batch_mean_energy": -3.99,
+              "batch_min_energy": -4.0,
+              "batch_time_s": 0.0034282499691471457,
+              "best_so_far_energy": -4.0,
+              "elapsed_s": 0.06725883390754461,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 21
+            },
+            {
+              "batch_best_energy": -4.0,
+              "batch_energy_variance": 0.0196,
+              "batch_max_energy": -3.0,
+              "batch_mean_energy": -3.98,
+              "batch_min_energy": -4.0,
+              "batch_time_s": 0.003100166912190616,
+              "best_so_far_energy": -4.0,
+              "elapsed_s": 0.07044937496539205,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 22
+            },
+            {
+              "batch_best_energy": -4.0,
+              "batch_energy_variance": 0.009899999999999999,
+              "batch_max_energy": -3.0,
+              "batch_mean_energy": -3.99,
+              "batch_min_energy": -4.0,
+              "batch_time_s": 0.0032567919697612524,
+              "best_so_far_energy": -4.0,
+              "elapsed_s": 0.07381120894569904,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 23
+            },
+            {
+              "batch_best_energy": -4.0,
+              "batch_energy_variance": 0.0,
+              "batch_max_energy": -4.0,
+              "batch_mean_energy": -4.0,
+              "batch_min_energy": -4.0,
+              "batch_time_s": 0.003319125040434301,
+              "best_so_far_energy": -4.0,
+              "elapsed_s": 0.07722170895431191,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 24
+            },
+            {
+              "batch_best_energy": -4.0,
+              "batch_energy_variance": 0.0,
+              "batch_max_energy": -4.0,
+              "batch_mean_energy": -4.0,
+              "batch_min_energy": -4.0,
+              "batch_time_s": 0.0030177090084180236,
+              "best_so_far_energy": -4.0,
+              "elapsed_s": 0.08030191692523658,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 25
+            },
+            {
+              "batch_best_energy": -4.0,
+              "batch_energy_variance": 0.0196,
+              "batch_max_energy": -3.0,
+              "batch_mean_energy": -3.98,
+              "batch_min_energy": -4.0,
+              "batch_time_s": 0.003349500009790063,
+              "best_so_far_energy": -4.0,
+              "elapsed_s": 0.0837459999602288,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 26
+            },
+            {
+              "batch_best_energy": -4.0,
+              "batch_energy_variance": 0.038400000000000004,
+              "batch_max_energy": -3.0,
+              "batch_mean_energy": -3.96,
+              "batch_min_energy": -4.0,
+              "batch_time_s": 0.0030557080172002316,
+              "best_so_far_energy": -4.0,
+              "elapsed_s": 0.08688016689848155,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 27
+            },
+            {
+              "batch_best_energy": -4.0,
+              "batch_energy_variance": 0.009899999999999999,
+              "batch_max_energy": -3.0,
+              "batch_mean_energy": -3.99,
+              "batch_min_energy": -4.0,
+              "batch_time_s": 0.002857374958693981,
+              "best_so_far_energy": -4.0,
+              "elapsed_s": 0.08979704196099192,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 28
+            },
+            {
+              "batch_best_energy": -4.0,
+              "batch_energy_variance": 0.0,
+              "batch_max_energy": -4.0,
+              "batch_mean_energy": -4.0,
+              "batch_min_energy": -4.0,
+              "batch_time_s": 0.0028826670022681355,
+              "best_so_far_energy": -4.0,
+              "elapsed_s": 0.0927339589688927,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 29
+            },
+            {
+              "batch_best_energy": -4.0,
+              "batch_energy_variance": 0.009899999999999999,
+              "batch_max_energy": -3.0,
+              "batch_mean_energy": -3.99,
+              "batch_min_energy": -4.0,
+              "batch_time_s": 0.003030208987183869,
+              "best_so_far_energy": -4.0,
+              "elapsed_s": 0.0958530839998275,
+              "improved": false,
+              "improvement_in_native_score": 0.0,
+              "iteration": 30
+            }
+          ],
+          "iterations": 30,
+          "num_sweeps": 1000,
+          "reads_per_iteration": 100,
+          "total_reads": 3000
+        },
+        "native_score": -4.0,
+        "provenance": {
+          "execution": "local",
+          "library": "dwave-samplers",
+          "sampler": "SimulatedAnnealingSampler"
+        },
+        "resource_cost": null,
+        "runtime_s": 0.09585537493694574,
+        "status": "complete",
+        "values": {
+          "0": 1,
+          "1": 0,
+          "2": 1,
+          "3": 0
+        }
+      },
+      "runtime_s": 0.11191145796328783,
+      "status": "complete",
+      "strategy": {
+        "domain": "max-cut",
+        "fingerprint": "0f0273d03155f138d83ac859b75725e4c944d23c9fe5801dcddc49198425ca1b",
+        "formulation": "qubo",
+        "metadata": {},
+        "model": {
+          "coefficient_count": 9,
+          "curve": {
+            "constraint_count": 0,
+            "constraint_degrees": [],
+            "degree": 2,
+            "input_count": 4,
+            "input_types": [
+              "binary",
+              "binary",
+              "binary",
+              "binary"
+            ],
+            "output_count": 1,
+            "output_types": [
+              "real"
+            ]
+          },
+          "fingerprint": "17716b54dadec8728d2d1656d38d85b61c9c85e03b41f18bab2d0f52c1194b10",
+          "formulation": "qubo",
+          "metadata": {
+            "lagrange_multiplier": null,
+            "objective_sense": "maximize",
+            "source": "expression",
+            "source_curve": {
+              "constraint_count": 0,
+              "constraint_degrees": [],
+              "degree": 2,
+              "input_count": 4,
+              "input_types": [
+                "binary",
+                "binary",
+                "binary",
+                "binary"
+              ],
+              "output_count": 1,
+              "output_types": [
+                "real"
+              ]
+            }
+          }
+        },
+        "name": "max-cut:qubo:annealing:dwave-local",
+        "operation": "annealing",
+        "operation_configuration": {
+          "iterations": 30,
+          "num_sweeps": 1000,
+          "reads_per_iteration": 100,
+          "seed": 7
+        },
+        "reference": false,
+        "solver": "dwave-local",
+        "solver_configuration": {}
+      }
+    }
+  ],
+  "explanation": {
+    "alternatives": [
+      "max-cut:qubo:annealing:dwave-local"
+    ],
+    "evidence": {
+      "assessment": {
+        "confidence": 1.0,
+        "evidence": {
+          "execution_count": 2,
+          "feasible_count": 2,
+          "reference_quality": 4.0,
+          "strategy_assessments": [
+            {
+              "confidence": 1.0,
+              "evidence": {
+                "confidence": 1.0,
+                "execution_cost": 16.0,
+                "execution_status": "complete",
+                "expected_improvement": 0.0,
+                "feasible": true,
+                "is_reference": true,
+                "quality": 4.0,
+                "reference_gap": 0.0
+              },
+              "execution_cost": 16.0,
+              "expected_improvement": 0.0,
+              "feasible": true,
+              "marginal_utility": -16.0,
+              "quality": 4.0,
+              "reference_gap": 0.0,
+              "strategy": "max-cut:qubo:exact-search:dimod-exact",
+              "utility": 4.0
+            },
+            {
+              "confidence": 0.75,
+              "evidence": {
+                "confidence": 0.75,
+                "execution_cost": 0.11191145796328783,
+                "execution_status": "complete",
+                "expected_improvement": 0.0,
+                "feasible": true,
+                "is_reference": false,
+                "quality": 4.0,
+                "reference_gap": 0.0
+              },
+              "execution_cost": 0.11191145796328783,
+              "expected_improvement": 0.0,
+              "feasible": true,
+              "marginal_utility": -0.11191145796328783,
+              "quality": 4.0,
+              "reference_gap": 0.0,
+              "strategy": "max-cut:qubo:annealing:dwave-local",
+              "utility": 4.0
+            }
+          ],
+          "successful_count": 2
+        },
+        "execution_cost": 16.0,
+        "expected_improvement": 0.0,
+        "feasible": true,
+        "marginal_utility": -16.0,
+        "reference_gap": 0.0,
+        "selected_strategy": "max-cut:qubo:exact-search:dimod-exact",
+        "strategies": [
+          {
+            "confidence": 1.0,
+            "evidence": {
+              "confidence": 1.0,
+              "execution_cost": 16.0,
+              "execution_status": "complete",
+              "expected_improvement": 0.0,
+              "feasible": true,
+              "is_reference": true,
+              "quality": 4.0,
+              "reference_gap": 0.0
+            },
+            "execution_cost": 16.0,
+            "expected_improvement": 0.0,
+            "feasible": true,
+            "marginal_utility": -16.0,
+            "quality": 4.0,
+            "reference_gap": 0.0,
+            "strategy": "max-cut:qubo:exact-search:dimod-exact",
+            "utility": 4.0
+          },
+          {
+            "confidence": 0.75,
+            "evidence": {
+              "confidence": 0.75,
+              "execution_cost": 0.11191145796328783,
+              "execution_status": "complete",
+              "expected_improvement": 0.0,
+              "feasible": true,
+              "is_reference": false,
+              "quality": 4.0,
+              "reference_gap": 0.0
+            },
+            "execution_cost": 0.11191145796328783,
+            "expected_improvement": 0.0,
+            "feasible": true,
+            "marginal_utility": -0.11191145796328783,
+            "quality": 4.0,
+            "reference_gap": 0.0,
+            "strategy": "max-cut:qubo:annealing:dwave-local",
+            "utility": 4.0
+          }
+        ],
+        "utility": 4.0
+      },
+      "confidence": 1.0,
+      "confidence_threshold": 0.7,
+      "execution_cost": 16.0,
+      "execution_count": 2,
+      "expected_improvement": 0.0,
+      "feasible": true,
+      "improvement_threshold": 0.05,
+      "marginal_utility": -16.0,
+      "minimum_marginal_utility": 0.0,
+      "reason_code": "REFERENCE_TARGET_REACHED",
+      "reference_gap": 0.0,
+      "strategy_count": 2,
+      "target_reference_gap": 0.0,
+      "utility": 4.0
+    },
+    "limitations": [],
+    "selected_strategy": "max-cut:qubo:exact-search:dimod-exact",
+    "summary": "OptEngine decided to stop because the selected strategy reached the configured reference target using strategy 'max-cut:qubo:exact-search:dimod-exact'."
+  },
+  "failures": [],
+  "logs": [
+    "OptEngine started.",
+    "Analysis started.",
+    "Analysis completed: 2 compatible strategies.",
+    "Evaluation started.",
+    "Strategy completed: max-cut:qubo:exact-search:dimod-exact.",
+    "Strategy completed: max-cut:qubo:annealing:dwave-local.",
+    "Evaluation completed: 2 succeeded, 0 failed.",
+    "Decision started.",
+    "Decision completed: stop.",
+    "Explanation started.",
+    "Explanation completed.",
+    "OptEngine finished.",
+    "Write started."
+  ],
+  "output_path": "outputs/quickstart_20260723_194537_483727Z.json",
+  "provenance": {
+    "optengine_version": "0.1.1",
+    "platform": "macOS-26.5.2-arm64-arm-64bit-Mach-O",
+    "python_implementation": "CPython",
+    "python_version": "3.14.6"
+  },
+  "run_id": "16b49720-8f98-4ece-84e6-3599ca435de3",
+  "started_at": "2026-07-23T19:45:37.275648+00:00"
+}
