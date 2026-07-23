@@ -416,7 +416,3 @@ class MaxCut(Domain):
             objective=self.objective,
             summary=self.summary,
         )
-
-
-# Transitional public alias. New code should use MaxCut.
-MaxCutDomain = MaxCut

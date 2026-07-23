@@ -7,7 +7,12 @@ from optengine.catalog import Catalog
 from optengine.explainers.default import DefaultExplainer
 from optengine.policy.chintropic_stop import ChintropicStopPolicy
 from optengine.runner import run
-from optengine.trace import analysis_chain, outcome_chain, strategy_chain
+from optengine.trace import (
+    analysis_chain,
+    full_strategy_chain,
+    outcome_chain,
+    strategy_chain,
+)
 from optengine.writers.json import JsonRecommendationWriter
 from tests.support import (
     ExampleDomain,
@@ -59,6 +64,27 @@ def test_complete_domain_chain_is_structurally_exposed(tmp_path: Path) -> None:
         "decision",
         "recommendation",
     )
+    assert tuple(
+        name
+        for name, _ in full_strategy_chain(
+            recommendation.analysis,
+            recommendation.executions[0],
+            recommendation.assessment,
+        )
+    ) == (
+        "domain",
+        "interpretation",
+        "objective",
+        "expression",
+        "curve",
+        "formulation",
+        "model",
+        "operation",
+        "solver",
+        "strategy",
+        "execution",
+        "utility",
+    )
 
 
 def test_rendered_runtime_shows_full_chain_and_strategy_results(
@@ -76,29 +102,35 @@ def test_rendered_runtime_shows_full_chain_and_strategy_results(
     )
     output = capsys.readouterr().out
     expected = (
-        "> domain",
-        "> analysis.domain",
-        "> analysis.interpretation",
-        "> analysis.objective",
-        "> analysis.expression",
-        "> analysis.curve",
-        "> analysis.strategy[1].formulation",
-        "> analysis.strategy[1].model",
-        "> analysis.strategy[1].operation",
-        "> analysis.strategy[1].solver",
-        "> analysis.strategy[1].strategy",
-        "> execution.strategy[1].execution",
-        "> utility.strategy[1]",
-        "> outcome.utility",
-        "> outcome.decision",
-        "> decision",
-        "> reason",
-        "> output",
+        "Problem",
+        "  Domain          Example :: chain",
+        "  Interpretation  ExampleDomain → Objective",
+        "  Objective       maximize Objective",
+        "  Expression      x + 2·y",
+        "  Curve           2 binary inputs → real • linear • unconstrained",
+        "Strategy plan (1)",
+        "Strategy 1/1",
+        "  Formulation     Example Formulation",
+        "  Operation       Example Operation",
+        "  Solver          Reference • reference",
+        "  … Running Reference ...",
+        "  ✓ Execution complete — quality 3 • feasible",
+        "    Candidate       x=1 • y=1",
+        "Utility ranking",
+        "Recommendation",
+        "  Decision        STOP",
+        "Artifact",
+        "  Output",
     )
     positions = [output.index(marker) for marker in expected]
     assert positions == sorted(positions)
-    assert "'status': 'complete'" in output
+    strategy_start = output.index("Strategy 1/1")
     assert (
-        "'strategy': 'example:example-formulation:example-operation:reference'"
-        in output
+        output.index(
+            "  Model           2 binary inputs → real • linear • unconstrained",
+            strategy_start,
+        )
+        > strategy_start
     )
+    assert "{'status': 'complete'" not in output
+    assert "'strategy':" not in output

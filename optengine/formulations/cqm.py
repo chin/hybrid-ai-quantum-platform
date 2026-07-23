@@ -8,7 +8,6 @@ from optengine.errors import MissingDependencyError
 from optengine.formulations.base import Formulation, Model as BaseModel
 from optengine.mathematics import (
     Constraint,
-    Curve,
     Expression,
     ValueType,
     Variable,

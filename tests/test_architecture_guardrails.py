@@ -50,3 +50,19 @@ def test_capability_request_and_result_are_nested() -> None:
     assert Operation.Request.__qualname__.startswith("Operation.")
     assert Solver.Capability.__qualname__.startswith("Solver.")
     assert Solver.Result.__qualname__.startswith("Solver.")
+
+
+def test_concrete_domains_use_canonical_names_only() -> None:
+    import optengine.domains as domains
+    import optengine.domains.maxcut as maxcut_module
+    import optengine.domains.portfolio as portfolio_module
+
+    assert domains.__all__ == [
+        "Domain",
+        "MaxCut",
+        "Portfolio",
+    ]
+    assert not hasattr(maxcut_module, "MaxCutDomain")
+    assert not hasattr(portfolio_module, "PortfolioDomain")
+    assert domains.MaxCut.__name__ == "MaxCut"
+    assert domains.Portfolio.__name__ == "Portfolio"

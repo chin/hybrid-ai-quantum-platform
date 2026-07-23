@@ -659,7 +659,3 @@ class Portfolio(Domain):
             objective=self.objective,
             summary=self.summary,
         )
-
-
-# Transitional aliases. New code should use Portfolio.
-PortfolioDomain = Portfolio

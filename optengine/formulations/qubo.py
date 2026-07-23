@@ -80,7 +80,10 @@ class QUBO(Formulation):
                 source_model.payload,
                 lagrange_multiplier=self.lagrange_multiplier,
             )
-            sample_decoder = lambda values: dict(inverter(values))
+
+            def sample_decoder(values: Mapping[Any, Any]) -> Mapping[Any, Any]:
+                return dict(inverter(values))
+
             source = "cqm"
         else:
             multiplier = -1.0 if objective.sense == "maximize" else 1.0

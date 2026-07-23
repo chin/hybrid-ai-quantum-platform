@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from optengine.engine import OptEngine
+from optengine.trace import render_strategy_result, render_strategy_start
 
 
 def evaluate(engine: OptEngine) -> None:
@@ -10,10 +11,27 @@ def evaluate(engine: OptEngine) -> None:
         raise RuntimeError("OptEngine has not been analyzed.")
 
     engine.log("Evaluation started.")
-    for strategy in engine.analysis.strategies:
+    strategies = engine.analysis.strategies
+    total = len(strategies)
+    for index, strategy in enumerate(strategies, start=1):
+        if engine.render:
+            render_strategy_start(
+                strategy,
+                index=index,
+                total=total,
+            )
+
         execution = strategy.execute()
         engine.executions.append(execution)
         engine.recommendation.executions.append(execution)
+
+        if engine.render:
+            render_strategy_result(
+                execution,
+                index=index,
+                total=total,
+            )
+
         if execution.failed and execution.failure is not None:
             engine.log(
                 "Strategy failed: "

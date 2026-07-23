@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from pathlib import Path
 
 import pytest
 
@@ -9,8 +8,6 @@ from optengine.domains.maxcut import MaxCut
 from optengine.domains.portfolio import Portfolio
 from optengine.formulations.cqm import CQM
 from optengine.formulations.qubo import QUBO
-from optengine.operations.annealing import Annealing
-from optengine.operations.exact import ExactSearch
 from optengine.presets.maxcut import maxcut_catalog
 from optengine.presets.portfolio import portfolio_catalog
 from optengine.solvers.dimod_cqm_exact import DimodCQMExact

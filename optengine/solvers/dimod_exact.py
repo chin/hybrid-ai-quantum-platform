@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import importlib.util
 import time
-from typing import Any, ClassVar
+from typing import ClassVar
 
 from optengine.errors import MissingDependencyError
 from optengine.formulations.qubo import QUBO

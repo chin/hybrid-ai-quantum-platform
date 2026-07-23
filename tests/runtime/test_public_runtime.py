@@ -195,9 +195,27 @@ def test_rendered_workflow_exposes_each_stage(
         title="OptEngine :: Test",
     )
     output = capsys.readouterr().out
-    assert "> domain" in output
-    assert "> analysis" in output
-    assert "> evaluation" in output
-    assert "> decision" in output
-    assert "> reason" in output
-    assert "> output" in output
+    expected = (
+        "Problem",
+        "  Domain          Example :: example",
+        "  Interpretation  ExampleDomain → Objective",
+        "  Objective       maximize Objective",
+        "  Expression      x + 2·y",
+        "Strategy plan (1)",
+        "Strategy 1/1",
+        "  Formulation     Example Formulation",
+        "  Operation       Example Operation",
+        "  Solver          Reference • reference",
+        "  … Running Reference ...",
+        "  ✓ Execution complete",
+        "Utility ranking",
+        "Recommendation",
+        "  Decision        STOP",
+        "  Why",
+        "Artifact",
+        "  Output",
+    )
+    positions = [output.index(marker) for marker in expected]
+    assert positions == sorted(positions)
+    assert "{'fingerprint':" not in output
+    assert "'strategy':" not in output

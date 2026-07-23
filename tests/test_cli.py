@@ -10,7 +10,12 @@ from optengine.cli import (
     blank,
     block,
     failure,
+    detail,
     footer,
+    heading,
+    item,
+    progress,
+    result,
     step,
     success,
     tool_block,
@@ -113,3 +118,28 @@ def test_banner_and_footer_geometry(monkeypatch, capsys) -> None:
     assert strip_ansi(lines[0]) == "━" * BANNER_WIDTH
     assert strip_ansi(lines[1]) == ("Runtime Complete".center(BANNER_WIDTH))
     assert strip_ansi(lines[2]) == "━" * BANNER_WIDTH
+
+
+def test_runtime_presentation_helpers_are_aligned_and_wrapped(
+    monkeypatch,
+    capsys,
+) -> None:
+    monkeypatch.delenv("FORCE_COLOR", raising=False)
+    heading("Strategy 1/2")
+    detail(
+        "Selection",
+        "QUBO → Exact Search → A Solver With A Deliberately Long Human Name",
+    )
+    item("1.", "QUBO → Exact Search → Reference")
+    progress("Running Reference ...")
+    result("Execution complete — cut value 4 • feasible")
+    result("Execution failed — RuntimeError: expected", ok=False)
+
+    output = capsys.readouterr().out
+    assert "Strategy 1/2" in output
+    assert "  Selection       QUBO → Exact Search" in output
+    assert "  1.   QUBO → Exact Search → Reference" in output
+    assert "  … Running Reference ..." in output
+    assert "  ✓ Execution complete" in output
+    assert "  ✗ Execution failed" in output
+    assert max(len(line) for line in output.splitlines()) <= BANNER_WIDTH

@@ -6,7 +6,13 @@ from optengine.analysis import Analyzer, CompatibilityRecord
 from optengine.catalog import Catalog
 from optengine.compatibility import Compatibility
 from optengine.errors import NoCompatibleStrategyError
-from optengine.execution import Complete, Failed, Failure, Pending
+from optengine.execution import (
+    Complete,
+    ExecutionInstance,
+    Failed,
+    Failure,
+    Pending,
+)
 from tests.support import (
     ExampleDomain,
     ExampleFormulation,
@@ -231,4 +237,57 @@ def test_execution_state_objects_are_polymorphic() -> None:
     ).to_dict() == {
         "error_type": "ValueError",
         "message": "bad",
+    }
+
+
+def test_execution_instance_delegates_to_public_runner(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path,
+) -> None:
+    domain = ExampleDomain()
+    catalog = _catalog(ExampleSolver(name="delegated"))
+    policy = object()
+    explainer = object()
+    writer = object()
+    utility = object()
+    analyzer = object()
+    expected = object()
+    received: dict[str, object] = {}
+
+    def fake_run(subject, **kwargs):
+        received["subject"] = subject
+        received.update(kwargs)
+        return expected
+
+    monkeypatch.setattr("optengine.runner.run", fake_run)
+
+    instance = ExecutionInstance(
+        name="contract-execution",
+        domain=domain,
+        catalog=catalog,
+        policy=policy,
+        explainer=explainer,
+        writer=writer,
+        utility=utility,
+        analyzer=analyzer,
+        requested_strategies=("example:requested",),
+        output_dir=tmp_path,
+        render=False,
+        title="Contract Execution",
+    )
+
+    assert instance.execute() is expected
+    assert received == {
+        "subject": domain,
+        "catalog": catalog,
+        "policy": policy,
+        "explainer": explainer,
+        "writer": writer,
+        "utility": utility,
+        "analyzer": analyzer,
+        "requested_strategies": ("example:requested",),
+        "output_dir": tmp_path,
+        "render": False,
+        "title": "Contract Execution",
+        "run_name": "contract-execution",
     }
