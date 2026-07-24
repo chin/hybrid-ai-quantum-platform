@@ -7,7 +7,7 @@ import subprocess
 import sys
 import time
 from pathlib import Path
-from typing import Any, Sequence
+from typing import Any
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -28,8 +28,7 @@ class PublishError(RuntimeError):
 
 
 def _run(
-    command: Sequence[str],
-    *,
+    *command: str,
     capture: bool = False,
     check: bool = True,
 ) -> subprocess.CompletedProcess[str]:
@@ -57,7 +56,7 @@ def _run(
 
 
 def _output(*command: str) -> str:
-    return _run(command, capture=True).stdout.strip()
+    return _run(*command, capture=True).stdout.strip()
 
 
 def _step(name: str) -> None:
