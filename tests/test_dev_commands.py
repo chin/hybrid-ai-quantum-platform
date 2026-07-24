@@ -84,6 +84,8 @@ def test_version_preview_calculates_on_feature_branch_without_changing_sources(
     capsys,
 ) -> None:
     pyproject_before = dev.PYPROJECT.read_bytes()
+    current_before = dev._load_pyproject()["project"]["version"]
+    simulated_next_version = "9.9.9"
     seen: dict[str, object] = {}
 
     monkeypatch.setattr(dev, "_current_branch", lambda: "feat/portfolio-domain-cli")
@@ -91,15 +93,15 @@ def test_version_preview_calculates_on_feature_branch_without_changing_sources(
     def fake_semantic_release_value(config: Path, option: str) -> str:
         seen["option"] = option
         seen["config"] = json.loads(config.read_text(encoding="utf-8"))
-        return "0.2.0"
+        return simulated_next_version
 
     monkeypatch.setattr(dev, "_semantic_release_value", fake_semantic_release_value)
 
     current, next_version, tag = dev.preview_version()
 
-    assert current == "0.1.1"
-    assert next_version == "0.2.0"
-    assert tag == "v0.2.0"
+    assert current == current_before
+    assert next_version == simulated_next_version
+    assert tag == f"v{simulated_next_version}"
     assert seen["option"] == "--print"
     assert (
         seen["config"]["semantic_release"]["branches"]["preview"]["match"]
