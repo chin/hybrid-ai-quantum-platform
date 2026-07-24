@@ -2,6 +2,15 @@
 
 <!-- version list -->
 
+## v0.2.1 (2026-07-24)
+
+### Bug Fixes
+
+- Publish assets before immutable release
+  ([#74](https://github.com/chin/hybrid-ai-quantum-platform/pull/74),
+  [`71d40f2`](https://github.com/chin/hybrid-ai-quantum-platform/commit/71d40f269d1a564c7e1cf84a55c8ecca2a6c5f08))
+
+
 ## v0.2.0 (2026-07-24)
 
 ### Bug Fixes
