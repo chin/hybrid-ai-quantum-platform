@@ -39,7 +39,7 @@ jobs:
       - name: Pin checkout to triggering commit
         run: git reset --hard "${{ github.sha }}"
 
-      - name: Determine and create release
+      - name: Determine and create version
         id: release
         uses: python-semantic-release/python-semantic-release@v10.6.1
         with:
@@ -49,7 +49,8 @@ jobs:
           commit: "true"
           push: "true"
           tag: "true"
-          vcs_release: "true"
+          vcs_release: "false"
+          strict: true
           verbosity: "3"
 
       - name: Report release result
@@ -58,22 +59,21 @@ jobs:
           PREVIOUS_VERSION: ${{ steps.release.outputs.previous_version }}
           VERSION: ${{ steps.release.outputs.version }}
           TAG: ${{ steps.release.outputs.tag }}
-          LINK: ${{ steps.release.outputs.link }}
           COMMIT_SHA: ${{ steps.release.outputs.commit_sha }}
         run: |
           printf 'released=%s\n' "$RELEASED"
           printf 'previous_version=%s\n' "$PREVIOUS_VERSION"
           printf 'version=%s\n' "$VERSION"
           printf 'tag=%s\n' "$TAG"
-          printf 'link=%s\n' "$LINK"
           printf 'commit_sha=%s\n' "$COMMIT_SHA"
 
           test "$RELEASED" = "true" || {
-            echo "::error::Semantic Release completed without creating a release."
+            echo "::error::Semantic Release completed without creating a version."
             exit 1
           }
 
-      - name: Verify distributions exist
+      - name: Verify distributions
+        if: steps.release.outputs.released == 'true'
         run: |
           test -d dist || {
             echo "::error::dist directory was not created"
@@ -83,12 +83,51 @@ jobs:
           find dist -maxdepth 1 -type f -print
 
           test -n "$(find dist -maxdepth 1 -type f -print -quit)" || {
-            echo "::error::No distributions were built"
+            echo "::error::No distribution files were built"
             exit 1
           }
 
-      - name: Upload distributions to GitHub Release
-        uses: python-semantic-release/publish-action@v10.6.1
-        with:
-          github_token: ${{ secrets.RELEASE_TOKEN }}
-          tag: ${{ steps.release.outputs.tag }}
+      - name: Create immutable GitHub Release with assets
+        if: steps.release.outputs.released == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+          TAG: ${{ steps.release.outputs.tag }}
+          RELEASE_NOTES: ${{ steps.release.outputs.release_notes }}
+        run: |
+          printf '%s\n' "$RELEASE_NOTES" > /tmp/release-notes.md
+
+          gh release create "$TAG" \
+            dist/* \
+            --repo "$GITHUB_REPOSITORY" \
+            --verify-tag \
+            --title "$TAG" \
+            --notes-file /tmp/release-notes.md \
+            --latest
+
+      - name: Verify published release assets
+        if: steps.release.outputs.released == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+          TAG: ${{ steps.release.outputs.tag }}
+        run: |
+          ASSET_COUNT="$(
+            gh release view "$TAG" \
+              --repo "$GITHUB_REPOSITORY" \
+              --json assets \
+              --jq '.assets | length'
+          )"
+
+          gh release view "$TAG" \
+            --repo "$GITHUB_REPOSITORY" \
+            --json tagName,isImmutable,url,assets \
+            --jq '{
+              tag: .tagName,
+              immutable: .isImmutable,
+              url: .url,
+              assets: [.assets[].name]
+            }'
+
+          test "$ASSET_COUNT" -gt 0 || {
+            echo "::error::Published release contains no assets"
+            exit 1
+          }
