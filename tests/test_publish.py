@@ -1,32 +1,42 @@
 from __future__ import annotations
 
+import subprocess
+
 import pytest
 
 from tools import publish
 
 
 def test_next_tag_extracts_semantic_release_tag(monkeypatch) -> None:
-    result = publish.subprocess.CompletedProcess(
+    result = subprocess.CompletedProcess(
         args=[],
         returncode=0,
         stdout="warning text\nv0.3.0\n",
         stderr="",
     )
 
-    monkeypatch.setattr(publish, "_run", lambda *args, **kwargs: result)
+    monkeypatch.setattr(
+        publish,
+        "_run",
+        lambda *args, **kwargs: result,
+    )
 
     assert publish._next_tag() == "v0.3.0"
 
 
 def test_next_tag_rejects_no_release(monkeypatch) -> None:
-    result = publish.subprocess.CompletedProcess(
+    result = subprocess.CompletedProcess(
         args=[],
         returncode=2,
         stdout="",
         stderr="No release will be made\n",
     )
 
-    monkeypatch.setattr(publish, "_run", lambda *args, **kwargs: result)
+    monkeypatch.setattr(
+        publish,
+        "_run",
+        lambda *args, **kwargs: result,
+    )
 
     with pytest.raises(
         publish.PublishError,
