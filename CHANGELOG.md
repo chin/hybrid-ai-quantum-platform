@@ -2,6 +2,25 @@
 
 <!-- version list -->
 
+## v0.4.0 (2026-07-24)
+
+### Bug Fixes
+
+- Complete publish command integration
+  ([#77](https://github.com/chin/hybrid-ai-quantum-platform/pull/77),
+  [`de6d675`](https://github.com/chin/hybrid-ai-quantum-platform/commit/de6d6750934240dd28597dfce46e85453f933c1d))
+
+- Correct publish command execution
+  ([#77](https://github.com/chin/hybrid-ai-quantum-platform/pull/77),
+  [`de6d675`](https://github.com/chin/hybrid-ai-quantum-platform/commit/de6d6750934240dd28597dfce46e85453f933c1d))
+
+### Features
+
+- Automate release and package publication
+  ([#76](https://github.com/chin/hybrid-ai-quantum-platform/pull/76),
+  [`eea6ec8`](https://github.com/chin/hybrid-ai-quantum-platform/commit/eea6ec83e1ed5b888df7053df9208ee6e358486d))
+
+
 ## v0.3.0 (2026-07-24)
 
 ### Features
