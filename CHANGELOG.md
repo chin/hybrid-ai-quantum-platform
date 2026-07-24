@@ -2,6 +2,15 @@
 
 <!-- version list -->
 
+## v0.3.0 (2026-07-24)
+
+### Features
+
+- Publish OptEngine container package
+  ([#75](https://github.com/chin/hybrid-ai-quantum-platform/pull/75),
+  [`7dbefd7`](https://github.com/chin/hybrid-ai-quantum-platform/commit/7dbefd797016b32780d3a94376eb7b0938443545))
+
+
 ## v0.2.1 (2026-07-24)
 
 ### Bug Fixes
