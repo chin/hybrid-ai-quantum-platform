@@ -189,8 +189,5 @@ clean: ## Remove disposable generated files and caches
 	@rm -rf .coverage htmlcov
 # 	@rm -f coverage.xml
 
-publish: ## Publish distributions to a package registry
-	@echo ""
-	@echo "> publish.status"
-	@echo "• package-registry publication is not implemented yet"
-	@echo ""
+publish: release-check ## Publish the GitHub Release and container package
+	@uv run python tools/publish.py
